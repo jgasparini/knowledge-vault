@@ -84,3 +84,23 @@ Tell Claude:
 Claude reads the source, pulls out the key insights, creates a source summary page, updates any related concept and entity pages, files everything in the right place, and updates the index and changelog. You don't need to do anything.
 
 When it's done, you'll see a new page in `wiki/projects/ai-tools-research/sources/` and a fresh entry in `CHANGELOG.md`.
+
+### 7. Ask a question
+
+Once you've ingested a few sources, start asking:
+
+> **"What do I know about retrieval-augmented generation?"**
+>
+> **"What's the tension between GPT-4 and Claude on reasoning tasks?"**
+>
+> **"What should I read next to fill the gap on AI agents?"**
+
+Claude reads your wiki, synthesises an answer from what's actually in there, and files it in `Outputs/`. If the answer is substantial enough to become a permanent wiki page, Claude will ask before promoting it.
+
+### 8. Run a health check *(after 10–15 ingests)*
+
+Tell Claude:
+
+> **"Lint the wiki"**
+
+Claude runs 8 structural checks — orphan pages, missing wikilinks, stale content, index drift, and more. It auto-fixes what it safely can and flags everything else for your decision.
