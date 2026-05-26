@@ -104,3 +104,56 @@ Tell Claude:
 > **"Lint the wiki"**
 
 Claude runs 8 structural checks — orphan pages, missing wikilinks, stale content, index drift, and more. It auto-fixes what it safely can and flags everything else for your decision.
+
+## Reference
+
+### Skills
+
+These are the phrases that trigger Claude's built-in workflows:
+
+| Skill | What to say | What it does |
+|-------|-------------|--------------|
+| `wiki-setup` | "Set up a new project for [topic]" | Scaffolds the project folder, index, and navigation files |
+| `wiki-ingest` | "Ingest the inbox" or "Ingest [filename]" | Full 10-step ingest: read → extract insights → write pages → update registries |
+| `wiki-lint` | "Lint the wiki" or "Wiki health check" | 8-check structural health pass with auto-fixes |
+| `writing-rules` | *(applied automatically)* | House style guide — applied to all wiki prose |
+
+### Folder structure
+
+```
+knowledge-vault/
+  inbox/              ← drop sources here
+  wiki/
+    projects/         ← one folder per active research project
+    areas/            ← ongoing responsibilities (no end date)
+    resources/
+      concepts/       ← mental models and patterns
+      entities/       ← tools, companies, models, papers
+      topics/         ← broad domain hubs with evolving theses
+    INDEX.md          ← project directory + global resource catalog
+    QUESTIONS.md      ← cross-project open questions
+  Outputs/            ← query results and reports
+  archive/            ← completed or inactive material
+  meta/
+    CLAUDE.md         ← schema and rules (Claude reads this on every operation)
+  CHANGELOG.md        ← log of every ingest, lint pass, and restructure
+  templates/          ← page templates for manual capture
+```
+
+### Customising for your domain
+
+**Writing style:** create a `writing-rules.md` file in the vault root. Claude applies it to all wiki prose, layered on top of the built-in style guide in `skills/writing-rules/`.
+
+**Schema changes:** edit `meta/CLAUDE.md`. The skills read it at runtime — if the schema changes there, the skills adapt automatically. You never need to edit the skills directly.
+
+---
+
+## Contributing
+
+Pull requests welcome. If you've adapted the schema for a specific domain (legal research, competitive intelligence, engineering architecture), consider sharing it as a branch or fork.
+
+## Licence
+
+MIT
+
+---

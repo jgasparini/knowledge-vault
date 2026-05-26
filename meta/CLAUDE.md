@@ -10,11 +10,13 @@ from scratch each time, but to build up a structured, interlinked
 body of knowledge that compounds with every source added and every
 question asked.
 
-Before writing any wiki prose, check whether a `skills/writing-rules/SKILL.md`
-file exists in the workspace root. If it does, apply those rules to
-all article bodies, summaries, and outputs. Do not apply them to
-frontmatter, navigation files (INDEX.md, QUESTIONS.md, CHANGELOG.md),
-or verbatim quotes from source material.
+Before writing any wiki prose, read `skills/writing-rules/SKILL.md`
+and apply those rules to all article bodies, summaries, and outputs.
+Do not apply them to frontmatter, navigation files (INDEX.md,
+QUESTIONS.md, CHANGELOG.md), or verbatim quotes from source material.
+If a `writing-rules.md` file also exists in the workspace root, apply
+it on top of the skill — root-level rules take precedence for any
+domain-specific overrides.
 
 ### Core principles
 
@@ -69,6 +71,7 @@ Workflows are defined as skills in `skills/`:
 - `skills/wiki-setup/SKILL.md` — interactive scaffold for a new project
 - `skills/wiki-ingest/SKILL.md` — full 10-step ingest workflow
 - `skills/wiki-lint/SKILL.md` — 8-check lint workflow with scripts
+- `skills/writing-rules/SKILL.md` — house style guide; read before writing any wiki prose
 
 All skills read this file at runtime for schema details. If the schema
 changes here, the skills adapt automatically.
