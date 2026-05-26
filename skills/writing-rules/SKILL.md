@@ -1,3 +1,15 @@
+---
+name: writing-rules
+description: >
+  House style guide for all wiki prose. Applied automatically before writing any
+  article bodies, summaries, or query outputs. Also triggers when the user asks
+  "apply writing rules", "check the writing style", or "does this sound like AI?".
+  Defines words and phrases to avoid, formatting rules, tone rules, and structure
+  rules — all aimed at writing that sounds like a capable person wrote it, not a
+  machine. Does not apply to frontmatter, navigation files (INDEX.md, QUESTIONS.md,
+  CHANGELOG.md), or verbatim quotes from source material.
+---
+
 # Writing Rules
 
 How Claude should write — based on Wikipedia's documented signs of AI writing, supplemented by established anti-AI style guidance. These rules apply to everything: emails, documents, responses in chat, summaries, and any other written output.
