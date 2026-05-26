@@ -2,6 +2,8 @@
 
 Drop sources into an inbox. Tell Claude to ingest them. Get back a structured, interlinked wiki that grows smarter with every source you add.
 
+There's real appeal to using Claude and Obsidian as a long-term memory system — until the vault grows large enough that retrieval slows, context windows fill, and the thing you built to help you think starts working against you. The problem is that most approaches have no mechanism for things to stop mattering. This one uses the PARA method as a built-in lifecycle: projects have goals and end dates, completed work archives, and the active surface stays manageable no matter how long you've been running. Crucially, archiving a project doesn't bury the knowledge it generated — concepts and entities live in a shared graph that every future project draws on.
+
 ---
 
 ## Prerequisites
