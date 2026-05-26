@@ -105,6 +105,8 @@ Tell Claude:
 
 Claude runs 8 structural checks — orphan pages, missing wikilinks, stale content, index drift, and more. It auto-fixes what it safely can and flags everything else for your decision.
 
+---
+
 ## Reference
 
 ### Skills
@@ -155,5 +157,3 @@ Pull requests welcome. If you've adapted the schema for a specific domain (legal
 ## Licence
 
 MIT
-
----
