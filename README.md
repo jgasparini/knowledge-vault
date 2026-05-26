@@ -114,7 +114,7 @@ Tell Claude:
 
 > **"Lint the wiki"**
 
-Claude runs 8 structural checks — orphan pages, missing wikilinks, stale content, index drift, and more. It auto-fixes what it safely can and flags everything else for your decision.
+Claude runs 8 structural checks — orphan pages, missing wikilinks, stale content, index drift, and more. It auto-fixes what it safely can and flags everything else for your decision. The checks run as bash scripts rather than Claude reading files directly: scripts execute in milliseconds with zero token cost, and are deterministic — they won't miss a broken link or vary between runs.
 
 ---
 
