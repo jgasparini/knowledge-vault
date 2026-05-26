@@ -10,7 +10,7 @@ from scratch each time, but to build up a structured, interlinked
 body of knowledge that compounds with every source added and every
 question asked.
 
-Before writing any wiki prose, check whether a `writing-rules.md`
+Before writing any wiki prose, check whether a `skills/writing-rules/SKILL.md`
 file exists in the workspace root. If it does, apply those rules to
 all article bodies, summaries, and outputs. Do not apply them to
 frontmatter, navigation files (INDEX.md, QUESTIONS.md, CHANGELOG.md),
