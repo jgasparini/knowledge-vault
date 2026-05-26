@@ -91,7 +91,7 @@ Status values: `stub` → `active` → `evergreen` → `archived`.
 1. Read `wiki/INDEX.md` to identify relevant pages.
 2. Read identified pages in full, including topic hub evolving theses.
 3. Synthesise and cite with `[[page-name]]`; flag when drawing on general knowledge.
-4. Write the answer to `Outputs/` as a dated markdown file.
+4. Write the answer as a dated markdown file to the scoped `Outputs/` folder: `wiki/projects/[name]/Outputs/` for project queries, `wiki/areas/[name]/Outputs/` for area queries, `wiki/resources/Outputs/` for resource queries, or root `Outputs/` for cross-cutting queries. Create the folder if needed.
 5. Propose promotion to a wiki page if it synthesises 3+ pages or surfaces a new connection — never promote silently.
 
 ## Customisation

@@ -142,6 +142,9 @@ evolving thesis — Claude's running synthesis of what the accumulated
 sources suggest about that domain. Updated on every relevant ingest.
 
 **Outputs/** — landing zone for query results, reports, and analyses.
+Scoped: project queries land in `wiki/projects/[name]/Outputs/`, area
+queries in `wiki/areas/[name]/Outputs/`, resource queries in
+`wiki/resources/Outputs/`, cross-cutting queries in root `Outputs/`.
 Promoted to wiki pages only when Claude proposes and the human confirms.
 
 **archive/** — keep but stop maintaining. Searchable, never deleted.
@@ -464,8 +467,17 @@ including adjacent concepts and the evolving thesis on relevant topics.
 truth. Cite with `[[page-name]]`. Flag clearly when drawing on general
 knowledge instead.
 
-**Step 4 — Land in Outputs/.** The answer lands in `Outputs/` as a
-dated markdown file.
+**Step 4 — Land in the scoped Outputs/.** The answer lands as a dated
+markdown file in the `Outputs/` folder closest to the query's scope:
+
+- Project-scoped query → `wiki/projects/[name]/Outputs/`
+- Area-scoped query → `wiki/areas/[name]/Outputs/`
+- Resource-scoped query (concept, entity, topic) → `wiki/resources/Outputs/`
+- Cross-cutting or ambiguous → root `Outputs/`
+
+Create the `Outputs/` subfolder if it does not exist. This keeps
+query results co-located with the material they draw on, making
+patterns and compounding insights visible over time.
 
 **Step 5 — Propose promotion if warranted.** Ask whether the answer
 should become a wiki page. Promote when it synthesises across three
