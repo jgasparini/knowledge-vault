@@ -20,12 +20,20 @@ Three skills handle all workflows. Trigger them by invoking the `Skill` tool wit
 
 ## Lint scripts
 
-Run from the vault root:
+**macOS / Linux** — run from the vault root:
 
 ```bash
 bash skills/wiki-lint/scripts/find-orphans.sh /path/to/wiki
 bash skills/wiki-lint/scripts/find-missing-pages.sh /path/to/wiki
 bash skills/wiki-lint/scripts/check-index-drift.sh /path/to/wiki [projects/name]
+```
+
+**Windows 11** — PowerShell equivalents (require PowerShell 5.1+):
+
+```powershell
+powershell -File skills\wiki-lint\scripts\find-orphans.ps1 C:\path\to\wiki
+powershell -File skills\wiki-lint\scripts\find-missing-pages.ps1 C:\path\to\wiki
+powershell -File skills\wiki-lint\scripts\check-index-drift.ps1 C:\path\to\wiki [projects/name]
 ```
 
 ## Folder structure

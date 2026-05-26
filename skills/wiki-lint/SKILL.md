@@ -202,5 +202,18 @@ Append one entry to `CHANGELOG.md` (newest first):
 ## Portability note
 
 Scripts live in `skills/wiki-lint/scripts/`. The vault path must be translated to the
-bash-accessible mount path for the current session. The skill reads `meta/CLAUDE.md` at
+shell-accessible mount path for the current session. The skill reads `meta/CLAUDE.md` at
 runtime for schema details — if the schema changes, re-read before running checks.
+
+**macOS / Linux:** use the `.sh` scripts via `bash`:
+```bash
+bash skills/wiki-lint/scripts/find-orphans.sh /path/to/wiki
+```
+
+**Windows 11:** use the `.ps1` equivalents via PowerShell (5.1+):
+```powershell
+powershell -File skills\wiki-lint\scripts\find-orphans.ps1 C:\path\to\wiki
+powershell -File skills\wiki-lint\scripts\find-missing-pages.ps1 C:\path\to\wiki
+powershell -File skills\wiki-lint\scripts\check-index-drift.ps1 C:\path\to\wiki projects/ai-native-engineering
+```
+Output format is identical — `ORPHAN`, `MISSING`, `NOT_INDEXED`, `BROKEN_ENTRY`, and `SUMMARY` lines — so the rest of the skill works unchanged on both platforms.
