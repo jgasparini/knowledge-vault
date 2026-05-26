@@ -1,0 +1,206 @@
+---
+name: wiki-lint
+description: >
+  Run a lint pass on the wiki. Triggers when the user says "run a lint", "lint pass",
+  "lint the wiki", "check the wiki", or "wiki health check". Runs 8 structural checks,
+  auto-fixes index drift and missing cross-references, flags everything else for the user's
+  decision, produces a standard report, and appends an entry to CHANGELOG.md.
+  Use this after every 10–15 ingests, or whenever the wiki feels like it's drifting.
+---
+
+# Wiki Lint
+
+## Before you start
+
+Read `meta/CLAUDE.md` — specifically Section 2 (vault structure) and Section 3 (page types
+and status values). Today's date matters for staleness checks.
+
+### Establish lint scope
+
+- **Project-scoped** (default): "lint [project name]" or "run a lint". Checks pages in
+  the named project. Scripted checks run globally (they must — inbound links come from
+  anywhere), but results are filtered to pages listed in the project INDEX.md.
+- **Global**: "full lint" or "lint all projects". No filtering — all pages, all projects.
+
+### Locate the scripts
+
+The lint scripts live at `skills/wiki-lint/scripts/` relative to the vault root.
+Determine the bash-accessible path by translating the vault path using the session mount.
+
+---
+
+## Execution order
+
+Checks 1, 5, and 8 are **scripted** — run the shell scripts first (they are fast and
+exhaustive). Checks 2, 3, 4, 6, and 7 are **manual** — they require reading page content
+and applying judgment.
+
+Do not produce the report until all 8 checks are complete.
+
+---
+
+## Scripted checks (run first)
+
+### Check 1 — Orphans [SCRIPTED]
+
+Run:
+```bash
+bash skills/wiki-lint/scripts/find-orphans.sh /path/to/wiki
+```
+
+Output format: `ORPHAN <inbound_count> <relative_path>` per orphan, then `SUMMARY <total> <orphan_count>`.
+
+**If project-scoped:** filter ORPHAN results to only pages listed in the project INDEX.md.
+
+For each orphan in scope, suggest the most natural existing page to add an inbound link from.
+Do not add links silently — list orphans and wait for instruction.
+
+---
+
+### Check 5 — Missing pages [SCRIPTED] ⚠️ Highest priority
+
+Run:
+```bash
+bash skills/wiki-lint/scripts/find-missing-pages.sh /path/to/wiki
+```
+
+Output format: `MISSING <ref_count> [[link-name]]` per missing page, then `SUMMARY`.
+
+**If project-scoped:** filter MISSING results to links that appear in project pages.
+
+For each missing page: note the link name and reference count. Create a stub immediately —
+correct frontmatter, a one-line "What it is", and at least one inbound link. Note each stub
+created in CHANGELOG.md. If more than 10 missing pages are found, flag as a structural problem.
+
+---
+
+### Check 8 — Index drift [SCRIPTED]
+
+Run:
+```bash
+bash skills/wiki-lint/scripts/check-index-drift.sh /path/to/wiki [projects/name]
+```
+
+For project-scoped lint, pass the project subdirectory as the second argument.
+
+Output format: `NOT_INDEXED <path>` and `BROKEN_ENTRY [[link]] in <index>`, then `SUMMARY`.
+
+Both types are auto-fixes:
+- **NOT_INDEXED**: add the page to the correct section of the relevant INDEX.md.
+- **BROKEN_ENTRY**: remove the entry from INDEX.md.
+
+Note total corrections in CHANGELOG.md.
+
+---
+
+## Manual checks (read content)
+
+### Check 2 — Stubs ready to expand
+
+Pages with `status: stub` that now have 2+ source pages referencing them. List each with
+the sources that could support expansion. Do not expand silently — flag for the user's decision.
+
+---
+
+### Check 3 — Stale active pages
+
+Pages with `status: active` not updated in 30+ days where a relevant source has been ingested
+since. Check the `updated:` field in frontmatter against today's date, then cross-reference
+CHANGELOG.md for relevant ingests. List which ingests were missed.
+
+---
+
+### Check 4 — Contradictions without cross-references
+
+Conflicting claims across pages that haven't been cross-referenced. This is a judgment call.
+Auto-fix: add the cross-reference in both pages. Do not resolve the contradiction — just make
+the tension visible. Note each fix in CHANGELOG.md.
+
+---
+
+### Check 6 — Archive candidates
+
+**Projects:** pages in `wiki/projects/` with `status: complete`. Flag — do not move without
+explicit instruction.
+
+**Resources/areas:** pages with `status: active` or `status: stub` not referenced in 90+ days.
+Flag with a one-sentence reason.
+
+---
+
+### Check 7 — QUESTIONS.md hygiene
+
+For project-scoped lint: read `wiki/projects/[name]/QUESTIONS.md`.
+For global lint: read both the project and root QUESTIONS.md files.
+
+For each open item (`- [ ]`): check whether a wiki page now resolves it. If yes, close it
+(`- [x]`) with a page reference. If it has been open 60+ days without progress, flag as stale.
+Note closures in CHANGELOG.md.
+
+---
+
+## Report format
+
+Always produce the report in this exact format:
+
+```
+## Lint pass — YYYY-MM-DD [scope: project-name or global]
+
+**Orphans:** [n] found
+- [[page]] — suggested connection: [[page]]
+
+**Stubs ready to expand:** [n] found
+- [[page]] — sources available: [[source]], [[source]]
+
+**Stale active pages:** [n] found
+- [[page]] — last updated [date], missed sources: [[source]]
+
+**Contradictions without cross-references:** [n] found / [n] auto-fixed
+
+**Missing pages:** [n] found — [n] stubs created
+- [[link-name]] — [n] references
+
+**Archive candidates:** [n] found
+- [[page]] — reason: [one sentence]
+
+**QUESTIONS.md hygiene:** [n] items closed, [n] stale items flagged
+
+**Index drift:** [n] entries added, [n] entries removed
+```
+
+If a category is clean, write `[0] found` — do not omit the category.
+
+---
+
+## After the report
+
+Append one entry to `CHANGELOG.md` (newest first):
+
+```
+## YYYY-MM-DD — Lint pass [scope]
+- Missing pages: [n]
+- Orphans: [details or "none"]
+- Stubs promoted: [details or "none"]
+- QUESTIONS hygiene: [details or "none"]
+- Index drift: [n entries added, n removed]
+```
+
+---
+
+## Lint rules
+
+- Run scripted checks first (1, 5, 8), then manual checks (2, 3, 4, 6, 7). Report only after all 8.
+- Missing pages (Check 5) are highest priority. Create stubs immediately.
+- Auto-fixes (Check 4 cross-references, Check 7 QUESTIONS closures, Check 8 index drift)
+  are applied and noted in CHANGELOG.md.
+- Everything else is flagged for the user's decision.
+- If any category exceeds 10 items, flag it as a structural problem.
+- The lint report is the output. Do not pad it with commentary.
+
+---
+
+## Portability note
+
+Scripts live in `skills/wiki-lint/scripts/`. The vault path must be translated to the
+bash-accessible mount path for the current session. The skill reads `meta/CLAUDE.md` at
+runtime for schema details — if the schema changes, re-read before running checks.
