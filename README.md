@@ -46,3 +46,41 @@ Open [claude.ai](https://claude.ai), start a new conversation, and connect the `
 cd path/to/knowledge-vault
 claude
 ```
+
+### 4. Set up your project
+
+Tell Claude:
+
+> **"Set up a new project for AI tools research"**
+
+Claude will ask you four questions:
+
+| Question | Example answer |
+|----------|----------------|
+| Project name | `ai-tools-research` |
+| Goal (one sentence) | Build a working knowledge base of AI tools, models, and techniques |
+| Domain / topic | artificial intelligence |
+| Review date | *(leave blank, or pick a date)* |
+
+When you're done, Claude creates `wiki/projects/ai-tools-research/` with everything it needs to start tracking your research.
+
+### 5. Add a source
+
+Drop any file into the `inbox/` folder. It can be:
+
+- A PDF paper you downloaded
+- A saved article (as Markdown or plain text)
+- Notes you've already written
+- A web clip saved as a file
+
+Claude can read PDF, Markdown, and plain text files.
+
+### 6. Ingest it
+
+Tell Claude:
+
+> **"Ingest the inbox"**
+
+Claude reads the source, pulls out the key insights, creates a source summary page, updates any related concept and entity pages, files everything in the right place, and updates the index and changelog. You don't need to do anything.
+
+When it's done, you'll see a new page in `wiki/projects/ai-tools-research/sources/` and a fresh entry in `CHANGELOG.md`.
