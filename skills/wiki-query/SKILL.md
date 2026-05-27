@@ -2,7 +2,7 @@
 name: wiki-query
 description: >
   Query the wiki for accumulated knowledge on a topic. Triggers when the user asks
-  "query the wiki about X", "what does the wiki say about X", "ask the wiki X",
+  "query the wiki", "what does the wiki say about X", "ask the wiki X",
   "search the wiki for X", or any question clearly directed at accumulated wiki
   knowledge rather than general knowledge.
   Runs a 6-step workflow: detect scope → read scoped index → read targeted pages →
