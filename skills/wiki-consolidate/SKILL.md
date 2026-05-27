@@ -22,7 +22,9 @@ Read `meta/CLAUDE.md` in full. Pay attention to:
 
 Today's date is needed for the report header and CHANGELOG entry.
 
-### Establish scope
+---
+
+## Establish scope
 
 - **Project-scoped** (default): "consolidate [project name]". Check pages within that
   project plus any concepts or entities it references.
@@ -61,6 +63,8 @@ Three types of proposal:
 **Archive candidates:** pages with `status: active` or `status: stub` that have no
 source references and have not been updated in 90 or more days. Flag — do not archive
 without explicit instruction.
+
+These thresholds are defaults. If `meta/CLAUDE.md` defines lifecycle thresholds explicitly, use those instead.
 
 For each proposal: name the page, state the evidence (source count, days since last
 update), propose the status change. Do not touch frontmatter until the user confirms.
@@ -108,7 +112,7 @@ Always produce the report in this exact format before asking for confirmation:
 
 If a category is clean, write `[n] found` with n=0 — do not omit the category.
 
-Present the report, then ask: "Which of these would you like to action?"
+Present the report, then ask: "Which of these would you like to confirm?"
 
 ---
 
@@ -116,17 +120,22 @@ Present the report, then ask: "Which of these would you like to action?"
 
 For each approved item, apply the following:
 
-**Deduplication merge:** fold the content of the retiring page into the surviving page.
-Replace the retiring page's body with a one-line redirect (`See [[surviving-page]]`),
-set its `status: archived`, and update all inbound wikilinks to point to the surviving page.
+**Deduplication merge:** fold the content of the retiring page into the surviving page using this approach:
+- Merge sections by type: deepen definitions, add complementary examples, preserve both perspectives if claims conflict rather than silently dropping one
+- Reconcile frontmatter: merge the `sources:` lists, set `updated:` to today's date, keep the higher status value
+- Cross-reference any conflicting claims in both directions (do not resolve them — let them coexist)
+Replace the retiring page's body with a one-line redirect (`See [[surviving-page]]`), set its `status: archived`, and update all inbound wikilinks to point to the surviving page.
 
 **Status change:** update the `status:` field in frontmatter and set `updated:` to today's date.
 
 **Synthesis — new concept page:** create using the schema from `meta/CLAUDE.md` Section 3.2.
 Ensure the new page has at least two inbound wikilinks before finishing.
 
-**Synthesis — wikilink:** add the link in both pages under their `## How it connects`
-or `## Connections` section as appropriate.
+**Synthesis — wikilink:** add the link in both pages under the section defined for that page type in `meta/CLAUDE.md` Section 3 (concepts use `## How it connects`, entities use `## Connections`). If the section is missing from a page, create it.
+
+**Registry updates:** After applying any approved changes, update the following files:
+- Remove any merged/archived pages from the relevant `INDEX.md` entries, or note them as redirects
+- If a new concept page was created, add it to the project `INDEX.md` and root `wiki/INDEX.md` per the ingest rules
 
 Append one entry to `CHANGELOG.md` (newest first):
 
@@ -136,6 +145,8 @@ Append one entry to `CHANGELOG.md` (newest first):
 - Status changes: [list or "none"]
 - Synthesis actions: [n or "none"]
 ```
+
+If all three checks find zero items, still append the CHANGELOG entry with all fields set to "none", and state clearly in the report: "Wiki is semantically clean as of YYYY-MM-DD — no action needed."
 
 ---
 
@@ -152,6 +163,4 @@ Append one entry to `CHANGELOG.md` (newest first):
 
 ## Portability note
 
-This skill reads the vault schema from `meta/CLAUDE.md` at runtime. It does not hardcode
-page types, status values, or folder paths. If the schema changes, this skill adapts
-automatically.
+This skill is pure LLM judgment — it has no shell scripts. All checks require reading page content and applying semantic reasoning. It reads the vault schema from `meta/CLAUDE.md` at runtime and does not hardcode page types, status values, or folder paths. If the schema changes, this skill adapts automatically.
