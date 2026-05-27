@@ -10,12 +10,14 @@ The authoritative schema lives in `meta/CLAUDE.md`. Read it before any operation
 
 ## Skills
 
-Three skills handle all workflows. Trigger them by invoking the `Skill` tool with the appropriate name:
+Five skills handle all workflows. Trigger them by invoking the `Skill` tool with the appropriate name:
 
 | Skill | Trigger phrases | What it does |
 |-------|----------------|--------------|
 | `wiki-setup` | "set up a new project for [topic]" | Scaffolds project folder, `_overview.md`, `INDEX.md`, `QUESTIONS.md`, optional topic hub |
 | `wiki-ingest` | "ingest [filename]", "ingest the inbox", "add this to the wiki" | Full 10-step ingest: read → surface → structural check → write → update → create → verify links → move file → update registries → confirm |
+| `wiki-query` | "query the wiki", "what does the wiki say about X", "ask the wiki X" | 6-step query: detect scope → read scoped index → read targeted pages → synthesise and cite → write to Outputs/ → gap analysis |
+| `wiki-consolidate` | "consolidate the wiki", "run a consolidation", "review the wiki for drift" | Semantic review: deduplication candidates, lifecycle promotions, synthesis opportunities — produces a proposal report, nothing changed without confirmation |
 | `wiki-lint` | "run a lint", "lint the wiki", "wiki health check" | 8-check health pass using bash scripts in `skills/wiki-lint/scripts/` |
 
 ## Lint scripts
@@ -85,14 +87,6 @@ Status values: `stub` → `active` → `evergreen` → `archived`.
 - Cross-reference contradictions in both directions — do not resolve them silently.
 - File naming: lowercase, hyphens (`my-concept-name.md`). No dates in filenames.
 - Wikilinks use Obsidian syntax: `[[page-name]]`.
-
-## Query workflow
-
-1. Read `wiki/INDEX.md` to identify relevant pages.
-2. Read identified pages in full, including topic hub evolving theses.
-3. Synthesise and cite with `[[page-name]]`; flag when drawing on general knowledge.
-4. Write the answer as a dated markdown file to the scoped `Outputs/` folder: `wiki/projects/[name]/Outputs/` for project queries, `wiki/areas/[name]/Outputs/` for area queries, `wiki/resources/Outputs/` for resource queries, or root `Outputs/` for cross-cutting queries. Create the folder if needed.
-5. Propose promotion to a wiki page if it synthesises 3+ pages or surfaces a new connection — never promote silently.
 
 ## Customisation
 
