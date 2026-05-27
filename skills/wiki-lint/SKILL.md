@@ -100,6 +100,8 @@ Note total corrections in CHANGELOG.md.
 Pages with `status: stub` that now have 2+ source pages referencing them. List each with
 the sources that could support expansion. Do not expand silently — flag for the user's decision.
 
+To formally propose and apply status changes, run `wiki-consolidate` after this lint pass.
+
 ---
 
 ### Check 3 — Stale active pages
@@ -107,6 +109,8 @@ the sources that could support expansion. Do not expand silently — flag for th
 Pages with `status: active` not updated in 30+ days where a relevant source has been ingested
 since. Check the `updated:` field in frontmatter against today's date, then cross-reference
 CHANGELOG.md for relevant ingests. List which ingests were missed.
+
+To formally propose and apply status changes, run `wiki-consolidate` after this lint pass.
 
 ---
 
