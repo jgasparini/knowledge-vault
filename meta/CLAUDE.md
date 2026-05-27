@@ -70,7 +70,9 @@ Workflows are defined as skills in `skills/`:
 
 - `skills/wiki-setup/SKILL.md` — interactive scaffold for a new project
 - `skills/wiki-ingest/SKILL.md` — full 10-step ingest workflow
+- `skills/wiki-query/SKILL.md` — 6-step query workflow: scoped index-first reading, Outputs/ landing, gap analysis
 - `skills/wiki-lint/SKILL.md` — 8-check lint workflow with scripts
+- `skills/wiki-consolidate/SKILL.md` — semantic review: deduplication, lifecycle promotions, synthesis opportunities
 - `skills/writing-rules/SKILL.md` — house style guide; read before writing any wiki prose
 
 All skills read this file at runtime for schema details. If the schema
@@ -456,6 +458,8 @@ Related projects, areas, other people.
 
 Queries are how you extract value from the accumulated wiki.
 A good answer is a wiki page waiting to happen.
+
+See `skills/wiki-query/SKILL.md` for the full query workflow. The steps below are a summary.
 
 **Step 1 — Read the index.** Read `wiki/INDEX.md` first to identify
 relevant pages.
