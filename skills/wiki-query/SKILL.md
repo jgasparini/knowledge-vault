@@ -15,8 +15,8 @@ description: >
 
 ## Before you start
 
-Read `meta/CLAUDE.md` — specifically Section 2 (vault structure), Section 3 (page types),
-and Section 4 (query workflow). Today's date is needed for the output filename.
+Read `meta/CLAUDE.md` — specifically Section 2 (vault structure) and Section 3 (page types).
+Today's date is needed for the output filename.
 
 ---
 
@@ -41,7 +41,7 @@ Read only the index that matches the detected scope:
 | Scope | Index to read |
 |-------|--------------|
 | Project | `wiki/projects/[name]/INDEX.md` |
-| Area | `wiki/areas/[name]/` index page |
+| Area | The area's main page at `wiki/areas/[name].md` or `wiki/areas/[name]/_overview.md` if one exists |
 | Resource (concept/entity/topic) | Relevant section of `wiki/INDEX.md` |
 | Cross-cutting | Full `wiki/INDEX.md` |
 
@@ -83,6 +83,11 @@ Write the answer as a dated markdown file in the closest scoped folder:
 
 Filename: `YYYY-MM-DD-[brief-slug].md`
 
+The output file must include:
+- Frontmatter: `type: query`, `date: YYYY-MM-DD`, `query:` (the user's question), `scope:` (project/area/resource/cross-cutting)
+- `## Answer` — the synthesised response with citations
+- `## Gaps` — questions the wiki could not answer (or "None" if none)
+
 Create the `Outputs/` subfolder if it does not exist.
 
 Never answer a query inline without writing to `Outputs/`.
@@ -97,7 +102,7 @@ Two closing actions, both required:
 its own pages. File each as a new item in the relevant `QUESTIONS.md`:
 
 - Project-scoped query → `wiki/projects/[name]/QUESTIONS.md`
-- Area-scoped query → area QUESTIONS.md or root `wiki/QUESTIONS.md`
+- Area-scoped query → root `wiki/QUESTIONS.md`
 - Resource or cross-cutting → root `wiki/QUESTIONS.md`
 
 If there are no gaps, note that explicitly in the output file.
