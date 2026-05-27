@@ -68,14 +68,7 @@ When you're done, Claude creates `wiki/projects/ai-tools-research/` with everyth
 
 ### 5. Add a source
 
-Drop any file into the `inbox/` folder. It can be:
-
-- A PDF paper you downloaded
-- A saved article (as Markdown or plain text)
-- Notes you've already written
-- A web clip saved as a file
-
-Claude can read PDF, Markdown, and plain text files.
+Drop any file into the `inbox/` folder. See [Supported formats](#supported-formats) below for what Claude can read natively and what needs a conversion step first.
 
 ### 6. Ingest it
 
@@ -115,6 +108,23 @@ Tell Claude:
 > **"Lint the wiki"**
 
 Claude runs 8 structural checks — orphan pages, missing wikilinks, stale content, index drift, and more. It auto-fixes what it safely can and flags everything else for your decision. The checks run as bash scripts rather than Claude reading files directly: scripts execute in milliseconds with zero token cost, and are deterministic — they won't miss a broken link or vary between runs.
+
+---
+
+## Supported formats
+
+| Format | Extensions | Status |
+|--------|-----------|--------|
+| Markdown | `.md` | Native |
+| Plain text | `.txt` | Native |
+| PDF | `.pdf` | Native |
+| Images | `.png`, `.jpg`, `.jpeg`, `.gif`, `.webp` | Native — Claude reads them visually |
+| Jupyter notebooks | `.ipynb` | Native |
+| Word documents | `.docx` | Not native — export to PDF or paste content as `.md` |
+| PowerPoint | `.pptx`, `.ppt` | Not native — export to PDF or paste content as `.md` |
+| Email | `.eml`, `.msg` | Not native — forward body as `.txt` or paste inline |
+
+For not-natively-supported formats, the ingest skill supports inline content too: paste the text directly into chat and tell Claude to ingest it.
 
 ---
 
