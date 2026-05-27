@@ -6,9 +6,9 @@ description: >
   "search the wiki for X", or any question clearly directed at accumulated wiki
   knowledge rather than general knowledge.
   Runs a 6-step workflow: detect scope → read scoped index → read targeted pages →
-  synthesise and cite → write to scoped Outputs/ → gap analysis and promotion proposal.
+  synthesise and cite → write to scoped outputs/ → gap analysis and promotion proposal.
   Use this skill for every wiki query — it keeps context lean by reading only the
-  relevant index, ensures answers land in Outputs/, and routes gaps back to QUESTIONS.md.
+  relevant index, ensures answers land in outputs/, and routes gaps back to QUESTIONS.md.
 ---
 
 # Wiki Query
@@ -70,16 +70,16 @@ Answer the query using the wiki as source of truth:
 
 ---
 
-## Step 5 — Write to scoped Outputs/
+## Step 5 — Write to scoped outputs/
 
 Write the answer as a dated markdown file in the closest scoped folder:
 
-| Query scope | Output folder |
+| Query scope | output folder |
 |-------------|--------------|
-| Project | `wiki/projects/[name]/Outputs/` |
-| Area | `wiki/areas/[name]/Outputs/` |
-| Resource | `wiki/resources/Outputs/` |
-| Cross-cutting | root `Outputs/` |
+| Project | `wiki/projects/[name]/outputs/` |
+| Area | `wiki/areas/[name]/outputs/` |
+| Resource | `wiki/resources/outputs/` |
+| Cross-cutting | root `outputs/` |
 
 Filename: `YYYY-MM-DD-[brief-slug].md`
 
@@ -88,9 +88,9 @@ The output file must include:
 - `## Answer` — the synthesised response with citations
 - `## Gaps` — questions the wiki could not answer (or "None" if none)
 
-Create the `Outputs/` subfolder if it does not exist.
+Create the `outputs/` subfolder if it does not exist.
 
-Never answer a query inline without writing to `Outputs/`.
+Never answer a query inline without writing to `outputs/`.
 
 ---
 
@@ -120,7 +120,7 @@ Never promote silently. If the answer does not meet the threshold, do not propos
 
 ## Hard rules
 
-- Never answer a query inline without writing to `Outputs/`.
+- Never answer a query inline without writing to `outputs/`.
 - Never read the full root index when a scoped index suffices.
 - Always flag explicitly when drawing on general knowledge.
 - Never promote an output to a wiki page without explicit user confirmation.

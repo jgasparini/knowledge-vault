@@ -11,7 +11,7 @@
 #       When given, checks the project INDEX.md + root INDEX.md.
 #       When omitted, checks all INDEX.md files against all content pages.
 #
-# Output:
+# output:
 #   NOT_INDEXED <relative_path>        — content file not found in any INDEX.md
 #   BROKEN_ENTRY [link] in <index>    — INDEX.md entry with no corresponding file
 # Final line:

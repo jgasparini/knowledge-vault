@@ -48,7 +48,7 @@ Run:
 bash skills/wiki-lint/scripts/find-orphans.sh /path/to/wiki
 ```
 
-Output format: `ORPHAN <inbound_count> <relative_path>` per orphan, then `SUMMARY <total> <orphan_count>`.
+output format: `ORPHAN <inbound_count> <relative_path>` per orphan, then `SUMMARY <total> <orphan_count>`.
 
 **If project-scoped:** filter ORPHAN results to only pages listed in the project INDEX.md.
 
@@ -64,7 +64,7 @@ Run:
 bash skills/wiki-lint/scripts/find-missing-pages.sh /path/to/wiki
 ```
 
-Output format: `MISSING <ref_count> [[link-name]]` per missing page, then `SUMMARY`.
+output format: `MISSING <ref_count> [[link-name]]` per missing page, then `SUMMARY`.
 
 **If project-scoped:** filter MISSING results to links that appear in project pages.
 
@@ -83,7 +83,7 @@ bash skills/wiki-lint/scripts/check-index-drift.sh /path/to/wiki [projects/name]
 
 For project-scoped lint, pass the project subdirectory as the second argument.
 
-Output format: `NOT_INDEXED <path>` and `BROKEN_ENTRY [[link]] in <index>`, then `SUMMARY`.
+output format: `NOT_INDEXED <path>` and `BROKEN_ENTRY [[link]] in <index>`, then `SUMMARY`.
 
 Both types are auto-fixes:
 - **NOT_INDEXED**: add the page to the correct section of the relevant INDEX.md.
@@ -220,4 +220,4 @@ powershell -File skills\wiki-lint\scripts\find-orphans.ps1 C:\path\to\wiki
 powershell -File skills\wiki-lint\scripts\find-missing-pages.ps1 C:\path\to\wiki
 powershell -File skills\wiki-lint\scripts\check-index-drift.ps1 C:\path\to\wiki projects/ai-native-engineering
 ```
-Output format is identical — `ORPHAN`, `MISSING`, `NOT_INDEXED`, `BROKEN_ENTRY`, and `SUMMARY` lines — so the rest of the skill works unchanged on both platforms.
+output format is identical — `ORPHAN`, `MISSING`, `NOT_INDEXED`, `BROKEN_ENTRY`, and `SUMMARY` lines — so the rest of the skill works unchanged on both platforms.

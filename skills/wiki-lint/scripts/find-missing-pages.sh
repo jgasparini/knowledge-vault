@@ -6,7 +6,7 @@
 #
 # Always runs across the full wiki. Project scoping is done by the lint skill.
 #
-# Output (one line per missing page with 2+ references):
+# output (one line per missing page with 2+ references):
 #   MISSING <ref_count> [[link-name]]
 # Final line:
 #   SUMMARY links_checked missing_count

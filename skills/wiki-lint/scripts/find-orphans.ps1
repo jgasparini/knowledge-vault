@@ -7,7 +7,7 @@
 #
 # Always runs across the full wiki (inbound links must be checked globally).
 #
-# Output (one line per orphan):
+# output (one line per orphan):
 #   ORPHAN <inbound_count> <relative_path>
 # Final line:
 #   SUMMARY pages_checked orphan_count

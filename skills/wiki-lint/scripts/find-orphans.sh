@@ -8,7 +8,7 @@
 # Project scoping is done by the lint skill: run globally, filter results to
 # pages listed in the project INDEX.md.
 #
-# Output (one line per orphan):
+# output (one line per orphan):
 #   ORPHAN <inbound_count> <relative_path>
 # Final line:
 #   SUMMARY pages_checked orphan_count

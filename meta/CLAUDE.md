@@ -25,7 +25,7 @@ into the existing wiki — update pages, flag contradictions, strengthen
 cross-references. Do not treat each ingest as isolated.
 
 **The wiki is the output.** Summaries, analyses, and answers to good
-questions should be filed as wiki pages or promoted from Outputs/,
+questions should be filed as wiki pages or promoted from outputs/,
 not left in chat history.
 
 **You write; the human curates.** You maintain all wiki files. The
@@ -70,7 +70,7 @@ Workflows are defined as skills in `skills/`:
 
 - `skills/wiki-setup/SKILL.md` — interactive scaffold for a new project
 - `skills/wiki-ingest/SKILL.md` — full 10-step ingest workflow
-- `skills/wiki-query/SKILL.md` — 6-step query workflow: scoped index-first reading, Outputs/ landing, gap analysis
+- `skills/wiki-query/SKILL.md` — 6-step query workflow: scoped index-first reading, outputs/ landing, gap analysis
 - `skills/wiki-lint/SKILL.md` — 8-check lint workflow with scripts
 - `skills/wiki-consolidate/SKILL.md` — semantic review: deduplication, lifecycle promotions, synthesis opportunities
 - `skills/writing-rules/SKILL.md` — house style guide; read before writing any wiki prose
@@ -104,7 +104,7 @@ vault/
       topics/         ← broad topic hubs linking out to subtopics
     INDEX.md          ← project directory + global resources catalog
     QUESTIONS.md      ← cross-project questions only
-  Outputs/            ← query results, reports, analyses
+  outputs/            ← query results, reports, analyses
   archive/            ← completed, inactive, or low-signal material
   meta/
     CLAUDE.md         ← this file
@@ -143,10 +143,10 @@ knowledge nodes), tools, companies, AI models, research groups.
 evolving thesis — Claude's running synthesis of what the accumulated
 sources suggest about that domain. Updated on every relevant ingest.
 
-**Outputs/** — landing zone for query results, reports, and analyses.
-Scoped: project queries land in `wiki/projects/[name]/Outputs/`, area
-queries in `wiki/areas/[name]/Outputs/`, resource queries in
-`wiki/resources/Outputs/`, cross-cutting queries in root `Outputs/`.
+**outputs/** — landing zone for query results, reports, and analyses.
+Scoped: project queries land in `wiki/projects/[name]/outputs/`, area
+queries in `wiki/areas/[name]/outputs/`, resource queries in
+`wiki/resources/outputs/`, cross-cutting queries in root `outputs/`.
 Promoted to wiki pages only when Claude proposes and the human confirms.
 
 **archive/** — keep but stop maintaining. Searchable, never deleted.
@@ -471,15 +471,15 @@ including adjacent concepts and the evolving thesis on relevant topics.
 truth. Cite with `[[page-name]]`. Flag clearly when drawing on general
 knowledge instead.
 
-**Step 4 — Land in the scoped Outputs/.** The answer lands as a dated
-markdown file in the `Outputs/` folder closest to the query's scope:
+**Step 4 — Land in the scoped outputs/.** The answer lands as a dated
+markdown file in the `outputs/` folder closest to the query's scope:
 
-- Project-scoped query → `wiki/projects/[name]/Outputs/`
-- Area-scoped query → `wiki/areas/[name]/Outputs/`
-- Resource-scoped query (concept, entity, topic) → `wiki/resources/Outputs/`
-- Cross-cutting or ambiguous → root `Outputs/`
+- Project-scoped query → `wiki/projects/[name]/outputs/`
+- Area-scoped query → `wiki/areas/[name]/outputs/`
+- Resource-scoped query (concept, entity, topic) → `wiki/resources/outputs/`
+- Cross-cutting or ambiguous → root `outputs/`
 
-Create the `Outputs/` subfolder if it does not exist. This keeps
+Create the `outputs/` subfolder if it does not exist. This keeps
 query results co-located with the material they draw on, making
 patterns and compounding insights visible over time.
 

@@ -97,14 +97,14 @@ Once you've ingested a few sources, start asking:
 >
 > **"What should I read next to fill the gap on AI agents?"**
 
-Claude reads your wiki, synthesises an answer from what's actually in there, and files it in the `Outputs/` folder closest to the query's scope:
+Claude reads your wiki, synthesises an answer from what's actually in there, and files it in the `outputs/` folder closest to the query's scope:
 
-| Query scope | Output lands in |
+| Query scope | output lands in |
 |-------------|-----------------|
-| About a specific project | `wiki/projects/[name]/Outputs/` |
-| About an area | `wiki/areas/[name]/Outputs/` |
-| About a concept, entity, or topic | `wiki/resources/Outputs/` |
-| Cross-cutting or ambiguous | root `Outputs/` |
+| About a specific project | `wiki/projects/[name]/outputs/` |
+| About an area | `wiki/areas/[name]/outputs/` |
+| About a concept, entity, or topic | `wiki/resources/outputs/` |
+| Cross-cutting or ambiguous | root `outputs/` |
 
 This keeps your query history co-located with the material it draws on, so patterns and compounding insights are easy to spot over time. If the answer is substantial enough to become a permanent wiki page, Claude will ask before promoting it.
 
@@ -139,18 +139,18 @@ knowledge-vault/
   wiki/
     projects/
       [name]/         ← one folder per active research project
-        Outputs/      ← query results scoped to this project
+        outputs/      ← query results scoped to this project
     areas/
       [name]/         ← ongoing responsibilities (no end date)
-        Outputs/      ← query results scoped to this area
+        outputs/      ← query results scoped to this area
     resources/
       concepts/       ← mental models and patterns
       entities/       ← tools, companies, models, papers
       topics/         ← broad domain hubs with evolving theses
-      Outputs/        ← query results scoped to concepts/entities/topics
+      outputs/        ← query results scoped to concepts/entities/topics
     INDEX.md          ← project directory + global resource catalog
     QUESTIONS.md      ← cross-project open questions
-  Outputs/            ← cross-cutting query results and reports
+  outputs/            ← cross-cutting query results and reports
   archive/            ← completed or inactive material
   meta/
     CLAUDE.md         ← schema and rules (Claude reads this on every operation)
