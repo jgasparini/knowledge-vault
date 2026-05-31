@@ -1,7 +1,8 @@
 .DS_Store
 .obsidian/
 *.canvas
-wiki/
+wiki/*
+!wiki/.gitkeep
 archive/
 inbox/
 docs/
