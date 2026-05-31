@@ -13,7 +13,7 @@
 #   SUMMARY <files_checked> <files_flagged>
 
 WIKI="${1:?Usage: $0 /path/to/vault/wiki [days_threshold]}"
-WIKI="${WIKI%/}"
+while [[ "$WIKI" == */ ]]; do WIKI="${WIKI%/}"; done
 THRESHOLD="${2:-30}"
 
 if ! [[ "$THRESHOLD" =~ ^[0-9]+$ ]]; then
