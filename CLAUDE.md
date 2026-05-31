@@ -28,6 +28,7 @@ Five skills handle all workflows. Trigger them by invoking the `Skill` tool with
 bash skills/wiki-lint/scripts/find-orphans.sh /path/to/wiki
 bash skills/wiki-lint/scripts/find-missing-pages.sh /path/to/wiki
 bash skills/wiki-lint/scripts/check-index-drift.sh /path/to/wiki [projects/name]
+bash skills/wiki-lint/scripts/prune-questions.sh /path/to/wiki [days_threshold]
 ```
 
 **Windows 11** — PowerShell equivalents (require PowerShell 5.1+):
@@ -36,6 +37,7 @@ bash skills/wiki-lint/scripts/check-index-drift.sh /path/to/wiki [projects/name]
 powershell -File skills\wiki-lint\scripts\find-orphans.ps1 C:\path\to\wiki
 powershell -File skills\wiki-lint\scripts\find-missing-pages.ps1 C:\path\to\wiki
 powershell -File skills\wiki-lint\scripts\check-index-drift.ps1 C:\path\to\wiki [projects/name]
+powershell -File skills\wiki-lint\scripts\prune-questions.ps1 C:\path\to\wiki [days_threshold]
 ```
 
 ## Folder structure
