@@ -137,9 +137,34 @@ Flag with a one-sentence reason.
 For project-scoped lint: read `wiki/projects/[name]/QUESTIONS.md`.
 For global lint: read both the project and root QUESTIONS.md files.
 
-For each open item (`- [ ]`): check whether a wiki page now resolves it. If yes, close it
-(`- [x]`) with a page reference. If it has been open 60+ days without progress, flag as stale.
-Note closures in CHANGELOG.md.
+**Step A — Close resolved items (manual):** For each open item (`- [ ]`): check whether a wiki
+page now resolves it. If yes, close it (`- [x]`) with a page reference. If it has been open
+60+ days without progress, flag as stale. Note closures in CHANGELOG.md.
+
+**Step B — Prune old closed items (scripted):** Run:
+
+```bash
+bash skills/wiki-lint/scripts/prune-questions.sh /path/to/wiki
+```
+
+Output format:
+- `OVERCROWDED <closed_count> <open_count> <relpath>` — closed items outnumber open ones
+- `OLD_CLOSED <count> <relpath>` — closed items with a `*raised YYYY-MM-DD*` date ≥ 30 days old
+
+**If project-scoped:** filter results to the project QUESTIONS.md only.
+
+For each flagged file, move all `[x]` items that triggered the flag to a `## Archive` section
+at the very bottom of the file. Create the section if it doesn't exist:
+
+```markdown
+## Archive
+
+*Resolved questions pruned from the active view.*
+
+- [x] ...
+```
+
+Log each prune in CHANGELOG.md: `- Pruned N closed questions from [path] to Archive`.
 
 ---
 
@@ -167,7 +192,7 @@ Always produce the report in this exact format:
 **Archive candidates:** [n] found
 - [[page]] — reason: [one sentence]
 
-**QUESTIONS.md hygiene:** [n] items closed, [n] stale items flagged
+**QUESTIONS.md hygiene:** [n] items closed, [n] stale items flagged, [n] items archived
 
 **Index drift:** [n] entries added, [n] entries removed
 ```
@@ -185,7 +210,7 @@ Append one entry to `CHANGELOG.md` (newest first):
 - Missing pages: [n]
 - Orphans: [details or "none"]
 - Stubs promoted: [details or "none"]
-- QUESTIONS hygiene: [details or "none"]
+- QUESTIONS hygiene: [n closed, n stale, n archived — or "none"]
 - Index drift: [n entries added, n removed]
 ```
 
@@ -219,5 +244,6 @@ bash skills/wiki-lint/scripts/find-orphans.sh /path/to/wiki
 powershell -File skills\wiki-lint\scripts\find-orphans.ps1 C:\path\to\wiki
 powershell -File skills\wiki-lint\scripts\find-missing-pages.ps1 C:\path\to\wiki
 powershell -File skills\wiki-lint\scripts\check-index-drift.ps1 C:\path\to\wiki projects/ai-native-engineering
+powershell -File skills\wiki-lint\scripts\prune-questions.ps1 C:\path\to\wiki [days_threshold]
 ```
 output format is identical — `ORPHAN`, `MISSING`, `NOT_INDEXED`, `BROKEN_ENTRY`, and `SUMMARY` lines — so the rest of the skill works unchanged on both platforms.
