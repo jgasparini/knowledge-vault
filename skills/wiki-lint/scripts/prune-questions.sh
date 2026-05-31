@@ -13,7 +13,14 @@
 #   SUMMARY <files_checked> <files_flagged>
 
 WIKI="${1:?Usage: $0 /path/to/vault/wiki [days_threshold]}"
+WIKI="${WIKI%/}"
 THRESHOLD="${2:-30}"
+
+if ! [[ "$THRESHOLD" =~ ^[0-9]+$ ]]; then
+    echo "Error: days_threshold must be a non-negative integer" >&2
+    exit 1
+fi
+
 today=$(date +%s)
 
 files_checked=0
