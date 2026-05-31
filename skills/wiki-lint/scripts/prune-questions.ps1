@@ -17,6 +17,7 @@ param(
     [Parameter(Mandatory=$true, Position=0)]
     [string]$WikiPath,
     [Parameter(Position=1)]
+    [ValidateRange(0, [int]::MaxValue)]
     [int]$DaysThreshold = 30
 )
 
@@ -38,7 +39,7 @@ Get-ChildItem -Path $WikiPath -Filter "QUESTIONS.md" -Recurse -ErrorAction Silen
         $content = Get-Content -Path $file.FullName -Raw -Encoding UTF8 -ErrorAction SilentlyContinue
         if (-not $content) { return }
 
-        $lines = $content -split "`n"
+        $lines = $content -split '\r?\n'
 
         # Count open and closed items
         $openCount = ($lines | Where-Object { $_ -match '^\- \[ \]' } | Measure-Object).Count
