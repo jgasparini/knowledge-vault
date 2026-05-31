@@ -138,7 +138,10 @@ These are the phrases that trigger Claude's built-in workflows:
 |-------|-------------|--------------|
 | `wiki-setup` | "Set up a new project for [topic]" | Scaffolds the project folder, index, and navigation files |
 | `wiki-ingest` | "Ingest the inbox" or "Ingest [filename]" | Full 10-step ingest: read → extract insights → write pages → update registries |
+| `wiki-query` | "What does the wiki say about X?" | Searches the wiki, synthesises an answer from your notes, and files the output |
+| `wiki-consolidate` | "Consolidate the wiki" | Reviews for duplication, drift, and synthesis opportunities — proposes changes, nothing applied without confirmation |
 | `wiki-lint` | "Lint the wiki" or "Wiki health check" | 8-check structural health pass with auto-fixes |
+| `email-processor` | "Process my inbox" or "Triage my emails" | Reads your Outlook inbox, classifies emails into archive / unsubscribe / reply / keep, and acts only on what you approve |
 | `writing-rules` | *(applied automatically)* | House style guide — applied to all wiki prose |
 
 ### Folder structure
