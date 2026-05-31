@@ -16,7 +16,7 @@ Five skills handle all workflows. Trigger them by invoking the `Skill` tool with
 |-------|----------------|--------------|
 | `wiki-setup` | "set up a new project for [topic]" | Scaffolds project folder, `_overview.md`, `INDEX.md`, `QUESTIONS.md`, optional topic hub |
 | `wiki-ingest` | "ingest [filename]", "ingest the inbox", "add this to the wiki" | Full 10-step ingest: read → surface → structural check → write → update → create → verify links → move file → update registries → confirm |
-| `wiki-query` | "query the wiki", "what does the wiki say about X", "ask the wiki X" | 6-step query: detect scope → read scoped index → read targeted pages → synthesise and cite → write to outputs/ → gap analysis |
+| `wiki-query` | "query the wiki", "what does the wiki say about X", "ask the wiki X" | 6-step query: detect scope → read scoped index → read targeted pages → synthesise and cite → write to Outputs/ → gap analysis |
 | `wiki-consolidate` | "consolidate the wiki", "run a consolidation", "review the wiki for drift" | Semantic review: deduplication candidates, lifecycle promotions, synthesis opportunities — produces a proposal report, nothing changed without confirmation |
 | `wiki-lint` | "run a lint", "lint the wiki", "wiki health check" | 8-check health pass using bash scripts in `skills/wiki-lint/scripts/` |
 
