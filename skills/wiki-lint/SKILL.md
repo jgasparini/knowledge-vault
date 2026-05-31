@@ -237,6 +237,9 @@ runtime for schema details — if the schema changes, re-read before running che
 **macOS / Linux:** use the `.sh` scripts via `bash`:
 ```bash
 bash skills/wiki-lint/scripts/find-orphans.sh /path/to/wiki
+bash skills/wiki-lint/scripts/find-missing-pages.sh /path/to/wiki
+bash skills/wiki-lint/scripts/check-index-drift.sh /path/to/wiki [projects/name]
+bash skills/wiki-lint/scripts/prune-questions.sh /path/to/wiki [days_threshold]
 ```
 
 **Windows 11:** use the `.ps1` equivalents via PowerShell (5.1+):
