@@ -126,7 +126,10 @@ For each approved Archive item:
 For each approved Unsubscribe item, handle one at a time:
 1. State: "About to open the unsubscribe link for [sender name] — is that right?"
 2. After confirmation, open the URL: `open "[url]"` via Bash (macOS)
-3. Report: "Link opened for [sender]. The unsubscription may take a day or two to take effect."
+3. Report: "Unsubscribe link opened for [sender]. The unsubscription may take a day or two to take effect."
+4. Ask: "Would you like to delete this email from your inbox now? It will be permanently removed."
+5. If the user confirms: delete the email using `mcp__claude_ai_Zapier__microsoft_outlook_delete_email`; confirm "Deleted: [subject]".
+6. If the user declines or says nothing: skip silently and move to the next item.
 
 ### Draft Replies
 
@@ -162,7 +165,7 @@ After all approved actions are complete, give a short summary:
 ## Done
 
 - Archived: N emails
-- Unsubscribe links opened: N
+- Unsubscribe links opened: N (N deleted)
 - Drafts created in Outlook: N
 - Still in inbox (D / skipped): N
 ```
