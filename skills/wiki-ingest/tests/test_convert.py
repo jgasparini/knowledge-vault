@@ -3,6 +3,8 @@ import subprocess
 import sys
 import pytest
 
+from convert import convert
+
 
 # ---------------------------------------------------------------------------
 # .docx
@@ -16,9 +18,6 @@ def test_docx_extracts_paragraphs(tmp_path):
     src = tmp_path / "sample.docx"
     doc.save(src)
 
-    sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
-    from convert import convert
-
     result = convert(src)
     assert "Hello from Word" in result
     assert "Second paragraph" in result
@@ -26,8 +25,6 @@ def test_docx_extracts_paragraphs(tmp_path):
 
 def test_docx_skips_empty_paragraphs(tmp_path):
     from docx import Document
-    sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
-    from convert import convert
 
     doc = Document()
     doc.add_paragraph("Real text")
@@ -37,6 +34,8 @@ def test_docx_skips_empty_paragraphs(tmp_path):
     doc.save(src)
 
     result = convert(src)
+    assert "Real text" in result
+    assert "More text" in result
     assert "\n\n\n" not in result  # no double-blank lines from empty paras
 
 
@@ -46,9 +45,6 @@ def test_docx_skips_empty_paragraphs(tmp_path):
 
 def test_pptx_extracts_text_frames(tmp_path):
     from pptx import Presentation
-    from pptx.util import Inches
-    sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
-    from convert import convert
 
     prs = Presentation()
     slide = prs.slides.add_slide(prs.slide_layouts[1])
@@ -63,8 +59,6 @@ def test_pptx_extracts_text_frames(tmp_path):
 
 def test_pptx_includes_speaker_notes(tmp_path):
     from pptx import Presentation
-    sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
-    from convert import convert
 
     prs = Presentation()
     slide = prs.slides.add_slide(prs.slide_layouts[5])
@@ -82,9 +76,6 @@ def test_pptx_includes_speaker_notes(tmp_path):
 # ---------------------------------------------------------------------------
 
 def test_eml_extracts_body_and_headers(tmp_path):
-    sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
-    from convert import convert
-
     raw = (
         b"From: alice@example.com\r\n"
         b"To: bob@example.com\r\n"
@@ -104,9 +95,6 @@ def test_eml_extracts_body_and_headers(tmp_path):
 
 
 def test_eml_multipart_returns_text_plain(tmp_path):
-    sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
-    from convert import convert
-
     raw = (
         b"From: sender@example.com\r\n"
         b"Subject: Multipart\r\n"
@@ -135,9 +123,6 @@ def test_eml_multipart_returns_text_plain(tmp_path):
 # ---------------------------------------------------------------------------
 
 def test_unsupported_format_raises_value_error(tmp_path):
-    sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
-    from convert import convert
-
     src = tmp_path / "mystery.xyz"
     src.write_text("content")
     with pytest.raises(ValueError, match="Unsupported format"):
@@ -165,6 +150,7 @@ def test_cli_writes_md_file_and_prints_path(tmp_path):
     assert out_path.exists()
     assert out_path.suffix == ".md"
     assert "CLI test paragraph" in out_path.read_text()
+    assert out_path.parent == tmp_path
 
 
 def test_cli_bad_usage_exits_nonzero():
