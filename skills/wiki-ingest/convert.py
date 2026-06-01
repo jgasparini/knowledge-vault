@@ -57,26 +57,29 @@ def convert(src: pathlib.Path) -> str:
             f"Date: {msg.get('Date', '')}",
             "",
         ]
+        body = ""
         for part in msg.walk():
             if part.get_content_type() == "text/plain":
                 payload = part.get_payload(decode=True)
                 if payload:
-                    parts.append(payload.decode(errors="replace"))
+                    body = payload.decode(errors="replace")
                     break
+        if body:
+            parts.append(body)
         return "\n".join(parts)
 
     if ext == ".msg":
         _require("extract_msg", "extract-msg", ext)
         import extract_msg
-        m = extract_msg.openMsg(src)
-        return "\n".join([
-            f"From: {getattr(m, 'sender', '')}",
-            f"To: {getattr(m, 'to', '')}",
-            f"Subject: {getattr(m, 'subject', '')}",
-            f"Date: {getattr(m, 'date', '')}",
-            "",
-            m.body or "",
-        ])
+        with extract_msg.openMsg(src) as m:
+            return "\n".join([
+                f"From: {getattr(m, 'sender', '')}",
+                f"To: {getattr(m, 'to', '')}",
+                f"Subject: {getattr(m, 'subject', '')}",
+                f"Date: {getattr(m, 'date', '')}",
+                "",
+                m.body or "",
+            ])
 
     raise ValueError(f"Unsupported format: {ext}")
 
