@@ -44,6 +44,28 @@ Work through these steps in order. Do not skip ahead or compress steps together.
 
 ---
 
+### Step 0 — Convert (if needed)
+
+Before reading the file, check its extension. If it is `.docx`, `.pptx`, `.ppt`, `.eml`,
+or `.msg`, run the conversion script to produce a readable `.md` file:
+
+```bash
+python skills/wiki-ingest/convert.py inbox/<filename>
+```
+
+The script prints the path of the output file (e.g. `inbox/filename.md`). Proceed with
+that `.md` file in Step 1 instead of the original.
+
+If the script exits with an error about a missing dependency, show the user the install
+command it printed and stop. Do not proceed until the dependency is installed.
+
+If the file extension is anything else (`.md`, `.txt`, `.pdf`, images, notebooks), skip
+this step entirely.
+
+Record the original file extension — you will need it in Step 4 to set `source-type`.
+
+---
+
 ### Step 1 — Read
 
 Read the source file in full. No output yet. If the file is unreadable (corrupt, wrong
@@ -101,7 +123,14 @@ Example: `my-source-title-2025.md`
 
 The page must include:
 - Frontmatter with `type: source`, `status: processed`, today's date, `origin:` (URL or
-  inbox filename), `project:` field
+  inbox filename), `project:` field, and `source-type:` set according to the original file
+  format:
+  - `.docx` → `word-doc`
+  - `.pptx` / `.ppt` → `powerpoint`
+  - `.eml` / `.msg` → `email`
+  - `.pdf` → `pdf`
+  - `.md`, `.txt` → `markdown`
+  - other / inline → `web` or `inline` as appropriate
 - Summary (one paragraph)
 - Key insights (3–7 bullets, distilled signal not paraphrase)
 - Contradictions or tensions (cross-reference any conflicts with existing wiki pages — in
