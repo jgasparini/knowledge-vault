@@ -10,7 +10,7 @@ The authoritative schema lives in `meta/CLAUDE.md`. Read it before any operation
 
 ## Skills
 
-Five skills handle all workflows. Trigger them by invoking the `Skill` tool with the appropriate name:
+Six skills handle all workflows. Trigger them by invoking the `Skill` tool with the appropriate name:
 
 | Skill | Trigger phrases | What it does |
 |-------|----------------|--------------|
@@ -19,6 +19,7 @@ Five skills handle all workflows. Trigger them by invoking the `Skill` tool with
 | `wiki-query` | "query the wiki", "what does the wiki say about X", "ask the wiki X" | 6-step query: detect scope → read scoped index → read targeted pages → synthesise and cite → write to Outputs/ → gap analysis |
 | `wiki-consolidate` | "consolidate the wiki", "run a consolidation", "review the wiki for drift" | Semantic review: deduplication candidates, lifecycle promotions, synthesis opportunities — produces a proposal report, nothing changed without confirmation |
 | `wiki-lint` | "run a lint", "lint the wiki", "wiki health check" | 8-check health pass using bash scripts in `skills/wiki-lint/scripts/` |
+| `improve-system` | "improve-system", "audit notes", "improve that skill", "capture this experience", "mine sessions", "fill in about me" | 5-mode meta-maintenance: Audit / Skill Review / Experience / Historical Review / Foundation — detects mode from context |
 
 ## Lint scripts
 

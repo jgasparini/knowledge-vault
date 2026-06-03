@@ -1,6 +1,11 @@
 # CHANGELOG
 
 Running log of all librarian operations. Newest entry at the top.
+
+## 2026-06-01 — Structural | Create health area
+- Area created: [[health/health]]
+- wiki/INDEX.md updated: Areas section added
+- Note: stub page, no sources ingested yet
 One entry per operation: ingest, query promotion, lint pass, restructure.
 
 Format:
