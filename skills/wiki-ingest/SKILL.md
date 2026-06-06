@@ -125,8 +125,9 @@ Example: `my-source-title-2025.md`
 
 The page must include:
 - Frontmatter with `type: source`, `status: processed`, today's date, `origin:` (URL or
-  inbox filename), `project:` field, and `source-type:` set according to the original file
-  format:
+  inbox filename), `project:` field, `source-type:` set according to the original file
+  format, and `reliability:` set according to source credibility (see `meta/CLAUDE.md`
+  Section 3.1 for the four values and decision rules):
   - `.docx` → `word-doc`
   - `.pptx` / `.ppt` → `powerpoint`
   - `.eml` / `.msg` → `email`

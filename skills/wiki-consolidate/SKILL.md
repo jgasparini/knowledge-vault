@@ -41,7 +41,8 @@ entity pages that cover the same thing from different angles.
 For each candidate pair:
 1. Name both pages with wikilinks
 2. Quote the overlapping claim (one sentence from each page)
-3. Propose a merge direction — which page survives, which becomes a redirect stub
+3. Note the `reliability:` value of each page's source(s) — this gives the user a basis for deciding which framing to preserve in the merged page
+4. Propose a merge direction — which page survives, which becomes a redirect stub
 
 Do not merge anything without explicit user confirmation.
 
@@ -123,7 +124,7 @@ For each approved item, apply the following:
 **Deduplication merge:** fold the content of the retiring page into the surviving page using this approach:
 - Merge sections by type: deepen definitions, add complementary examples, preserve both perspectives if claims conflict rather than silently dropping one
 - Reconcile frontmatter: merge the `sources:` lists, set `updated:` to today's date, keep the higher status value
-- Cross-reference any conflicting claims in both directions (do not resolve them — let them coexist)
+- Cross-reference any conflicting claims in both directions (do not resolve them — let them coexist). When cross-referencing, note the `reliability:` value of each source so the reader can weigh the tension appropriately
 Replace the retiring page's body with a one-line redirect (`See [[surviving-page]]`), set its `status: archived`, and update all inbound wikilinks to point to the surviving page.
 
 **Status change:** update the `status:` field in frontmatter and set `updated:` to today's date.

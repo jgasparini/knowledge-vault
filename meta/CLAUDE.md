@@ -185,10 +185,17 @@ status: processed
 created: YYYY-MM-DD
 tags: []
 source-type: article|pdf|book-chapter|meeting|transcript|video
+reliability: primary|practitioner|secondary|speculative
 origin: URL or filename in inbox/
 project:
 ---
 ```
+
+**Reliability values:**
+- `primary` — original research, primary data, official documentation, direct first-person accounts (e.g. DORA survey data, NCSC advisories, clinic letters, a company's own engineering blog)
+- `practitioner` — credible secondary accounts from named practitioners with verifiable direct experience (e.g. an engineering lead describing their own team's practice, a named executive's case study)
+- `secondary` — analysis or synthesis by credible third parties without direct access (e.g. analyst reports, journalist recaps, survey analyses)
+- `speculative` — opinion, prediction, marketing material, or thin signal (e.g. vendor blog posts with unnamed case studies, prediction pieces)
 
 **Page structure:**
 ```
