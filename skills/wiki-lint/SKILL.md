@@ -216,6 +216,10 @@ Append one entry to `CHANGELOG.md` (newest first):
 
 ---
 
+Update `meta/health.md`: reset `ingest-count` to 0 and set `last-lint` to today's date.
+
+---
+
 ## Lint rules
 
 - Run scripted checks first (1, 5, 8), then manual checks (2, 3, 4, 6, 7). Report only after all 8.

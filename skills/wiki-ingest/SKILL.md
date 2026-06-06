@@ -217,7 +217,14 @@ Prepend one new entry at the top (newest first):
 - Note: [source provided inline / file moved from inbox/]
 ```
 
-If you reach the end of the workflow and have not updated all four files, go back and do
+**`meta/health.md`**
+Read the file. Increment `ingest-count` by 1 and write the updated value back. If
+`ingest-count` is now 15 or more, emit this warning at the end of Step 9 before continuing
+to Step 10:
+
+> ⚠️ *`ingest-count` ingests since last lint — consider running `wiki-lint` before the next ingest.*
+
+If you reach the end of the workflow and have not updated all five files, go back and do
 it before confirming. Do not confirm without completing this step.
 
 ---

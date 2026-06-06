@@ -136,6 +136,7 @@ Ensure the new page has at least two inbound wikilinks before finishing.
 **Registry updates:** After applying any approved changes, update the following files:
 - Remove any merged/archived pages from the relevant `INDEX.md` entries, or note them as redirects
 - If a new concept page was created, add it to the project `INDEX.md` and root `wiki/INDEX.md` per the ingest rules
+- Update `meta/health.md`: set `last-consolidation` to today's date
 
 Append one entry to `CHANGELOG.md` (newest first):
 
