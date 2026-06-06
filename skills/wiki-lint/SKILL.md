@@ -218,6 +218,21 @@ Append one entry to `CHANGELOG.md` (newest first):
 
 Update `meta/health.md`: reset `ingest-count` to 0 and set `last-lint` to today's date.
 
+**Trim CHANGELOG.md (archive entries older than 90 days):**
+
+Scan `CHANGELOG.md` for entries whose date header (`## YYYY-MM-DD — …`) is more than 90
+days before today. If any are found:
+
+1. Group them by year. For each year, append those entries to
+   `archive/CHANGELOG-[year].md` (create the file if it doesn't exist, with a
+   `# CHANGELOG Archive — [year]` heading).
+2. Remove the archived entries from `CHANGELOG.md`, preserving the header and all
+   entries within the 90-day window.
+3. Note the trim in the lint CHANGELOG entry already written: append
+   `- CHANGELOG trimmed: [n] entries archived to archive/CHANGELOG-[year].md`
+
+If no entries are older than 90 days, skip this step silently.
+
 ---
 
 ## Lint rules

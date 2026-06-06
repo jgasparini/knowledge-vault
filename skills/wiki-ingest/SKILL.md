@@ -71,9 +71,11 @@ Record the original file extension — you will need it in Step 4 to set `source
 Read the source file in full. No output yet. If the file is unreadable (corrupt, wrong
 format, empty), stop and tell the user.
 
-If "ingest the inbox" was the trigger, list all files in `inbox/` and compare against
-`CHANGELOG.md` to identify which have not yet been ingested. Process one at a time unless
-instructed otherwise.
+If "ingest the inbox" was the trigger, list all files in `inbox/` and identify which have
+not yet been ingested by checking whether a matching raw source file already exists anywhere
+in `wiki/**/sources/`. A file is already ingested if its filename appears in any sources/
+folder. Do not use CHANGELOG.md for this check — it grows unbounded and is unreliable for
+large vaults. Process one file at a time unless instructed otherwise.
 
 ---
 
