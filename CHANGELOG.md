@@ -2,6 +2,19 @@
 
 Running log of all librarian operations. Newest entry at the top.
 
+## 2026-06-07 — Consolidation pass [global]
+- Duplicates merged: none
+- Status changes: none
+- Synthesis actions: 3 (cross-area links added)
+- Cross-area links added: 3 — [[agent-containment]] and [[multi-agent-coordination]] added to both [[ai-security/ai-security]] and [[ai-native-engineering/ai-native-engineering]] Key resources (sources filed in the engineering area; threat-surface content — blast radius, supply chain, trust escalation, privilege inheritance — squarely security-area territory); [[human-agent-oversight]] added to [[ai-security/ai-security]] Key resources (Forrester names "documented human oversight between AI discovery and action" as a coming compliance field). Reciprocal links added to each concept's Connections section pointing to both area overviews.
+
+## 2026-06-07 — Ingest | Fine-tuning hallucination research (2 sources)
+- Pages created: [[does-fine-tuning-encourage-hallucinations-2024]], [[understanding-new-knowledge-induced-hallucinations-2025]] (source summary pages)
+- Pages updated: [[claude-code]] (fine-tuning anti-pattern section deepened with primary citation chain — linear new-knowledge → hallucination relationship, unfamiliarity-vs-proportion mechanism, cross-task propagation, late-training mitigation), [[ai-native-engineering]] (evolving thesis — fourteenth signal closing the open question), wiki/areas/ai-native-engineering/INDEX.md, wiki/areas/ai-native-engineering/QUESTIONS.md
+- Structural suggestions: none — both sources fit the existing [[ai-native-engineering]] area and deepen the existing [[claude-code]] fine-tuning anti-pattern note rather than requiring new structure
+- Contradictions cross-referenced: none — both sources corroborate the ICL-only position in [[anthropic-london-customising-agents-at-scale-2026]], converting it from an asserted to an evidenced claim
+- Note: traced and ingested in response to the open question raised 2026-05-26 ("the Anthropic speaker references late 2025 papers... these papers have not been ingested") — resolved [[does-fine-tuning-encourage-hallucinations-2024]] (Gekhman et al., EMNLP 2024 — the foundational study, predating "late 2025" but establishing the linear relationship) and [[understanding-new-knowledge-induced-hallucinations-2025]] (Dang et al., submitted 2025-11-04 — the mechanism study, the most likely "late 2025" reference); files moved from inbox/ to wiki/areas/ai-native-engineering/sources/
+
 ## 2026-06-07 — Schema | Domain-aware lint staleness threshold (resolves issue #11)
 - meta/CLAUDE.md Section 3.4 — added optional `decay-rate: fast|slow|stable` field to topic
   hub frontmatter (fast = 45-day, slow = 90-day, stable = 180-day staleness threshold; absent
