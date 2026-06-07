@@ -10,7 +10,7 @@ The authoritative schema lives in `meta/CLAUDE.md`. Read it before any operation
 
 ## Skills
 
-Nine skills handle all workflows. Trigger them by invoking the `Skill` tool with the appropriate name:
+Ten skills handle all workflows. Trigger them by invoking the `Skill` tool with the appropriate name:
 
 | Skill | Trigger phrases | What it does |
 |-------|----------------|--------------|
@@ -23,6 +23,7 @@ Nine skills handle all workflows. Trigger them by invoking the `Skill` tool with
 | `ask-the-board` | "/ask-the-board [decision]", "what would the board say about X", "ask Nicole and Phil" | Surfaces Nicole Forsgren's and Phil Venables's perspectives on a decision in their own voice, with explicit agreements and divergences |
 | `establish-advisors` | "/establish-advisors", "add a new advisor", "who else should be on the board", "who should join the board" | Reads the vault to diagnose knowledge gaps, recommends advisors whose published work addresses those gaps, ingests their 5 best pieces, and updates `ask-the-board` |
 | `thinking-partner` | "let's think through X", "I'm just exploring", "thinking mode on X" | Open-ended ideation mode — hard-blocked from outlines, drafts, or wiki pages; asks sharp questions, surfaces wiki connections, and keeps a running notes log; hands off to `wiki-ingest`/`wiki-query`/drafting only on explicit signal |
+| `catch-me-up` | "catch me up", "where did I leave off [on X]", "what have I been doing the last N days" | Reconstructs context after an interruption: reads CHANGELOG.md for the relevant window, pulls the project's decisions log and open questions if scoped, and delivers a short conversational re-entry briefing — nothing is filed to outputs/ |
 
 ## Lint scripts
 
