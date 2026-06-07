@@ -142,6 +142,7 @@ These are the phrases that trigger Claude's built-in workflows:
 | `wiki-consolidate` | "Consolidate the wiki" | Reviews for duplication, drift, and synthesis opportunities — proposes changes, nothing applied without confirmation |
 | `wiki-lint` | "Lint the wiki" or "Wiki health check" | 8-check structural health pass with auto-fixes |
 | `catch-me-up` | "Catch me up" or "Where did I leave off on [project]?" | Reconstructs context after an interruption: scans the changelog for the relevant window, pulls the project's decisions log and open questions, and gives you a short conversational briefing — nothing is filed |
+| `thinking-partner` | "Let's think through X" or "I'm just exploring [topic]" | Open-ended ideation mode — hard-blocked from drafting outlines, prose, or wiki pages; asks sharp questions, surfaces wiki connections, and keeps a running notes log; hands off to ingest/query/drafting only when you say so |
 | `improve-system` | "Audit notes", "improve that skill", "capture this experience", "mine my sessions", "fill in about me" | 5-mode meta-maintenance: Audit / Skill Review / Experience / Historical Review / Foundation |
 | `ask-the-board` | "/ask-the-board [decision]" or "What would the board say about X?" | Surfaces each advisor's perspective on a decision in their own voice, then flags where they agree and diverge |
 | `establish-advisors` | "/establish-advisors" or "Who else should be on the board?" | Diagnoses knowledge gaps in your vault and recommends advisors whose published work addresses them |
