@@ -302,8 +302,15 @@ created: YYYY-MM-DD
 updated: YYYY-MM-DD
 tags: []
 sources: []
+decay-rate: fast|slow|stable
 ---
 ```
+
+`decay-rate` is optional and controls the staleness threshold the lint Check 3 applies to
+this hub and the concept/entity pages under it: `fast` → 45 days (e.g. AI security, AI
+tooling, agentic systems), `slow` → 90 days (e.g. organisational practice, career
+frameworks), `stable` → 180 days (e.g. core banking, fundamental concepts). If the field
+is absent, the default 30-day threshold applies.
 
 **Page structure:**
 ```

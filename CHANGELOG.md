@@ -2,6 +2,21 @@
 
 Running log of all librarian operations. Newest entry at the top.
 
+## 2026-06-07 — Schema | Domain-aware lint staleness threshold (resolves issue #11)
+- meta/CLAUDE.md Section 3.4 — added optional `decay-rate: fast|slow|stable` field to topic
+  hub frontmatter (fast = 45-day, slow = 90-day, stable = 180-day staleness threshold; absent
+  field keeps the 30-day default)
+- Topic hubs updated with `decay-rate`: [[agentic-systems]] (fast), [[ai-native-engineering]]
+  (fast), [[ai-security]] (fast), [[personal-ai-operating-system]] (slow)
+- skills/wiki-lint/SKILL.md Check 3 rewritten — resolves the threshold per page: topic hubs
+  use their own `decay-rate`; concepts/entities inherit it from the parent hub found via
+  reverse wikilink lookup in "Key concepts"/"Key entities" sections (no clear single parent →
+  30-day default); everything else keeps the 30-day default
+- Note: flat 30-day threshold was producing false positives for slow-moving domains (e.g.
+  core banking) and could miss drift in fast-moving ones (e.g. AI security); no new
+  `parent-topic` frontmatter field added to concept/entity pages — existing hub→page wikilinks
+  are reused for the reverse lookup
+
 ## 2026-06-01 — Structural | Create health area
 - Area created: [[health/health]]
 - wiki/INDEX.md updated: Areas section added
