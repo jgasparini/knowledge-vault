@@ -10,7 +10,7 @@ The authoritative schema lives in `meta/CLAUDE.md`. Read it before any operation
 
 ## Skills
 
-Eight skills handle all workflows. Trigger them by invoking the `Skill` tool with the appropriate name:
+Nine skills handle all workflows. Trigger them by invoking the `Skill` tool with the appropriate name:
 
 | Skill | Trigger phrases | What it does |
 |-------|----------------|--------------|
@@ -22,6 +22,7 @@ Eight skills handle all workflows. Trigger them by invoking the `Skill` tool wit
 | `improve-system` | "improve-system", "audit notes", "improve that skill", "capture this experience", "mine sessions", "fill in about me" | 5-mode meta-maintenance: Audit / Skill Review / Experience / Historical Review / Foundation — detects mode from context |
 | `ask-the-board` | "/ask-the-board [decision]", "what would the board say about X", "ask Nicole and Phil" | Surfaces Nicole Forsgren's and Phil Venables's perspectives on a decision in their own voice, with explicit agreements and divergences |
 | `establish-advisors` | "/establish-advisors", "add a new advisor", "who else should be on the board", "who should join the board" | Reads the vault to diagnose knowledge gaps, recommends advisors whose published work addresses those gaps, ingests their 5 best pieces, and updates `ask-the-board` |
+| `catch-me-up` | "catch me up", "where did I leave off [on X]", "what have I been doing the last N days" | Reconstructs context after an interruption: reads CHANGELOG.md for the relevant window, pulls the project's decisions log and open questions if scoped, and delivers a short conversational re-entry briefing — nothing is filed to outputs/ |
 
 ## Lint scripts
 
