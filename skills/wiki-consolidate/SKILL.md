@@ -2,11 +2,12 @@
 name: wiki-consolidate
 description: >
   Semantic review of the wiki. Triggers when the user says "consolidate the wiki",
-  "run a consolidation", "consolidation pass", "review the wiki for drift", or
-  "cleanup pass".
-  Runs three checks: deduplication candidates (pages covering the same ground),
-  lifecycle promotions (status changes that are overdue), and synthesis opportunities
-  (concepts ready for a new hub or cross-reference).
+  "run a consolidation", "consolidation pass", "review the wiki for drift",
+  "cleanup pass", "cross-area synthesis", or "consolidate across areas".
+  Runs four checks: deduplication candidates (pages covering the same ground),
+  lifecycle promotions (status changes that are overdue), synthesis opportunities
+  (concepts ready for a new hub or cross-reference), and cross-area concept overlaps
+  (concepts or entities that span two or more areas without a connecting wikilink).
   Produces a proposal report — nothing is changed without explicit user confirmation.
   Complements wiki-lint (structural checks) with semantic review. Run every 30–50
   ingests, or whenever the wiki feels like it's drifting semantically.
@@ -28,7 +29,12 @@ Today's date is needed for the report header and CHANGELOG entry.
 
 - **Project-scoped** (default): "consolidate [project name]". Check pages within that
   project plus any concepts or entities it references.
-- **Global**: "consolidate all" or "full consolidation". All pages across all projects.
+- **Global**: "consolidate all" or "full consolidation". All pages across all projects
+  — also runs the cross-area check (Check 4) automatically, since a full pass should
+  surface area silos for free.
+- **Cross-area**: "cross-area synthesis" or "consolidate across areas". Runs Check 4
+  only — scans all concept and entity pages plus all area overview pages
+  (`wiki/areas/*/[area-name].md`). Does not require project scoping.
 
 ---
 
@@ -90,6 +96,52 @@ confirmation regardless of how clear the synthesis seems.
 
 ---
 
+## Check 4 — Cross-area concept overlaps
+
+Concept and entity pages have no `area:` frontmatter field — they're global resources —
+so this check can't be pure frontmatter-matching. It needs the same two-layer approach
+as Check 3: a cheap mechanical shortlist, then semantic judgment to confirm the overlap
+is real.
+
+**Layer 1 — mechanical shortlist** (cheap, catches the obvious cases):
+1. List `wiki/areas/*/sources/` for every area to build a `source filename → area` map
+   (do this for all areas, including any that lack an `INDEX.md`).
+2. For every page in `wiki/resources/concepts/` and `wiki/resources/entities/`, resolve
+   its `sources:` entries against the map and note the distinct areas its sources come
+   from, and separately note which areas already link to it from their `## Key
+   resources`. Either signal spanning 2+ areas earns a place on the shortlist.
+
+**Layer 2 — semantic confirmation** (judgment, catches the cases Layer 1 misses):
+A concept's *sources* can all sit in one area's folder while its *subject matter* is
+clearly relevant to another — e.g. a concept about oversight and containment whose
+sources were filed under `ai-native-engineering` is still substantively relevant to
+`ai-security`. So beyond the shortlist, read each area's `## What this covers` /
+`## Current focus` and skim its source corpus, and ask: does this concept's theme
+recur in an area that doesn't yet link to it? Promote it to a candidate if so — name
+the specific source(s) or passages that show the thematic fit, the same way Check 3
+cites co-occurrence evidence.
+
+Either path lands a page on the candidate list; only flag pages that span **2 or more**
+areas.
+
+For each candidate:
+1. Name the concept or entity (wikilink) and the areas it spans (wikilink to each
+   area's overview page, e.g. `[[ai-security/ai-security]]`)
+2. Check whether a wikilink already exists in each area's `## Key resources` section
+   and in the page's own `## Connections`/`## How it connects` section — note whether
+   it's missing in both areas, missing in one, or present but not reciprocated
+3. Propose one of:
+   - Add the wikilink to the area overview(s) missing it, and/or to the concept's
+     `## Connections`/`## How it connects` section
+   - If no existing page captures the shared idea, propose a new concept page
+     (subject to the same two-inbound-wikilinks rule as Check 3)
+   - A topic hub, if the overlap is broad enough to warrant one — requires explicit
+     user confirmation regardless of how clear the synthesis seems
+
+Do not add links or create anything without confirmation.
+
+---
+
 ## Report format
 
 Always produce the report in this exact format before asking for confirmation:
@@ -109,6 +161,9 @@ Always produce the report in this exact format before asking for confirmation:
 **Synthesis opportunities:** [n] found
 - [[concept-a]] + [[entity-b]] — co-appear in [[src-1]], [[src-2]], [[src-3]]
   Proposed: wikilink between existing pages
+
+**Cross-area concept overlaps:** [n] found
+- [[concept]] — referenced by [[area-a]] and [[area-b]]; proposed: add link in both area overview pages
 ```
 
 If a category is clean, write `[n] found` with n=0 — do not omit the category.
@@ -134,6 +189,12 @@ Ensure the new page has at least two inbound wikilinks before finishing.
 
 **Synthesis — wikilink:** add the link in both pages under the section defined for that page type in `meta/CLAUDE.md` Section 3 (concepts use `## How it connects`, entities use `## Connections`). If the section is missing from a page, create it.
 
+**Cross-area wikilink:** add the link to the named area overview's `## Key resources`
+section, and to the concept or entity page's `## Connections`/`## How it connects`
+section (creating either section if missing — same pattern as the synthesis wikilink
+above). A cross-area overlap that warrants a new concept page follows the
+**Synthesis — new concept page** procedure verbatim.
+
 **Registry updates:** After applying any approved changes, update the following files:
 - Remove any merged/archived pages from the relevant `INDEX.md` entries, or note them as redirects
 - If a new concept page was created, add it to the project `INDEX.md` and root `wiki/INDEX.md` per the ingest rules
@@ -148,7 +209,22 @@ Append one entry to `CHANGELOG.md` (newest first):
 - Synthesis actions: [n or "none"]
 ```
 
-If all three checks find zero items, still append the CHANGELOG entry with all fields set to "none", and state clearly in the report: "Wiki is semantically clean as of YYYY-MM-DD — no action needed."
+For a `[cross-area]` pass, add a fourth line:
+
+```
+## YYYY-MM-DD — Consolidation pass [cross-area]
+- Duplicates merged: none
+- Status changes: none
+- Synthesis actions: none
+- Cross-area links added: [n or "none"]
+```
+
+(Duplicates/status/synthesis stay "none" for a cross-area-only run since Checks 1–3
+don't execute in that scope.) For a `[global]` pass that includes Check 4, fold its
+count into the existing **Synthesis actions** line rather than adding a new field —
+keep the established `[global]` format intact.
+
+If all checks that ran for the chosen scope find zero items, still append the CHANGELOG entry with all fields set to "none", and state clearly in the report: "Wiki is semantically clean as of YYYY-MM-DD — no action needed."
 
 ---
 
