@@ -10,7 +10,7 @@ The authoritative schema lives in `meta/CLAUDE.md`. Read it before any operation
 
 ## Skills
 
-Six skills handle all workflows. Trigger them by invoking the `Skill` tool with the appropriate name:
+Eight skills handle all workflows. Trigger them by invoking the `Skill` tool with the appropriate name:
 
 | Skill | Trigger phrases | What it does |
 |-------|----------------|--------------|
@@ -20,6 +20,8 @@ Six skills handle all workflows. Trigger them by invoking the `Skill` tool with 
 | `wiki-consolidate` | "consolidate the wiki", "run a consolidation", "review the wiki for drift" | Semantic review: deduplication candidates, lifecycle promotions, synthesis opportunities — produces a proposal report, nothing changed without confirmation |
 | `wiki-lint` | "run a lint", "lint the wiki", "wiki health check" | 8-check health pass using bash scripts in `skills/wiki-lint/scripts/` |
 | `improve-system` | "improve-system", "audit notes", "improve that skill", "capture this experience", "mine sessions", "fill in about me" | 5-mode meta-maintenance: Audit / Skill Review / Experience / Historical Review / Foundation — detects mode from context |
+| `ask-the-board` | "/ask-the-board [decision]", "what would the board say about X", "ask Nicole and Phil" | Surfaces Nicole Forsgren's and Phil Venables's perspectives on a decision in their own voice, with explicit agreements and divergences |
+| `establish-advisors` | "/establish-advisors", "add a new advisor", "who else should be on the board", "who should join the board" | Reads the vault to diagnose knowledge gaps, recommends advisors whose published work addresses those gaps, ingests their 5 best pieces, and updates `ask-the-board` |
 
 ## Lint scripts
 
