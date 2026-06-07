@@ -6,3 +6,6 @@ wiki/*
 archive/
 inbox/
 docs/
+/outputs/
+CHANGELOG.md
+meta/health.md
