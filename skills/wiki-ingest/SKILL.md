@@ -71,9 +71,11 @@ Record the original file extension — you will need it in Step 4 to set `source
 Read the source file in full. No output yet. If the file is unreadable (corrupt, wrong
 format, empty), stop and tell the user.
 
-If "ingest the inbox" was the trigger, list all files in `inbox/` and compare against
-`CHANGELOG.md` to identify which have not yet been ingested. Process one at a time unless
-instructed otherwise.
+If "ingest the inbox" was the trigger, list all files in `inbox/` and identify which have
+not yet been ingested by checking whether a matching raw source file already exists anywhere
+in `wiki/**/sources/`. A file is already ingested if its filename appears in any sources/
+folder. Do not use CHANGELOG.md for this check — it grows unbounded and is unreliable for
+large vaults. Process one file at a time unless instructed otherwise.
 
 ---
 
@@ -123,8 +125,9 @@ Example: `my-source-title-2025.md`
 
 The page must include:
 - Frontmatter with `type: source`, `status: processed`, today's date, `origin:` (URL or
-  inbox filename), `project:` field, and `source-type:` set according to the original file
-  format:
+  inbox filename), `project:` field, `source-type:` set according to the original file
+  format, and `reliability:` set according to source credibility (see `meta/CLAUDE.md`
+  Section 3.1 for the four values and decision rules):
   - `.docx` → `word-doc`
   - `.pptx` / `.ppt` → `powerpoint`
   - `.eml` / `.msg` → `email`
@@ -217,7 +220,14 @@ Prepend one new entry at the top (newest first):
 - Note: [source provided inline / file moved from inbox/]
 ```
 
-If you reach the end of the workflow and have not updated all four files, go back and do
+**`meta/health.md`**
+Read the file. Increment `ingest-count` by 1 and write the updated value back. If
+`ingest-count` is now 15 or more, emit this warning at the end of Step 9 before continuing
+to Step 10:
+
+> ⚠️ *`ingest-count` ingests since last lint — consider running `wiki-lint` before the next ingest.*
+
+If you reach the end of the workflow and have not updated all five files, go back and do
 it before confirming. Do not confirm without completing this step.
 
 ---

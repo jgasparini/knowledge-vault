@@ -120,11 +120,11 @@ Claude runs 8 structural checks — orphan pages, missing wikilinks, stale conte
 | PDF | `.pdf` | Native |
 | Images | `.png`, `.jpg`, `.jpeg`, `.gif`, `.webp` | Native — Claude reads them visually |
 | Jupyter notebooks | `.ipynb` | Native |
-| Word documents | `.docx` | Not native — export to PDF or paste content as `.md` |
-| PowerPoint | `.pptx`, `.ppt` | Not native — export to PDF or paste content as `.md` |
-| Email | `.eml`, `.msg` | Not native — forward body as `.txt` or paste inline |
+| Word documents | `.docx` | Supported — auto-converted via `convert.py` before ingest |
+| PowerPoint | `.pptx`, `.ppt` | Supported — auto-converted via `convert.py` before ingest |
+| Email | `.eml`, `.msg` | Supported — auto-converted via `convert.py` before ingest |
 
-For not-natively-supported formats, the ingest skill supports inline content too: paste the text directly into chat and tell Claude to ingest it.
+For any format, the ingest skill also accepts inline content: paste the text directly into chat and tell Claude to ingest it.
 
 ---
 
@@ -141,6 +141,7 @@ These are the phrases that trigger Claude's built-in workflows:
 | `wiki-query` | "What does the wiki say about X?" | Searches the wiki, synthesises an answer from your notes, and files the output |
 | `wiki-consolidate` | "Consolidate the wiki" | Reviews for duplication, drift, and synthesis opportunities — proposes changes, nothing applied without confirmation |
 | `wiki-lint` | "Lint the wiki" or "Wiki health check" | 8-check structural health pass with auto-fixes |
+| `improve-system` | "Audit notes", "improve that skill", "capture this experience", "mine my sessions", "fill in about me" | 5-mode meta-maintenance: Audit / Skill Review / Experience / Historical Review / Foundation |
 | `email-processor` | "Process my inbox" or "Triage my emails" | Reads your Outlook inbox, classifies emails into archive / unsubscribe / reply / keep, and acts only on what you approve |
 | `writing-rules` | *(applied automatically)* | House style guide — applied to all wiki prose |
 

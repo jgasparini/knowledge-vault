@@ -106,9 +106,22 @@ To formally propose and apply status changes, run `wiki-consolidate` after this 
 
 ### Check 3 — Stale active pages
 
-Pages with `status: active` not updated in 30+ days where a relevant source has been ingested
-since. Check the `updated:` field in frontmatter against today's date, then cross-reference
-CHANGELOG.md for relevant ingests. List which ingests were missed.
+Pages with `status: active` not updated since the domain-appropriate threshold has elapsed,
+where a relevant source has been ingested since. The threshold is no longer flat — it depends
+on how fast the page's domain moves (see `decay-rate` in `meta/CLAUDE.md` Section 3.4):
+
+- **Topic hubs:** use the hub's own `decay-rate` — `fast` → 45 days, `slow` → 90 days,
+  `stable` → 180 days. No `decay-rate` field → 30-day default.
+- **Concepts and entities:** find the parent topic hub by searching `wiki/resources/topics/*.md`
+  for a "Key concepts" / "Key entities" entry that links to this page (`[[page-name]]`). If
+  exactly one hub links to it, use that hub's `decay-rate` (mapped as above). If no hub links
+  to it, or more than one does (no clear parent), fall back to the 30-day default.
+- **Everything else** (sources, projects, areas, people): 30-day default.
+
+Check the `updated:` field in frontmatter against today's date using the resolved threshold,
+then cross-reference CHANGELOG.md for relevant ingests. List which ingests were missed, and
+note which threshold was applied and why (e.g. "45 days via [[ai-security]]" or "30-day
+default — no parent hub found").
 
 To formally propose and apply status changes, run `wiki-consolidate` after this lint pass.
 
@@ -213,6 +226,25 @@ Append one entry to `CHANGELOG.md` (newest first):
 - QUESTIONS hygiene: [n closed, n stale, n archived — or "none"]
 - Index drift: [n entries added, n removed]
 ```
+
+---
+
+Update `meta/health.md`: reset `ingest-count` to 0 and set `last-lint` to today's date.
+
+**Trim CHANGELOG.md (archive entries older than 90 days):**
+
+Scan `CHANGELOG.md` for entries whose date header (`## YYYY-MM-DD — …`) is more than 90
+days before today. If any are found:
+
+1. Group them by year. For each year, append those entries to
+   `archive/CHANGELOG-[year].md` (create the file if it doesn't exist, with a
+   `# CHANGELOG Archive — [year]` heading).
+2. Remove the archived entries from `CHANGELOG.md`, preserving the header and all
+   entries within the 90-day window.
+3. Note the trim in the lint CHANGELOG entry already written: append
+   `- CHANGELOG trimmed: [n] entries archived to archive/CHANGELOG-[year].md`
+
+If no entries are older than 90 days, skip this step silently.
 
 ---
 
