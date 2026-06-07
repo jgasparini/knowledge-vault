@@ -17,6 +17,172 @@ Running log of all librarian operations. Newest entry at the top.
   `parent-topic` frontmatter field added to concept/entity pages — existing hub→page wikilinks
   are reused for the reverse lookup
 
+## 2026-06-06 — Ingest | Zero Trust for AI Agents (Anthropic ebook)
+- Pages created: [[anthropic-zero-trust-ai-agents-2026]] (source summary), [[least-agency]] (concept), [[owasp]] (entity stub)
+- Pages updated: [[agentic-security]] (OWASP threat taxonomy; "impossible vs tedious" test; three-tier model; compliance context), [[agent-containment]] (supply chain risks; configuration integrity; source references), [[human-agent-oversight]] ("automate bookkeeping not decisions"; dwell time/coverage as priority metrics; emergency change procedures), [[multi-agent-coordination]] (unscoped privilege inheritance; memory-based privilege retention; credential isolation per agent)
+- Structural suggestions: none — no new project, area, or topic hub; all content files into ai-native-engineering
+- Contradictions cross-referenced: Foundation tier requirements (cryptographic identity, short-lived tokens) are materially higher than current typical Claude Code deployment posture; tension noted in source summary and [[agent-containment]]
+- Note: file moved from inbox/ to wiki/areas/ai-native-engineering/sources/
+
+## 2026-06-06 — Ingest | How Anthropic Founders ACTUALLY Pick What to Build with Claude
+- Pages created: [[anthropic-founders-what-to-build-with-claude]] (source summary), [[middle-to-middle]] (concept), [[cost-of-error]] (concept), [[dario-amodei]] (entity stub), [[daniela-amodei]] (entity stub), [[boris-cherny]] (entity stub)
+- Pages updated: [[agentic-productivity-economics]] (recalibration framing; Claude Cowork build-time; 80x Q1 2026), [[human-agent-oversight]] (middle-to-middle section; Dario's 5%/95% comparative advantage), [[anthropic]] (developer-focus strategy; Q1 2026 growth; build philosophy summary), [[claude-code]] (Boris Cherny verification loop principle), [[verification-tax]] (cost-of-error as upstream build-selection gate)
+- Structural suggestions: none — no new project, area, or topic hub needed; all content fits within ai-native-engineering
+- Contradictions cross-referenced: none — source reinforces existing concepts without contradiction; tensions with end-to-end AI noted in [[middle-to-middle]]
+- Note: source provided as YouTube URL; transcript retrieved via yt-dlp; reliability rated secondary (third-party synthesis of primary Anthropic founder statements)
+
+## 2026-06-05 — Ingest | The Rise of the Talent Orchestrator (Gigged.AI)
+- Pages created: [[talent-orchestrator-gigged-ai-2026]] (source summary), [[talent-orchestration]] (concept), [[gigged-ai]] (entity)
+- Pages updated: [[sdlc-transformation]] (40/20/40 model added; tension with AI Pod compression noted), [[career-framework-adaptation]] (leadership layer section added), [[personal-ai-operating-system]] (evolving thesis extended; talent-orchestration added to key concepts), [[ai-operating-system/_overview]] (current status updated)
+- Structural suggestions: none — source fits within existing ai-operating-system project and personal-ai-operating-system topic hub
+- Contradictions cross-referenced: tension between 40/20/40 FTE floor and AI Pod compression noted in [[sdlc-transformation]] and [[talent-orchestration]]; 55% employer regret figure tensions with positive productivity narrative in [[agentic-productivity-economics]] (cross-reference noted in source page)
+- Note: inbox file was a URL stub; article fetched from gigged.ai; file moved from inbox/ to wiki/projects/ai-operating-system/sources/
+
+## 2026-06-04 — Ingest | Tokenomics Foundation
+- Pages created: [[tokenomics-foundation-2026]] (source summary), [[tokenomics-foundation]] (entity), [[token-economics]] (concept)
+- Pages updated: [[agentic-productivity-economics]] (Tokenomics Foundation as industry FinOps standards signal; [[token-economics]] concept linked)
+- Structural suggestions: token-economics topic hub flagged as a future candidate; current source is a website homepage (thin signal) — concept page is appropriate for now
+- Contradictions cross-referenced: none — source confirms and extends the FinOps risk already documented in [[agentic-productivity-economics]]
+- Note: web article fetched from tokeneconomics.com; file moved from inbox/ to wiki/areas/ai-native-engineering/sources/
+
+## 2026-06-04 — Ingest | How Anthropic enables self-service data analytics with Claude
+- Pages created: [[anthropic-self-service-analytics-2026]] (source summary), [[agentic-analytics]] (concept)
+- Pages updated: [[claude-code-harness]] (21% → 95%+ skills accuracy benchmark added), [[context-window-engineering]] (context-as-accuracy evidence added), [[production-signal-evals]] (offline evals as complementary methodology for non-conversational agentic products), [[personal-ai-operating-system]] (evolving thesis updated with fifth source)
+- Structural suggestions: none — no new project, area, or topic hub needed
+- Contradictions cross-referenced: none — source directly corroborates the skills investment thesis and context-window-engineering framing
+- Note: web article fetched from claude.com/blog; file moved from inbox/ to wiki/projects/ai-operating-system/sources/
+
+## 2026-06-03 — Lint pass [global]
+- Missing pages: 1 stub created ([[ask-the-board]] — 3 wiki references, no page existed)
+- Orphans: 2 wiki files flagged (wiki/areas/ai-native-engineering/outputs/2026-05-27-career-framework-adaptation.md — promoted query output, archive artifact; wiki/areas/core-banking/sources/cash-management-requirements-draft.md — draft source file). 25 system/infrastructure files excluded from scope.
+- Stubs ready to expand: none (all stubs have <2 sources in frontmatter)
+- Contradictions: 1 auto-fixed — tacit code sharing vs. harness abstraction tension cross-referenced in [[claude-code-harness]]
+- QUESTIONS hygiene: none closed, none stale, none archived (vault <30 days old)
+- Index drift: 1 entry added (ask-the-board to project and root INDEX); system files excluded
+
+## 2026-06-03 — Ingest | Claude Code Can Be Your Second Brain (Every podcast, YouTube)
+- Pages created: [[claude-code-second-brain-every-podcast-2026]] (source summary), [[thinking-partner-agent]] (concept), [[noah-bryer]] (entity), [[every]] (entity)
+- Pages updated: [[personal-ai-operating-system]] (thinking-partner-agent + noah-bryer + every added; evolving thesis updated with thinking/writing mode distinction and reading capability reframe), [[claude-code-harness]] (thinking mode / writing mode section added; catch-me-up pattern; source ref), [[llm-wiki]] (Noah Bryer's independent implementation added as corroborating evidence)
+- Structural suggestions: none — no new project, area, or topic hub needed
+- Contradictions cross-referenced: tacit code sharing sits in mild tension with the harness investment thesis (skip abstraction vs. build shared skills); noted in source summary as context-dependent, not a true contradiction
+- Note: transcript extracted via yt-dlp from Every YouTube channel; host Dan Shipper, guest Noah Bryer
+
+## 2026-06-03 — Ingest | Claude Code + Karpathy's NEW Self-Evolving System (YouTube)
+- Pages created: [[karpathy-llm-wiki-self-evolving-system-2026]] (source summary), [[llm-wiki]] (concept), [[andrej-karpathy]] (entity), [[world-of-ai]] (entity)
+- Pages updated: [[personal-ai-operating-system]] (llm-wiki + andrej-karpathy added to key concepts/entities; evolving thesis updated with three-framework synthesis), [[ai-operating-system/_overview]] (current status updated with third source)
+- Structural suggestions: none — no new project, area, or topic hub needed
+- Contradictions cross-referenced: none; this source provides the conceptual origin for the architecture this vault already implements
+- Note: transcript extracted via yt-dlp; creator is WorldofAI, subject is Andrej Karpathy's LLM Wiki concept; saved to wiki/projects/ai-operating-system/sources/
+
+## 2026-06-03 — Ingest | How I Use Claude Cowork to Automate 99% Of My Life (YouTube)
+- Pages created: [[cowork-os-automate-life-guide-2026]] (source summary), [[scheduled-tasks]] (concept), [[paul-j-lipsky]] (entity)
+- Pages updated: [[personal-ai-operating-system]] (evolving thesis updated; scheduled-tasks and paul-j-lipsky added to key concepts/entities), [[claude-code-harness]] (skill-capture pattern + scheduled-tasks connection + source ref), [[context-window-engineering]] (folder-scoping principle added as evidence + source ref), [[ai-operating-system/_overview]] (current status updated), [[6-skills-10x-claude-projects-2026]] (creator entity link added)
+- Structural suggestions: none — no new project, area, or topic hub needed
+- Contradictions cross-referenced: none — folder-scoping principle consistent with existing context-window-engineering framing
+- Note: transcript extracted via yt-dlp; saved to wiki/projects/ai-operating-system/sources/; no inbox file
+
+## 2026-06-03 — Ingest | The ONLY 6 Skills You Need to 10x Your Claude Projects (YouTube)
+- Pages created: [[6-skills-10x-claude-projects-2026]] (source summary), [[internal-focus-group]] (concept)
+- Pages updated: [[personal-ai-operating-system]] (populated from stub: evolving thesis, key concepts, key entities, sources), [[claude-code-harness]] (connections + source ref added), [[ai-operating-system/_overview]] (current status updated with first source)
+- Structural suggestions: none — no new project, area, or topic hub needed
+- Contradictions cross-referenced: minor framing difference between browser scraping (this source) and MCP connections (claude-code-harness) as primary data access mechanisms; noted as complementary in source summary
+- Note: transcript extracted via yt-dlp; saved to wiki/projects/ai-operating-system/sources/; no inbox file
+
+## 2026-06-03 — Structural | Promote AI Native Engineering from project to area
+- Moved: wiki/projects/ai-native-engineering/ → wiki/areas/ai-native-engineering/
+- Renamed: _overview.md → ai-native-engineering.md (area convention)
+- Reframed: frontmatter type: project → area; removed deadline/stakeholders/review-date/goal fields; restructured sections to area schema (What this covers, Current focus, Key resources, Related projects, People)
+- Updated: wiki/INDEX.md — AI Native Engineering row moved from Projects table to Areas table; link updated to [[ai-native-engineering/ai-native-engineering]]; Projects section retained for AI Operating System
+- Updated: wiki/areas/ai-native-engineering/INDEX.md — header and section labels updated from "project" to "area"
+- Rationale: area has no end date or completion state; it is a standing research responsibility
+
+## 2026-06-03 — Structural | Promote AI Security from project to area
+- Moved: wiki/projects/ai-security/ → wiki/areas/ai-security/
+- Renamed: _overview.md → ai-security.md (area convention)
+- Reframed: frontmatter type: project → area; removed deadline/stakeholders/review-date/goal fields; restructured sections to area schema (What this covers, Current focus, Key resources, Related projects, People)
+- Updated: wiki/INDEX.md — AI Security row moved from Projects table to Areas table; link updated to [[ai-security/ai-security]]
+- Updated: wiki/areas/ai-security/INDEX.md — header and section labels updated from "project" to "area"
+- Rationale: area has no end date or completion state; it is a standing research responsibility that will continue to grow
+
+## 2026-06-03 — Setup | AI Operating System
+- Project folder created: wiki/projects/ai-operating-system/
+- Files created: _overview.md, INDEX.md, QUESTIONS.md, sources/
+- Topic hub created: [[personal-ai-operating-system]]
+- Root INDEX.md updated: project row and topic hub row added
+
+## 2026-06-03 — Ingest | Cash Management Capability — Requirements & Estimable Specification
+- Pages created: [[cash-management-requirements]] (source summary), [[cash-management]] (concept)
+- Pages updated: [[core-banking/core-banking]] (current focus and key resources), [[wiki/INDEX]] (cash-management concept added)
+- Structural suggestions: flagged possibility of dedicated project for cash management capability; user chose to file as area source
+- Contradictions cross-referenced: none — new domain
+- Note: file moved from inbox/ → wiki/areas/core-banking/sources/
+
+## 2026-06-03 — Structural | Create core banking area
+- Area created: [[core-banking/core-banking]]
+- wiki/INDEX.md updated: core-banking row added to Areas section
+- Note: stub page, no sources ingested yet
+
+## 2026-06-03 — Ingest | Caveman — the token-efficient stack for agent-native builders
+- Pages created: [[caveman-token-efficient-stack]] (source summary), [[caveman]] (entity stub)
+- Pages updated: [[context-window-engineering]] (compression vs. placement note; Caveman added to connections), [[spec-driven-development]] (Cavekit added to tools), [[ai-tooling-landscape]] (open-source community category added), [[ai-native-engineering]] (topic hub — thirteenth signal added to evolving thesis; Caveman added to entities)
+- Structural suggestions: none — no new Project, Area, or Topic hub needed
+- Contradictions cross-referenced: Caveman's compression approach (~75–77%) noted as complementary to (not contradictory with) [[context-window-engineering]]'s placement discipline; claims self-reported and unverified
+- Note: file moved from inbox/ → wiki/projects/ai-native-engineering/sources/
+
+## 2026-06-03 — Ingest | A harness for every task: dynamic workflows in Claude Code
+- Pages created: [[anthropic-dynamic-workflows-claude-code]] (source summary), [[dynamic-workflows]] (concept)
+- Pages updated: [[claude-code-harness]] (dynamic workflows added as orchestration tier; new section; connections updated), [[multi-agent-coordination]] (seven workflow patterns taxonomy added), [[claude-code]] entity (dynamic workflows section added), [[ai-native-engineering]] (topic hub — dynamic-workflows added to key concepts; thirteenth signal added to evolving thesis)
+- Structural suggestions: none — no new Project, Area, or Topic hub needed
+- Contradictions cross-referenced: none — additive to existing pages
+- Note: file moved from inbox/ → wiki/projects/ai-native-engineering/sources/
+
+## 2026-06-02 — Consolidation pass [global]
+- Duplicates merged: none
+- Status changes: [[google]] stub → active (2 sources, substantive content across four sections)
+- Synthesis actions: 4 wikilinks added to [[ai-native-engineering]] topic hub Key concepts section ([[long-running-agents]], [[verification-tax]], [[agent-containment]], [[auto-mode-policy]]); missing reciprocal link [[agentic-security]] added to [[auto-mode-policy]] How it connects section
+
+## 2026-06-02 — Ingest | Expanding Project Glasswing | Anthropic
+- Pages created: [[anthropic-glasswing-expansion]] (source summary), [[claude-security]] (entity)
+- Pages updated: [[project-glasswing]] (partner count, sectors, patching shift, Claude Security link), [[ai-security]] (topic hub — evolving thesis, entities list), [[patch-velocity]] (Anthropic patching commitment added), [[ai-security/INDEX]] (new source and entity rows), [[ai-security/QUESTIONS]] (Claude Security question partially resolved; three new questions added), [[wiki/INDEX]] (project-glasswing summary updated; claude-security entity added)
+- Structural suggestions: none — no new Project, Area, or Topic hub needed
+- Contradictions cross-referenced: expansion pace vs. controlled-rollout framing noted in [[anthropic-glasswing-expansion]] and [[project-glasswing]]; Opus 4.8 vs. Mythos Preview capability distinction noted in [[claude-security]] and [[anthropic-glasswing-expansion]]
+- Note: file moved from inbox/ → wiki/projects/ai-security/sources/
+
+## 2026-06-02 — Ingest | Microsoft Build 2026 Recap: Windows Is Now an Agent Platform, and Project Polaris Cuts the OpenAI Cord
+- Pages created: [[microsoft-build-2026-recap]] (source summary), [[project-polaris]], [[windows-agent-framework]], [[azure-agent-mesh]], [[copilot-workspace]]
+- Pages updated: [[microsoft]], [[github-copilot]], [[ai-tooling-landscape]], [[multi-agent-coordination]], [[long-running-agents]], [[ai-native-engineering]] (topic hub, twelfth thesis signal)
+- Structural suggestions: none — no new Project, Area, or Topic hub needed
+- Contradictions cross-referenced: Microsoft "dual exposure" framing (investment in OpenAI vs. Project Polaris cutting coding model dependency) noted in [[microsoft]] and [[microsoft-build-2026-recap]]; Copilot competitive characterisation tension (pre-Polaris survey data) noted in [[github-copilot]] and [[microsoft-build-2026-recap]]
+- Note: file moved from inbox/ → wiki/projects/ai-native-engineering/sources/
+
+## 2026-06-01 — Ingest | Nuffield Health MRI appointment confirmation (21 May 2026)
+- Pages created: [[nuffield-health-mri-appointment-confirmation-2026-05-21]], [[nuffield-health-edinburgh]] (entity stub)
+- Pages updated: [[health/health]] (current focus: MRI completed 28 May; results with Cowie; next step in-person review), [[cowie-clinic-letter-2026-05-18]] (cross-referenced as trigger for scan), [[wiki/INDEX]] (nuffield-health-edinburgh entity added)
+- Structural suggestions: none
+- Contradictions cross-referenced: none
+- Note: source provided inline from Outlook inbox; no file to move
+
+## 2026-06-01 — Ingest | Mr Cowie clinic letter (18 May 2026) + Square Health referral letter (actual PDF)
+- Pages created: [[cowie-clinic-letter-2026-05-18]], [[jonathan-cowie]] (entity stub)
+- Pages updated: [[square-health-referral-letter-2026-05-07]] (actual referral letter content incorporated; gap from prior email ingest resolved), [[health/health]] (current focus: MRI scan next step; Cowie contact details and hospital reference added), [[aviva-health-authorisation-251215-25]] (cross-reference to first clinical follow-on), [[wiki/INDEX]] (jonathan-cowie entity added)
+- Structural suggestions: none
+- Contradictions cross-referenced: none
+- Note: both files moved from inbox/ → wiki/areas/health/sources/
+
+## 2026-06-01 — Ingest | Square Health referral letter, Dr Hsaung Nadi
+- Pages created: [[square-health-referral-letter-2026-05-07]], [[square-health]]
+- Pages updated: [[health/health]] (key resources), [[wiki/INDEX]] (entity added), [[aviva-health-authorisation-251215-25]] (cross-reference added)
+- Structural suggestions: none
+- Contradictions cross-referenced: none — sequential with Aviva authorisation
+- Note: source provided inline from Outlook inbox; referral letter attachment to be ingested separately
+
+## 2026-06-01 — Ingest | Aviva Health claim authorisation 251215/25
+- Pages created: [[aviva-health-authorisation-251215-25]], [[aviva-health]]
+- Pages updated: [[health/health]] (current focus), [[wiki/INDEX]] (entity added)
+- Structural suggestions: none
+- Contradictions cross-referenced: none
+- Note: source provided inline from Outlook inbox (no file to move); suspected meniscus tear, knee network, Spire Murrayfield Edinburgh
+
 ## 2026-06-01 — Structural | Create health area
 - Area created: [[health/health]]
 - wiki/INDEX.md updated: Areas section added
