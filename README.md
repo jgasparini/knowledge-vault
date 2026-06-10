@@ -203,4 +203,4 @@ python3 -m pytest skills/wiki-ingest/tests/
 
 ## Licence
 
-MIT
+[MIT](LICENSE)
