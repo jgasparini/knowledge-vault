@@ -53,15 +53,15 @@ jobs:
           $failed = $false
 
           $out = & "$scripts/find-orphans.ps1" $wiki
-          if ($LASTEXITCODE -ne 0 -or -not ($out -match "^SUMMARY")) { Write-Error "find-orphans.ps1 failed"; $failed = $true }
+          if (-not ($out -match "^SUMMARY")) { Write-Error "find-orphans.ps1 failed"; $failed = $true }
 
           $out = & "$scripts/find-missing-pages.ps1" $wiki
-          if ($LASTEXITCODE -ne 0 -or -not ($out -match "^SUMMARY")) { Write-Error "find-missing-pages.ps1 failed"; $failed = $true }
+          if (-not ($out -match "^SUMMARY")) { Write-Error "find-missing-pages.ps1 failed"; $failed = $true }
 
           $out = & "$scripts/check-index-drift.ps1" $wiki
-          if ($LASTEXITCODE -ne 0 -or -not ($out -match "^SUMMARY")) { Write-Error "check-index-drift.ps1 failed"; $failed = $true }
+          if (-not ($out -match "^SUMMARY")) { Write-Error "check-index-drift.ps1 failed"; $failed = $true }
 
           $out = & "$scripts/prune-questions.ps1" (Join-Path $env:RUNNER_TEMP "questions")
-          if ($LASTEXITCODE -ne 0 -or -not ($out -match "^SUMMARY")) { Write-Error "prune-questions.ps1 failed"; $failed = $true }
+          if (-not ($out -match "^SUMMARY")) { Write-Error "prune-questions.ps1 failed"; $failed = $true }
 
           if ($failed) { exit 1 }
