@@ -165,6 +165,21 @@ Every new wiki page must have at least two inbound links from
 existing pages before an ingest is considered complete.
 Orphan pages are flagged during lint passes.
 
+### Raw vs. processed source files
+
+`sources/` folders hold two kinds of files:
+
+- **Raw source files** — the original file moved from `inbox/` (PDF,
+  `.docx`, a transcript dump, etc.), preserved verbatim. These carry
+  no schema frontmatter.
+- **Source summary pages** — Claude-authored pages following the
+  Section 3.1 schema, with full frontmatter including `source-type`
+  and `reliability`.
+
+A file in `sources/` with no frontmatter is always a raw source, never
+a content page — this gives lint scripts a mechanical way to tell the
+two apart.
+
 ---
 
 ## Section 3: Page Types and Frontmatter
@@ -184,7 +199,7 @@ type: source
 status: processed
 created: YYYY-MM-DD
 tags: []
-source-type: article|pdf|book-chapter|meeting|transcript|video
+source-type: article|paper|report|book-chapter|meeting|email|letter|video
 reliability: primary|practitioner|secondary|speculative
 origin: URL or filename in inbox/
 project:
@@ -196,6 +211,16 @@ project:
 - `practitioner` — credible secondary accounts from named practitioners with verifiable direct experience (e.g. an engineering lead describing their own team's practice, a named executive's case study)
 - `secondary` — analysis or synthesis by credible third parties without direct access (e.g. analyst reports, journalist recaps, survey analyses)
 - `speculative` — opinion, prediction, marketing material, or thin signal (e.g. vendor blog posts with unnamed case studies, prediction pieces)
+
+**Source-type rules:**
+- `source-type` describes the genre of the original work, not the file format
+  it arrived in. The file format (PDF, `.docx`, `.md`, etc.) is recoverable
+  from `origin:` and is not tracked separately.
+- Use the original medium even when ingested via a derived artifact — e.g. a
+  YouTube video transcribed to text is still `video`, not `transcript`. There
+  is no `transcript` value.
+- This is a closed enum. If no value fits, stop and propose a new value to
+  the user before using it — never coin a new `source-type` value silently.
 
 **Page structure:**
 ```
