@@ -66,15 +66,7 @@ to project `sources/` → CHANGELOG.md updated.
 
 ### Skills
 
-Workflows are defined as skills in `skills/`:
-
-- `skills/wiki-setup/SKILL.md` — interactive scaffold for a new project
-- `skills/wiki-ingest/SKILL.md` — full 10-step ingest workflow
-- `skills/wiki-query/SKILL.md` — 6-step query workflow: scoped index-first reading, outputs/ landing, gap analysis
-- `skills/wiki-lint/SKILL.md` — 8-check lint workflow with scripts
-- `skills/wiki-consolidate/SKILL.md` — semantic review: deduplication, lifecycle promotions, synthesis opportunities
-- `skills/writing-rules/SKILL.md` — house style guide; read before writing any wiki prose
-
+The canonical list of skills lives in the root `CLAUDE.md` "Skills" table.
 All skills read this file at runtime for schema details. If the schema
 changes here, the skills adapt automatically.
 

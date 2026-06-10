@@ -28,6 +28,15 @@ jobs:
       - uses: actions/checkout@v4
       - run: shellcheck skills/wiki-lint/scripts/*.sh
 
+  skill-registry-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          ls -d skills/*/ | xargs -n1 basename | sort -u > /tmp/actual.txt
+          grep -oE '^\| `[a-z0-9-]+`' CLAUDE.md | sed -E 's/^\| `//; s/`$//' | sort -u > /tmp/listed.txt
+          diff /tmp/actual.txt /tmp/listed.txt
+
   windows-ps:
     runs-on: windows-latest
     continue-on-error: true

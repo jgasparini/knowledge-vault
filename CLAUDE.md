@@ -10,7 +10,8 @@ The authoritative schema lives in `meta/CLAUDE.md`. Read it before any operation
 
 ## Skills
 
-Ten skills handle all workflows. Trigger them by invoking the `Skill` tool with the appropriate name:
+This is the canonical list of skills — every directory in `skills/` must appear
+here. Trigger them by invoking the `Skill` tool with the appropriate name:
 
 | Skill | Trigger phrases | What it does |
 |-------|----------------|--------------|
@@ -24,6 +25,8 @@ Ten skills handle all workflows. Trigger them by invoking the `Skill` tool with 
 | `establish-advisors` | "/establish-advisors", "add a new advisor", "who else should be on the board", "who should join the board" | Reads the vault to diagnose knowledge gaps, recommends advisors whose published work addresses those gaps, ingests their 5 best pieces, and updates `ask-the-board` |
 | `thinking-partner` | "let's think through X", "I'm just exploring", "thinking mode on X" | Open-ended ideation mode — hard-blocked from outlines, drafts, or wiki pages; asks sharp questions, surfaces wiki connections, and keeps a running notes log; hands off to `wiki-ingest`/`wiki-query`/drafting only on explicit signal |
 | `catch-me-up` | "catch me up", "where did I leave off [on X]", "what have I been doing the last N days" | Reconstructs context after an interruption: reads CHANGELOG.md for the relevant window, pulls the project's decisions log and open questions if scoped, and delivers a short conversational re-entry briefing — nothing is filed to outputs/ |
+| `email-processor` | "process my inbox", "triage my emails", "clean up my inbox" | Reads unread Microsoft 365/Outlook mail, learns reply patterns from sent mail, classifies into archive/unsubscribe/reply/keep, and acts only after explicit approval — never sends, never deletes |
+| `writing-rules` | *(applied automatically before writing wiki prose)*, "apply writing rules", "does this sound like AI?" | House style guide: words/phrases to avoid, formatting, tone, and structure rules — not applied to frontmatter, navigation files, or verbatim quotes |
 
 ## Lint scripts
 
