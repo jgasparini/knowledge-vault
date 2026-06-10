@@ -62,8 +62,6 @@ command it printed and stop. Do not proceed until the dependency is installed.
 If the file extension is anything else (`.md`, `.txt`, `.pdf`, images, notebooks), skip
 this step entirely.
 
-Record the original file extension — you will need it in Step 4 to set `source-type`.
-
 ---
 
 ### Step 1 — Read
@@ -125,15 +123,12 @@ Example: `my-source-title-2025.md`
 
 The page must include:
 - Frontmatter with `type: source`, `status: processed`, today's date, `origin:` (URL or
-  inbox filename), `project:` field, `source-type:` set according to the original file
-  format, and `reliability:` set according to source credibility (see `meta/CLAUDE.md`
-  Section 3.1 for the four values and decision rules):
-  - `.docx` → `word-doc`
-  - `.pptx` / `.ppt` → `powerpoint`
-  - `.eml` / `.msg` → `email`
-  - `.pdf` → `pdf`
-  - `.md`, `.txt` → `markdown`
-  - other / inline → `web` or `inline` as appropriate
+  inbox filename), `project:` field, `source-type:` set to the genre of the original
+  work per `meta/CLAUDE.md` Section 3.1 (e.g. `article`, `paper`, `report`,
+  `book-chapter`, `meeting`, `email`, `letter`, `video`), and `reliability:` set
+  according to source credibility (see Section 3.1 for the four values and decision
+  rules). `source-type` is a closed enum — if no value fits, stop and propose a new
+  one to the user rather than coining a value silently.
 - Summary (one paragraph)
 - Key insights (3–7 bullets, distilled signal not paraphrase)
 - Contradictions or tensions (cross-reference any conflicts with existing wiki pages — in

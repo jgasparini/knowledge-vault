@@ -3,7 +3,8 @@ type: source
 status: processed
 created: {{date}}
 tags: []
-source-type: article|pdf|book-chapter|meeting|transcript|video
+source-type: article|paper|report|book-chapter|meeting|email|letter|video
+reliability: primary|practitioner|secondary|speculative
 origin: 
 project: 
 ---
