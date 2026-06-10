@@ -190,7 +190,7 @@ this in the Raw source section — no file to move.
 
 ### Step 9 — Update registries ⚠️ Non-negotiable
 
-Four files must be updated after every ingest, no exceptions.
+Five files must be updated after every ingest, no exceptions.
 
 **`wiki/projects/[name]/INDEX.md`**
 Add a row for every new source, concept, or entity created. Add to the correct section.
@@ -243,7 +243,7 @@ Provide a one-paragraph completion summary:
 - Never write wiki pages before Step 2 is complete and the user has had a chance to redirect.
 - Never create a Project, Area, or Topic hub without explicit confirmation in Step 3.
 - Every source must produce at minimum: one source summary page, two updated or created wiki
-  pages, the raw file moved (or noted as inline), and registry entries in all four files.
+  pages, the raw file moved (or noted as inline), and registry entries in all five files.
 - When a source contradicts an existing wiki page, cross-reference the tension in both pages.
   Do not resolve contradictions silently. Let them coexist.
 - Step 9 (registries) is always the penultimate step. Confirm (Step 10) only after all
