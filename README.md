@@ -107,7 +107,7 @@ Tell Claude:
 
 > **"Lint the wiki"**
 
-Claude runs 8 structural checks — orphan pages, missing wikilinks, stale content, index drift, and more. It auto-fixes what it safely can and flags everything else for your decision. The checks run as bash scripts rather than Claude reading files directly: scripts execute in milliseconds with zero token cost, and are deterministic — they won't miss a broken link or vary between runs.
+Claude runs 9 structural checks — orphan pages, missing wikilinks, stale content, index drift, frontmatter schema, and more. It auto-fixes what it safely can and flags everything else for your decision. The checks run as bash scripts rather than Claude reading files directly: scripts execute in milliseconds with zero token cost, and are deterministic — they won't miss a broken link or vary between runs.
 
 ---
 
@@ -132,7 +132,9 @@ For any format, the ingest skill also accepts inline content: paste the text dir
 
 ### Skills
 
-These are the phrases that trigger Claude's built-in workflows:
+These are the phrases that trigger Claude's built-in workflows. Root `CLAUDE.md`
+is the canonical list of which skills exist — this table mirrors it with
+user-facing phrasing; if the two disagree on what skills exist, root `CLAUDE.md` wins.
 
 | Skill | What to say | What it does |
 |-------|-------------|--------------|
@@ -140,7 +142,7 @@ These are the phrases that trigger Claude's built-in workflows:
 | `wiki-ingest` | "Ingest the inbox" or "Ingest [filename]" | Full 10-step ingest: read → extract insights → write pages → update registries |
 | `wiki-query` | "What does the wiki say about X?" | Searches the wiki, synthesises an answer from your notes, and files the output |
 | `wiki-consolidate` | "Consolidate the wiki" | Reviews for duplication, drift, and synthesis opportunities — proposes changes, nothing applied without confirmation |
-| `wiki-lint` | "Lint the wiki" or "Wiki health check" | 8-check structural health pass with auto-fixes |
+| `wiki-lint` | "Lint the wiki" or "Wiki health check" | 9-check structural health pass with auto-fixes |
 | `catch-me-up` | "Catch me up" or "Where did I leave off on [project]?" | Reconstructs context after an interruption: scans the changelog for the relevant window, pulls the project's decisions log and open questions, and gives you a short conversational briefing — nothing is filed |
 | `thinking-partner` | "Let's think through X" or "I'm just exploring [topic]" | Open-ended ideation mode — hard-blocked from drafting outlines, prose, or wiki pages; asks sharp questions, surfaces wiki connections, and keeps a running notes log; hands off to ingest/query/drafting only when you say so |
 | `improve-system` | "Audit notes", "improve that skill", "capture this experience", "mine my sessions", "fill in about me" | 5-mode meta-maintenance: Audit / Skill Review / Experience / Historical Review / Foundation |
