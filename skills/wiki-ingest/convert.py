@@ -1,5 +1,6 @@
 import sys
 import pathlib
+from html.parser import HTMLParser
 
 
 def _require(module: str, package: str, ext: str) -> None:
@@ -12,13 +13,75 @@ def _require(module: str, package: str, ext: str) -> None:
         )
 
 
+_HTML_BLOCK_TAGS = {"p", "div", "br", "li", "tr", "h1", "h2", "h3", "h4", "h5", "h6"}
+
+
+class _HTMLTextExtractor(HTMLParser):
+    """Minimal HTML-to-text: drop tags, break lines at block-level elements."""
+
+    def __init__(self):
+        super().__init__()
+        self._chunks = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag in _HTML_BLOCK_TAGS:
+            self._chunks.append("\n")
+
+    def handle_data(self, data):
+        self._chunks.append(data)
+
+    def get_text(self) -> str:
+        lines = (line.strip() for line in "".join(self._chunks).splitlines())
+        return "\n".join(line for line in lines if line)
+
+
+def _html_to_text(html: str) -> str:
+    extractor = _HTMLTextExtractor()
+    extractor.feed(html)
+    return extractor.get_text()
+
+
+def _iter_block_items(doc):
+    """Yield each Paragraph and Table in document order (python-docx FAQ recipe)."""
+    from docx.oxml.table import CT_Tbl
+    from docx.oxml.text.paragraph import CT_P
+    from docx.table import Table
+    from docx.text.paragraph import Paragraph
+
+    for child in doc.element.body.iterchildren():
+        if isinstance(child, CT_P):
+            yield Paragraph(child, doc)
+        elif isinstance(child, CT_Tbl):
+            yield Table(child, doc)
+
+
+def _table_to_markdown(table) -> str:
+    rows = []
+    for i, row in enumerate(table.rows):
+        cells = [cell.text.strip().replace("\n", " ") for cell in row.cells]
+        rows.append("| " + " | ".join(cells) + " |")
+        if i == 0:
+            rows.append("| " + " | ".join(["---"] * len(cells)) + " |")
+    return "\n".join(rows)
+
+
 def convert(src: pathlib.Path) -> str:
     ext = src.suffix.lower()
 
     if ext == ".docx":
         _require("docx", "python-docx", ext)
         from docx import Document
-        return "\n\n".join(p.text for p in Document(src).paragraphs if p.text.strip())
+        from docx.table import Table
+        from docx.text.paragraph import Paragraph
+        doc = Document(src)
+        lines = []
+        for block in _iter_block_items(doc):
+            if isinstance(block, Paragraph):
+                if block.text.strip():
+                    lines.append(block.text)
+            elif isinstance(block, Table):
+                lines.append(_table_to_markdown(block))
+        return "\n\n".join(lines)
 
     if ext in (".pptx", ".ppt"):
         _require("pptx", "python-pptx", ext)
@@ -62,10 +125,23 @@ def convert(src: pathlib.Path) -> str:
             if part.get_content_type() == "text/plain":
                 payload = part.get_payload(decode=True)
                 if payload:
-                    body = payload.decode(errors="replace")
+                    charset = part.get_content_charset() or "utf-8"
+                    body = payload.decode(charset, errors="replace")
                     break
-        if body:
-            parts.append(body)
+        if not body:
+            for part in msg.walk():
+                if part.get_content_type() == "text/html":
+                    payload = part.get_payload(decode=True)
+                    if payload:
+                        charset = part.get_content_charset() or "utf-8"
+                        body = _html_to_text(payload.decode(charset, errors="replace"))
+                        break
+        if not body:
+            raise SystemExit(
+                f"No text/plain or text/html body found in {src}.\n"
+                "Refusing to write a body-less file."
+            )
+        parts.append(body)
         return "\n".join(parts)
 
     if ext == ".msg":
@@ -90,5 +166,8 @@ if __name__ == "__main__":
         sys.exit(1)
     src = pathlib.Path(sys.argv[1])
     out = src.with_suffix(".md")
+    if out.exists():
+        print(f"Refusing to overwrite existing file: {out}", file=sys.stderr)
+        sys.exit(1)
     out.write_text(convert(src), encoding="utf-8")
     print(out)
