@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  python-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python3 -m pip install -r requirements-dev.txt
+      - run: python3 -m pytest skills/wiki-ingest/tests/
+
+  script-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash skills/wiki-lint/tests/run.sh
+
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: shellcheck skills/wiki-lint/scripts/*.sh
+
+  windows-ps:
+    runs-on: windows-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - shell: pwsh
+        run: |
+          # Smoke test: build a tiny fixture vault and confirm each lint
+          # script runs and emits a SUMMARY line. Not a full port of the
+          # bash fixture suite (skills/wiki-lint/tests/) -- see #28/#30.
+          $wiki = Join-Path $env:RUNNER_TEMP "wiki"
+          New-Item -ItemType Directory -Path "$wiki/resources/concepts" -Force | Out-Null
+
+          $indexContent = "# Index`n- [[resources/concepts/page-good]]`n- [[resources/concepts/page-missing]]`n"
+          Set-Content -Path "$wiki/INDEX.md" -Value $indexContent
+
+          Set-Content -Path "$wiki/resources/concepts/page-good.md" -Value "# Good`n`n[[page-good]]"
+          Set-Content -Path "$wiki/resources/concepts/page-orphan.md" -Value "# Orphan"
+          New-Item -ItemType Directory -Path (Join-Path $env:RUNNER_TEMP "questions/projects/demo") -Force | Out-Null
+          Set-Content -Path (Join-Path $env:RUNNER_TEMP "questions/projects/demo/QUESTIONS.md") -Value "- [ ] Open question"
+
+          $scripts = "skills/wiki-lint/scripts"
+          $failed = $false
+
+          $out = & "$scripts/find-orphans.ps1" $wiki
+          if ($LASTEXITCODE -ne 0 -or -not ($out -match "^SUMMARY")) { Write-Error "find-orphans.ps1 failed"; $failed = $true }
+
+          $out = & "$scripts/find-missing-pages.ps1" $wiki
+          if ($LASTEXITCODE -ne 0 -or -not ($out -match "^SUMMARY")) { Write-Error "find-missing-pages.ps1 failed"; $failed = $true }
+
+          $out = & "$scripts/check-index-drift.ps1" $wiki
+          if ($LASTEXITCODE -ne 0 -or -not ($out -match "^SUMMARY")) { Write-Error "check-index-drift.ps1 failed"; $failed = $true }
+
+          $out = & "$scripts/prune-questions.ps1" (Join-Path $env:RUNNER_TEMP "questions")
+          if ($LASTEXITCODE -ne 0 -or -not ($out -match "^SUMMARY")) { Write-Error "prune-questions.ps1 failed"; $failed = $true }
+
+          if ($failed) { exit 1 }

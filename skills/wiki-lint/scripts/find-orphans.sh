@@ -29,8 +29,7 @@ while IFS= read -r page; do
   inbound=$(grep -rl --include="*.md" \
     -E "\[\[([^]|]*\/)?${pagename}(\|[^]]+)?\]\]" \
     "$WIKI" 2>/dev/null \
-    | grep -v "^${page}$" \
-    | wc -l | tr -d ' ')
+    | grep -vc "^${page}$")
 
   if [ "$inbound" -lt 2 ]; then
     relpath="${page#"$WIKI/"}"
