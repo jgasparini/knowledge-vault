@@ -18,6 +18,18 @@ WIKI="${1:?Usage: $0 /path/to/vault/wiki}"
 # Files that are never content pages
 NAV_PATTERN="/(INDEX|QUESTIONS|CHANGELOG)\.md$"
 
+# is_content_page <file> — true if the file's frontmatter has a `type:` field.
+# Raw source files (no frontmatter, or frontmatter without `type:`) are not
+# content pages and are excluded here regardless of filename.
+is_content_page() {
+  awk '
+    NR==1 { if ($0 != "---") exit 1; next }
+    /^---$/ { exit 1 }
+    /^type:/ { found=1; exit }
+    END { exit (found ? 0 : 1) }
+  ' "$1"
+}
+
 tmpout=$(mktemp)
 total=0
 
@@ -36,7 +48,10 @@ while IFS= read -r page; do
     echo "ORPHAN $inbound $relpath" >> "$tmpout"
   fi
 
-done < <(find "$WIKI" -name "*.md" ! -name "* *" | grep -vE "$NAV_PATTERN" | sort)
+done < <(
+  find "$WIKI" -name "*.md" | grep -vE "$NAV_PATTERN" | sort \
+    | while IFS= read -r f; do is_content_page "$f" && printf '%s\n' "$f"; done
+)
 
 cat "$tmpout"
 orphan_count=$(wc -l < "$tmpout" | tr -d ' ')

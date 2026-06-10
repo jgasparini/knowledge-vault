@@ -30,6 +30,20 @@ $navPattern = [regex]"[/\\](INDEX|QUESTIONS|CHANGELOG)\.md$"
 $ignoreLink = [regex]"^(INDEX|QUESTIONS|CHANGELOG|page-name|concept-name|entity-name)$"
 $linkRegex  = [regex]"\[\[([^\]]+)\]\]"
 
+# Test-ContentPage <path> — true if the file's frontmatter has a `type:` field.
+# Raw source files (no frontmatter, or frontmatter without `type:`) are not
+# content pages and are excluded here regardless of filename.
+function Test-ContentPage {
+    param([string]$Path)
+    $lines = Get-Content -Path $Path -ErrorAction SilentlyContinue
+    if (-not $lines -or $lines[0] -ne '---') { return $false }
+    for ($i = 1; $i -lt $lines.Count; $i++) {
+        if ($lines[$i] -eq '---') { return $false }
+        if ($lines[$i] -match '^type:') { return $true }
+    }
+    return $false
+}
+
 $results = [System.Collections.Generic.List[string]]::new()
 
 # Pre-load all INDEX.md files
@@ -38,7 +52,7 @@ $allIndexFiles = Get-ChildItem -Path $Wiki -Recurse -Filter "INDEX.md" -ErrorAct
 # ── Check 1: content pages not found in any INDEX.md ────────────────────────
 
 $contentPages = Get-ChildItem -Path $Wiki -Recurse -Filter "*.md" -ErrorAction SilentlyContinue |
-    Where-Object { $_.Name -notmatch ' ' -and $_.FullName -notmatch $navPattern } |
+    Where-Object { $_.FullName -notmatch $navPattern -and (Test-ContentPage $_.FullName) } |
     Sort-Object FullName
 
 foreach ($page in $contentPages) {
