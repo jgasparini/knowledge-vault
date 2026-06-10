@@ -6,6 +6,7 @@ wiki/*
 archive/
 inbox/
 docs/
-outputs/
+outputs/*
+!outputs/.gitkeep
 CHANGELOG.md
 meta/health.md
