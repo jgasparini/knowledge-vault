@@ -23,6 +23,18 @@ SCOPE="$2"
 NAV_PATTERN="/(INDEX|QUESTIONS|CHANGELOG)\.md$"
 IGNORE_LINK="^(INDEX|QUESTIONS|CHANGELOG|page-name|concept-name|entity-name)$"
 
+# is_content_page <file> — true if the file's frontmatter has a `type:` field.
+# Raw source files (no frontmatter, or frontmatter without `type:`) are not
+# content pages and are excluded here regardless of filename.
+is_content_page() {
+  awk '
+    NR==1 { if ($0 != "---") exit 1; next }
+    /^---$/ { exit 1 }
+    /^type:/ { found=1; exit }
+    END { exit (found ? 0 : 1) }
+  ' "$1"
+}
+
 tmpout=$(mktemp)
 
 # ── Check 1: content pages not found in any INDEX.md ───────────────────────
@@ -39,7 +51,10 @@ while IFS= read -r page; do
     echo "NOT_INDEXED $relpath" >> "$tmpout"
   fi
 
-done < <(find "$WIKI" -name "*.md" ! -name "* *" | grep -vE "$NAV_PATTERN" | sort)
+done < <(
+  find "$WIKI" -name "*.md" | grep -vE "$NAV_PATTERN" | sort \
+    | while IFS= read -r f; do is_content_page "$f" && printf '%s\n' "$f"; done
+)
 
 # ── Check 2: INDEX.md entries pointing to non-existent files ───────────────
 
