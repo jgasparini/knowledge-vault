@@ -188,6 +188,17 @@ knowledge-vault/
 
 Pull requests welcome. If you've adapted the schema for a specific domain (legal research, competitive intelligence, engineering architecture), consider sharing it as a branch or fork.
 
+### Development / running tests
+
+The `wiki-ingest` skill's source-conversion code (`skills/wiki-ingest/convert.py`) has a pytest suite. To run it:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements-dev.txt
+python3 -m pytest skills/wiki-ingest/tests/
+```
+
 ## Licence
 
 MIT
