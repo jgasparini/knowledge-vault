@@ -39,6 +39,29 @@ def test_docx_skips_empty_paragraphs(tmp_path):
     assert "\n\n\n" not in result  # no double-blank lines from empty paras
 
 
+def test_docx_extracts_table_in_document_order(tmp_path):
+    from docx import Document
+
+    doc = Document()
+    doc.add_paragraph("Before the table")
+    table = doc.add_table(rows=2, cols=2)
+    table.cell(0, 0).text = "Header A"
+    table.cell(0, 1).text = "Header B"
+    table.cell(1, 0).text = "Row1 A"
+    table.cell(1, 1).text = "Row1 B"
+    doc.add_paragraph("After the table")
+    src = tmp_path / "with_table.docx"
+    doc.save(src)
+
+    result = convert(src)
+    assert "Header A" in result
+    assert "Row1 B" in result
+    before_idx = result.index("Before the table")
+    table_idx = result.index("Header A")
+    after_idx = result.index("After the table")
+    assert before_idx < table_idx < after_idx
+
+
 # ---------------------------------------------------------------------------
 # .pptx
 # ---------------------------------------------------------------------------
@@ -118,6 +141,84 @@ def test_eml_multipart_returns_text_plain(tmp_path):
     assert "<html>" not in result
 
 
+def test_eml_decodes_non_utf8_charset(tmp_path):
+    body = "Café with naïve résumé".encode("windows-1252")
+    raw = (
+        b"From: sender@example.com\r\n"
+        b"Subject: Accents\r\n"
+        b'Content-Type: text/plain; charset="windows-1252"\r\n'
+        b"\r\n" + body
+    )
+    src = tmp_path / "accents.eml"
+    src.write_bytes(raw)
+
+    result = convert(src)
+    assert "Café with naïve résumé" in result
+    assert "�" not in result  # no mojibake replacement characters
+
+
+def test_eml_html_only_extracts_text(tmp_path):
+    raw = (
+        b"From: sender@example.com\r\n"
+        b"Subject: HTML only\r\n"
+        b'Content-Type: text/html; charset="utf-8"\r\n'
+        b"\r\n"
+        b"<html><body><p>Hello world</p><p>Second paragraph</p></body></html>"
+    )
+    src = tmp_path / "html_only.eml"
+    src.write_bytes(raw)
+
+    result = convert(src)
+    assert "Hello world" in result
+    assert "Second paragraph" in result
+    assert "<p>" not in result
+
+
+def test_eml_no_body_raises(tmp_path):
+    raw = (
+        b"From: sender@example.com\r\n"
+        b"Subject: No body\r\n"
+        b'Content-Type: image/png\r\n'
+        b"\r\n"
+        b"\x89PNG\r\n"
+    )
+    src = tmp_path / "no_body.eml"
+    src.write_bytes(raw)
+
+    with pytest.raises(SystemExit, match="No text/plain or text/html body"):
+        convert(src)
+
+
+# ---------------------------------------------------------------------------
+# .msg
+# ---------------------------------------------------------------------------
+
+def test_msg_extracts_headers_and_body(tmp_path, monkeypatch):
+    import extract_msg
+
+    class FakeMsg:
+        sender = "alice@example.com"
+        to = "bob@example.com"
+        subject = "Test MSG"
+        date = "Mon, 01 Jan 2024 12:00:00 +0000"
+        body = "Hello from the msg body"
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc_info):
+            return False
+
+    src = tmp_path / "message.msg"
+    src.write_bytes(b"not a real msg file")
+    monkeypatch.setattr(extract_msg, "openMsg", lambda path: FakeMsg())
+
+    result = convert(src)
+    assert "alice@example.com" in result
+    assert "Test MSG" in result
+    assert "Hello from the msg body" in result
+
+
 # ---------------------------------------------------------------------------
 # Error cases
 # ---------------------------------------------------------------------------
@@ -160,3 +261,23 @@ def test_cli_bad_usage_exits_nonzero():
         capture_output=True, text=True
     )
     assert result.returncode != 0
+
+
+def test_cli_refuses_to_overwrite_existing_output(tmp_path):
+    from docx import Document
+    doc = Document()
+    doc.add_paragraph("New content")
+    src = tmp_path / "collision.docx"
+    doc.save(src)
+
+    existing = tmp_path / "collision.md"
+    existing.write_text("Pre-existing content that must survive")
+
+    script = pathlib.Path(__file__).parent.parent / "convert.py"
+    result = subprocess.run(
+        [sys.executable, str(script), str(src)],
+        capture_output=True, text=True
+    )
+    assert result.returncode != 0
+    assert "collision.md" in result.stderr
+    assert existing.read_text() == "Pre-existing content that must survive"
