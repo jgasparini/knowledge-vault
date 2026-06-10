@@ -2,9 +2,10 @@
 name: wiki-lint
 description: >
   Run a lint pass on the wiki. Triggers when the user says "run a lint", "lint pass",
-  "lint the wiki", "check the wiki", or "wiki health check". Runs 8 structural checks,
-  auto-fixes index drift and missing cross-references, flags everything else for the user's
-  decision, produces a standard report, and appends an entry to CHANGELOG.md.
+  "lint the wiki", "check the wiki", or "wiki health check". Runs 9 structural checks,
+  auto-fixes index drift, missing cross-references, and frontmatter schema violations,
+  flags everything else for the user's decision, produces a standard report, and appends
+  an entry to CHANGELOG.md.
   Use this after every 10–15 ingests, or whenever the wiki feels like it's drifting.
 ---
 
@@ -31,11 +32,11 @@ Determine the bash-accessible path by translating the vault path using the sessi
 
 ## Execution order
 
-Checks 1, 5, and 8 are **scripted** — run the shell scripts first (they are fast and
+Checks 1, 5, 8, and 9 are **scripted** — run the shell scripts first (they are fast and
 exhaustive). Checks 2, 3, 4, 6, and 7 are **manual** — they require reading page content
 and applying judgment.
 
-Do not produce the report until all 8 checks are complete.
+Do not produce the report until all 9 checks are complete.
 
 ---
 
@@ -90,6 +91,35 @@ Both types are auto-fixes:
 - **BROKEN_ENTRY**: remove the entry from INDEX.md.
 
 Note total corrections in CHANGELOG.md.
+
+---
+
+### Check 9 — Frontmatter schema [SCRIPTED]
+
+Run:
+```bash
+bash skills/wiki-lint/scripts/check-frontmatter.sh /path/to/wiki
+```
+
+output format: `BAD_FRONTMATTER <field> <value> <path>` and `MISSING_FIELD <field> <path>`
+per violation, then `SUMMARY <pages_checked> <violation_count>`.
+
+Only pages whose `type:` matches one of the seven Section 3 page types (source, concept,
+entity, topic, project, area, person) are checked. Raw source files, web-clip imports with
+non-schema frontmatter, and `outputs/` working docs (`type: output`/`type: query`) are out
+of scope and never appear in the output.
+
+**If project-scoped:** filter results to pages under the project's folder.
+
+For each violation:
+- **MISSING_FIELD**: a required field is absent from frontmatter. If the correct value is
+  unambiguous (e.g. an `area:` field that should be `project:`), fix it directly. Otherwise
+  ask the user for the value.
+- **BAD_FRONTMATTER**: the field's value is not in its Section 3 enum. Propose the correct
+  value. If the value represents a genuine new case, follow the closed-enum proposal-gate
+  rules in `meta/CLAUDE.md` (Sections 3.1 and 3.3) before extending the enum.
+
+Note all corrections in CHANGELOG.md.
 
 ---
 
@@ -208,6 +238,9 @@ Always produce the report in this exact format:
 **QUESTIONS.md hygiene:** [n] items closed, [n] stale items flagged, [n] items archived
 
 **Index drift:** [n] entries added, [n] entries removed
+
+**Frontmatter schema:** [n] violations found / [n] fixed
+- <field> <value> in [[page]] — fix or proposal
 ```
 
 If a category is clean, write `[0] found` — do not omit the category.
@@ -225,6 +258,7 @@ Append one entry to `CHANGELOG.md` (newest first):
 - Stubs promoted: [details or "none"]
 - QUESTIONS hygiene: [n closed, n stale, n archived — or "none"]
 - Index drift: [n entries added, n removed]
+- Frontmatter schema: [n violations fixed — or "none"]
 ```
 
 ---
@@ -250,10 +284,10 @@ If no entries are older than 90 days, skip this step silently.
 
 ## Lint rules
 
-- Run scripted checks first (1, 5, 8), then manual checks (2, 3, 4, 6, 7). Report only after all 8.
+- Run scripted checks first (1, 5, 8, 9), then manual checks (2, 3, 4, 6, 7). Report only after all 9.
 - Missing pages (Check 5) are highest priority. Create stubs immediately.
-- Auto-fixes (Check 4 cross-references, Check 7 QUESTIONS closures, Check 8 index drift)
-  are applied and noted in CHANGELOG.md.
+- Auto-fixes (Check 4 cross-references, Check 7 QUESTIONS closures, Check 8 index drift,
+  Check 9 unambiguous frontmatter fixes) are applied and noted in CHANGELOG.md.
 - Everything else is flagged for the user's decision.
 - If any category exceeds 10 items, flag it as a structural problem.
 - The lint report is the output. Do not pad it with commentary.
@@ -272,6 +306,7 @@ bash skills/wiki-lint/scripts/find-orphans.sh /path/to/wiki
 bash skills/wiki-lint/scripts/find-missing-pages.sh /path/to/wiki
 bash skills/wiki-lint/scripts/check-index-drift.sh /path/to/wiki [projects/name]
 bash skills/wiki-lint/scripts/prune-questions.sh /path/to/wiki [days_threshold]
+bash skills/wiki-lint/scripts/check-frontmatter.sh /path/to/wiki
 ```
 
 **Windows 11:** use the `.ps1` equivalents via PowerShell (5.1+):
@@ -280,5 +315,7 @@ powershell -File skills\wiki-lint\scripts\find-orphans.ps1 C:\path\to\wiki
 powershell -File skills\wiki-lint\scripts\find-missing-pages.ps1 C:\path\to\wiki
 powershell -File skills\wiki-lint\scripts\check-index-drift.ps1 C:\path\to\wiki projects/ai-native-engineering
 powershell -File skills\wiki-lint\scripts\prune-questions.ps1 C:\path\to\wiki [days_threshold]
+powershell -File skills\wiki-lint\scripts\check-frontmatter.ps1 C:\path\to\wiki
 ```
-output format is identical — `ORPHAN`, `MISSING`, `NOT_INDEXED`, `BROKEN_ENTRY`, and `SUMMARY` lines — so the rest of the skill works unchanged on both platforms.
+output format is identical — `ORPHAN`, `MISSING`, `NOT_INDEXED`, `BROKEN_ENTRY`, `BAD_FRONTMATTER`,
+`MISSING_FIELD`, and `SUMMARY` lines — so the rest of the skill works unchanged on both platforms.

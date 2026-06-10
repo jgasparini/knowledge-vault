@@ -285,7 +285,7 @@ Things not yet resolved or well-understood.
 ```yaml
 ---
 type: entity
-entity-kind: person|company|tool|model|paper|research-group|standard
+entity-kind: person|company|tool|model|paper|research-group|standard|publication
 status: stub|active|evergreen
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
@@ -293,6 +293,10 @@ tags: []
 sources: []
 ---
 ```
+
+**Entity-kind rules:**
+- `entity-kind` is a closed enum. If no value fits, stop and propose a new value
+  to the user before using it — never coin a new `entity-kind` value silently.
 
 **Page structure:**
 ```

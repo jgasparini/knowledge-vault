@@ -49,6 +49,9 @@ jobs:
           New-Item -ItemType Directory -Path (Join-Path $env:RUNNER_TEMP "questions/projects/demo") -Force | Out-Null
           Set-Content -Path (Join-Path $env:RUNNER_TEMP "questions/projects/demo/QUESTIONS.md") -Value "- [ ] Open question"
 
+          $frontmatterContent = "---`ntype: source`nstatus: processed`ncreated: 2026-01-01`ntags: [test]`nsource-type: article`nreliability: primary`norigin: https://example.com`nproject: demo`n---`n`n# Good Source"
+          Set-Content -Path "$wiki/resources/concepts/page-good-source.md" -Value $frontmatterContent
+
           $scripts = "skills/wiki-lint/scripts"
           $failed = $false
 
@@ -63,5 +66,8 @@ jobs:
 
           $out = & "$scripts/prune-questions.ps1" (Join-Path $env:RUNNER_TEMP "questions")
           if (-not ($out -match "^SUMMARY")) { Write-Error "prune-questions.ps1 failed"; $failed = $true }
+
+          $out = & "$scripts/check-frontmatter.ps1" $wiki
+          if (-not ($out -match "^SUMMARY")) { Write-Error "check-frontmatter.ps1 failed"; $failed = $true }
 
           if ($failed) { exit 1 }
