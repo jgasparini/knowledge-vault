@@ -44,12 +44,13 @@ done < <(find "$WIKI" -name "*.md" ! -name "* *" | grep -vE "$NAV_PATTERN" | sor
 # ── Check 2: INDEX.md entries pointing to non-existent files ───────────────
 
 if [ -n "$SCOPE" ]; then
-  index_files="$WIKI/$SCOPE/INDEX.md $WIKI/INDEX.md"
+  index_file_list="$WIKI/$SCOPE/INDEX.md
+$WIKI/INDEX.md"
 else
-  index_files=$(find "$WIKI" -name "INDEX.md" | sort)
+  index_file_list=$(find "$WIKI" -name "INDEX.md" | sort)
 fi
 
-for indexfile in $index_files; do
+while IFS= read -r indexfile; do
   [ -f "$indexfile" ] || continue
   relindex="${indexfile#"$WIKI/"}"
 
@@ -74,12 +75,12 @@ for indexfile in $index_files; do
     | sed 's/\[\[//; s/\]\]//' \
     | sed 's/|.*//' \
     | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')
-done
+done <<< "$index_file_list"
 
 cat "$tmpout"
 
-not_indexed=$(grep "^NOT_INDEXED" "$tmpout" | wc -l | tr -d ' ')
-broken=$(grep "^BROKEN_ENTRY" "$tmpout" | wc -l | tr -d ' ')
+not_indexed=$(grep -c "^NOT_INDEXED" "$tmpout")
+broken=$(grep -c "^BROKEN_ENTRY" "$tmpout")
 rm -f "$tmpout"
 
 echo "SUMMARY $not_indexed $broken"

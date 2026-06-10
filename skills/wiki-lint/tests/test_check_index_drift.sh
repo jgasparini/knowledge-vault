@@ -9,12 +9,9 @@
 #   wiki/resources/concepts/page-orphan.md exists but is referenced by
 #   no INDEX.md -> NOT_INDEXED
 #
-# Vault root contains a space (F1, audit finding). The NOT_INDEXED check
-# is unaffected by F1 and is expected to PASS. The BROKEN_ENTRY check and
-# the SUMMARY line ARE affected by F1 (see check-index-drift.sh:46-52,
-# unquoted $index_files loop) and are EXPECTED TO FAIL until the separate
-# quoting-fix issue lands. Do not "fix" this test by changing the
-# expectations — the failure is the point.
+# Vault root contains a space (F1, audit finding, fixed by #31). All three
+# checks below — including BROKEN_ENTRY and SUMMARY — must pass with a
+# space-containing vault path.
 
 SCRIPT="$SCRIPTS_DIR/check-index-drift.sh"
 
@@ -54,9 +51,9 @@ assert_line_present "NOT_INDEXED resources/concepts/page-orphan.md" "$output" \
   "check-index-drift: flags a content page not referenced by any INDEX.md"
 
 assert_line_present "BROKEN_ENTRY [[resources/concepts/page-missing]] in INDEX.md" "$output" \
-  "check-index-drift: flags an INDEX.md entry with no matching file (F1 regression: EXPECTED TO FAIL until quoting fix lands)"
+  "check-index-drift: flags an INDEX.md entry with no matching file (vault path contains a space)"
 
 assert_line_present "SUMMARY 1 1" "$output" \
-  "check-index-drift: summary counts both findings (F1 regression: EXPECTED TO FAIL until quoting fix lands)"
+  "check-index-drift: summary counts both findings (vault path contains a space)"
 
 rm -rf "$base"
