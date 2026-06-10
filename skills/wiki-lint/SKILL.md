@@ -241,9 +241,13 @@ Always produce the report in this exact format:
 
 **Frontmatter schema:** [n] violations found / [n] fixed
 - <field> <value> in [[page]] — fix or proposal
+
+**Health:** ingest-count reset, last-lint set to YYYY-MM-DD
 ```
 
-If a category is clean, write `[0] found` — do not omit the category.
+If a category is clean, write `[0] found` — do not omit the category. The `Health:` line is
+filled in last, after the `meta/health.md` update in "After the report" below — see that
+section for what to write if verification fails.
 
 ---
 
@@ -264,6 +268,16 @@ Append one entry to `CHANGELOG.md` (newest first):
 ---
 
 Update `meta/health.md`: reset `ingest-count` to 0 and set `last-lint` to today's date.
+
+Verify the update:
+```bash
+bash skills/wiki-lint/scripts/check-health.sh /path/to/wiki
+```
+output format: `BAD_HEALTH <reason>` per issue, then `SUMMARY <issue_count>`.
+
+If `SUMMARY 0`, fill in the report's `**Health:**` line with `ingest-count reset, last-lint
+set to YYYY-MM-DD`. If any `BAD_HEALTH` lines appear, fix `meta/health.md` directly, re-run
+the check, then fill in the `**Health:**` line — never leave it as an unfilled placeholder.
 
 **Trim CHANGELOG.md (archive entries older than 90 days):**
 
@@ -307,6 +321,7 @@ bash skills/wiki-lint/scripts/find-missing-pages.sh /path/to/wiki
 bash skills/wiki-lint/scripts/check-index-drift.sh /path/to/wiki [projects/name]
 bash skills/wiki-lint/scripts/prune-questions.sh /path/to/wiki [days_threshold]
 bash skills/wiki-lint/scripts/check-frontmatter.sh /path/to/wiki
+bash skills/wiki-lint/scripts/check-health.sh /path/to/wiki
 ```
 
 **Windows 11:** use the `.ps1` equivalents via PowerShell (5.1+):
@@ -316,6 +331,8 @@ powershell -File skills\wiki-lint\scripts\find-missing-pages.ps1 C:\path\to\wiki
 powershell -File skills\wiki-lint\scripts\check-index-drift.ps1 C:\path\to\wiki projects/ai-native-engineering
 powershell -File skills\wiki-lint\scripts\prune-questions.ps1 C:\path\to\wiki [days_threshold]
 powershell -File skills\wiki-lint\scripts\check-frontmatter.ps1 C:\path\to\wiki
+powershell -File skills\wiki-lint\scripts\check-health.ps1 C:\path\to\wiki
 ```
 output format is identical — `ORPHAN`, `MISSING`, `NOT_INDEXED`, `BROKEN_ENTRY`, `BAD_FRONTMATTER`,
-`MISSING_FIELD`, and `SUMMARY` lines — so the rest of the skill works unchanged on both platforms.
+`MISSING_FIELD`, `BAD_HEALTH`, and `SUMMARY` lines — so the rest of the skill works unchanged on
+both platforms.
