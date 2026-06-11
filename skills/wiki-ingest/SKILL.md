@@ -99,7 +99,10 @@ Scan the source against the existing wiki. Before writing any pages, flag:
 
 - **New Project** — does this source suggest work with a goal and owner that doesn't map
   to an existing project?
-- **New Topic hub** — does this source introduce a domain broad enough to warrant its own hub?
+- **New Topic hub** — does this source introduce a domain broad enough to warrant its own
+  hub? Per `meta/CLAUDE.md` Section 3.4, prefer broadening an existing hub's scope over
+  creating a new narrow one — check whether an existing hub could reasonably absorb this
+  material before proposing a new one.
 - **New Area** — does this source relate to an ongoing responsibility not yet captured?
 
 If any of these apply, name them explicitly and ask the user to confirm before proceeding.

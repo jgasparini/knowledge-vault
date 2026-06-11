@@ -61,6 +61,14 @@ jobs:
           $frontmatterContent = "---`ntype: source`nstatus: processed`ncreated: 2026-01-01`ntags: [test]`nsource-type: article`nreliability: primary`norigin: https://example.com`nproject: demo`n---`n`n# Good Source"
           Set-Content -Path "$wiki/resources/concepts/page-good-source.md" -Value $frontmatterContent
 
+          $conceptContent = "---`ntype: concept`nstatus: active`ncreated: 2026-01-01`nupdated: 2026-01-01`ntags: []`nsources: []`n---`n`n# Concept"
+          Set-Content -Path "$wiki/resources/concepts/agent-memory.md" -Value $conceptContent
+          Set-Content -Path "$wiki/resources/concepts/agent-memory-taxonomy.md" -Value $conceptContent
+
+          $thinHubContent = "---`ntype: topic`nstatus: stub`ncreated: 2020-01-01`nupdated: 2020-01-01`ntags: []`nsources: []`n---`n`n# Thin Hub"
+          New-Item -ItemType Directory -Path "$wiki/resources/topics" -Force | Out-Null
+          Set-Content -Path "$wiki/resources/topics/thin-hub.md" -Value $thinHubContent
+
           $scripts = "skills/wiki-lint/scripts"
           $failed = $false
 
@@ -78,5 +86,13 @@ jobs:
 
           $out = & "$scripts/check-frontmatter.ps1" $wiki
           if (-not ($out -match "^SUMMARY")) { Write-Error "check-frontmatter.ps1 failed"; $failed = $true }
+
+          $out = & "$scripts/find-duplicate-candidates.ps1" $wiki
+          if (-not ($out -match "^SUMMARY")) { Write-Error "find-duplicate-candidates.ps1 failed"; $failed = $true }
+          if (-not ($out -match "^CANDIDATE concept")) { Write-Error "find-duplicate-candidates.ps1 did not detect expected CANDIDATE"; $failed = $true }
+
+          $out = & "$scripts/find-thin-topic-hubs.ps1" $wiki
+          if (-not ($out -match "^SUMMARY")) { Write-Error "find-thin-topic-hubs.ps1 failed"; $failed = $true }
+          if (-not ($out -match "^THIN_HUB 0 \d+ resources/topics/thin-hub.md")) { Write-Error "find-thin-topic-hubs.ps1 did not detect expected THIN_HUB"; $failed = $true }
 
           if ($failed) { exit 1 }

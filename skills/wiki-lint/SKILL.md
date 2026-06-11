@@ -2,7 +2,7 @@
 name: wiki-lint
 description: >
   Run a lint pass on the wiki. Triggers when the user says "run a lint", "lint pass",
-  "lint the wiki", "check the wiki", or "wiki health check". Runs 10 structural checks,
+  "lint the wiki", "check the wiki", or "wiki health check". Runs 11 structural checks,
   auto-fixes index drift, missing cross-references, and frontmatter schema violations,
   flags everything else for the user's decision, produces a standard report, and appends
   an entry to CHANGELOG.md.
@@ -32,11 +32,11 @@ Determine the bash-accessible path by translating the vault path using the sessi
 
 ## Execution order
 
-Checks 1, 5, 8, 9, and 10 are **scripted** — run the shell scripts first (they are fast and
-exhaustive). Checks 2, 3, 4, 6, and 7 are **manual** — they require reading page content
+Checks 1, 5, 8, 9, 10, and 11 are **scripted** — run the shell scripts first (they are fast
+and exhaustive). Checks 2, 3, 4, 6, and 7 are **manual** — they require reading page content
 and applying judgment.
 
-Do not produce the report until all 10 checks are complete.
+Do not produce the report until all 11 checks are complete.
 
 ---
 
@@ -150,6 +150,33 @@ of the current `consolidation-count`.
 This check has no natural project filter — concept/entity/topic pages aren't owned by a
 single project. Run it globally regardless of lint scope, same as Check 1 (orphans), and
 include its results in both project-scoped and global lint reports.
+
+---
+
+### Check 11 — Thin topic hubs [SCRIPTED]
+
+Run:
+```bash
+bash skills/wiki-lint/scripts/find-thin-topic-hubs.sh /path/to/wiki
+```
+
+output format: `THIN_HUB <sources_count> <days_old> <relative_path>` per flagged hub, then
+`SUMMARY <hubs_checked> <thin_count>`.
+
+A hub is flagged when it is `status: stub`, has fewer than 3 entries in its `sources:`
+frontmatter field, and was `created` 30 or more days ago (pass a second argument to the
+script to use a different threshold). This is the "thin hub" signal documented in
+`meta/CLAUDE.md` Section 3.4 — distinct from Check 3, which applies to `status: active`
+pages and uses `updated` plus `decay-rate`.
+
+For each THIN_HUB, name the hub with a wikilink and report its source count and age.
+
+If one or more hubs are flagged, recommend running `wiki-consolidate` now — its Check 5
+(Topic hub health) proposes merging thin hubs into broader adjacent hubs.
+
+This check has no natural project filter — topic hubs aren't owned by a single project.
+Run it globally regardless of lint scope, same as Checks 1 and 10, and include its
+results in both project-scoped and global lint reports.
 
 ---
 
@@ -277,18 +304,27 @@ Always produce the report in this exact format:
   Overlap: "..." (quote from page-a) / "..." (quote from page-b)
   Proposed: [[page-b]] (stub, 1 source) folds into [[page-a]] — review via wiki-consolidate
 
+**Thin topic hubs:** [n] found
+- [[hub]] — status: stub, N sources, M days old
+
 **Health:** ingest-count reset, last-lint set to YYYY-MM-DD
 ```
 
 If a category is clean, write `[0] found` — do not omit the category, including
-**Near-duplicate candidates**, which must always be written as `[0] found` rather than
-omitted. The `Health:` line is filled in last, after the `meta/health.md` update in "After
-the report" below — see that section for what to write if verification fails.
+**Near-duplicate candidates** and **Thin topic hubs**, which must always be written as
+`[0] found` rather than omitted. The `Health:` line is filled in last, after the
+`meta/health.md` update in "After the report" below — see that section for what to write
+if verification fails.
 
 If `**Near-duplicate candidates**` is `[n] >= 1`, add one line directly below the section:
 
 ⚠️ *Near-duplicate candidates found — consider running `wiki-consolidate` now, independent
 of the consolidation-count nudge.*
+
+If `**Thin topic hubs**` is `[n] >= 1`, add one line directly below the section:
+
+⚠️ *Thin topic hubs found — consider running `wiki-consolidate` now, independent of the
+consolidation-count nudge.*
 
 ---
 
@@ -305,6 +341,7 @@ Append one entry to `CHANGELOG.md` (newest first):
 - Index drift: [n entries added, n removed]
 - Frontmatter schema: [n violations fixed — or "none"]
 - Near-duplicate candidates: [n] found (or "none")
+- Thin topic hubs: [n] found (or "none")
 ```
 
 ---
@@ -340,7 +377,7 @@ If no entries are older than 90 days, skip this step silently.
 
 ## Lint rules
 
-- Run scripted checks first (1, 5, 8, 9, 10), then manual checks (2, 3, 4, 6, 7). Report only after all 10.
+- Run scripted checks first (1, 5, 8, 9, 10, 11), then manual checks (2, 3, 4, 6, 7). Report only after all 11.
 - Missing pages (Check 5) are highest priority. Create stubs immediately.
 - Auto-fixes (Check 4 cross-references, Check 7 QUESTIONS closures, Check 8 index drift,
   Check 9 unambiguous frontmatter fixes) are applied and noted in CHANGELOG.md.
@@ -364,6 +401,7 @@ bash skills/wiki-lint/scripts/check-index-drift.sh /path/to/wiki [projects/name]
 bash skills/wiki-lint/scripts/prune-questions.sh /path/to/wiki [days_threshold]
 bash skills/wiki-lint/scripts/check-frontmatter.sh /path/to/wiki
 bash skills/wiki-lint/scripts/find-duplicate-candidates.sh /path/to/wiki
+bash skills/wiki-lint/scripts/find-thin-topic-hubs.sh /path/to/wiki [days_threshold]
 bash skills/wiki-lint/scripts/check-health.sh /path/to/wiki
 ```
 
@@ -375,8 +413,9 @@ powershell -File skills\wiki-lint\scripts\check-index-drift.ps1 C:\path\to\wiki 
 powershell -File skills\wiki-lint\scripts\prune-questions.ps1 C:\path\to\wiki [days_threshold]
 powershell -File skills\wiki-lint\scripts\check-frontmatter.ps1 C:\path\to\wiki
 powershell -File skills\wiki-lint\scripts\find-duplicate-candidates.ps1 C:\path\to\wiki
+powershell -File skills\wiki-lint\scripts\find-thin-topic-hubs.ps1 C:\path\to\wiki [days_threshold]
 powershell -File skills\wiki-lint\scripts\check-health.ps1 C:\path\to\wiki
 ```
 output format is identical — `ORPHAN`, `MISSING`, `NOT_INDEXED`, `BROKEN_ENTRY`, `BAD_FRONTMATTER`,
-`MISSING_FIELD`, `BAD_HEALTH`, `CANDIDATE`, and `SUMMARY` lines — so the rest of the skill works
-unchanged on both platforms.
+`MISSING_FIELD`, `BAD_HEALTH`, `CANDIDATE`, `THIN_HUB`, and `SUMMARY` lines — so the rest of the
+skill works unchanged on both platforms.
