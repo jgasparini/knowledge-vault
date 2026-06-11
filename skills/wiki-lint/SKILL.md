@@ -2,7 +2,7 @@
 name: wiki-lint
 description: >
   Run a lint pass on the wiki. Triggers when the user says "run a lint", "lint pass",
-  "lint the wiki", "check the wiki", or "wiki health check". Runs 9 structural checks,
+  "lint the wiki", "check the wiki", or "wiki health check". Runs 10 structural checks,
   auto-fixes index drift, missing cross-references, and frontmatter schema violations,
   flags everything else for the user's decision, produces a standard report, and appends
   an entry to CHANGELOG.md.
@@ -32,11 +32,11 @@ Determine the bash-accessible path by translating the vault path using the sessi
 
 ## Execution order
 
-Checks 1, 5, 8, and 9 are **scripted** — run the shell scripts first (they are fast and
+Checks 1, 5, 8, 9, and 10 are **scripted** — run the shell scripts first (they are fast and
 exhaustive). Checks 2, 3, 4, 6, and 7 are **manual** — they require reading page content
 and applying judgment.
 
-Do not produce the report until all 9 checks are complete.
+Do not produce the report until all 10 checks are complete.
 
 ---
 
@@ -120,6 +120,36 @@ For each violation:
   rules in `meta/CLAUDE.md` (Sections 3.1 and 3.3) before extending the enum.
 
 Note all corrections in CHANGELOG.md.
+
+---
+
+### Check 10 — Near-duplicate candidates [SCRIPTED + MANUAL]
+
+Run:
+```bash
+bash skills/wiki-lint/scripts/find-duplicate-candidates.sh /path/to/wiki
+```
+
+output format: `CANDIDATE <type> <path-a> <path-b> <shared-tokens>` per pair, then
+`SUMMARY <pages_checked> <candidate_count>`.
+
+For each CANDIDATE, read both pages' "What it is" / "Overview" sections and frontmatter
+(`status`, `sources`). Confirm only if the two pages describe substantially the same
+concept, entity, or topic under different names. Dismiss coincidental word overlap
+(shared tokens that reflect a real but different relationship between the two pages,
+not duplication).
+
+For each confirmed pair: name both with wikilinks, quote the overlapping claim from
+each. If one page is clearly thinner (`status: stub`, fewer `sources`), propose it as
+the page that would fold into the other; otherwise note "review via wiki-consolidate"
+without proposing a direction. Do not merge anything here — this check reports only.
+
+If one or more pairs are confirmed, recommend running `wiki-consolidate` now, regardless
+of the current `consolidation-count`.
+
+This check has no natural project filter — concept/entity/topic pages aren't owned by a
+single project. Run it globally regardless of lint scope, same as Check 1 (orphans), and
+include its results in both project-scoped and global lint reports.
 
 ---
 
