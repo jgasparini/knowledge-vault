@@ -272,12 +272,23 @@ Always produce the report in this exact format:
 **Frontmatter schema:** [n] violations found / [n] fixed
 - <field> <value> in [[page]] — fix or proposal
 
+**Near-duplicate candidates:** [n] found
+- [[page-a]] / [[page-b]] — shared tokens: token1, token2
+  Overlap: "..." (quote from page-a) / "..." (quote from page-b)
+  Proposed: [[page-b]] (stub, 1 source) folds into [[page-a]] — review via wiki-consolidate
+
 **Health:** ingest-count reset, last-lint set to YYYY-MM-DD
 ```
 
-If a category is clean, write `[0] found` — do not omit the category. The `Health:` line is
-filled in last, after the `meta/health.md` update in "After the report" below — see that
-section for what to write if verification fails.
+If a category is clean, write `[0] found` — do not omit the category, including
+**Near-duplicate candidates**, which must always be written as `[0] found` rather than
+omitted. The `Health:` line is filled in last, after the `meta/health.md` update in "After
+the report" below — see that section for what to write if verification fails.
+
+If `**Near-duplicate candidates**` is `[n] >= 1`, add one line directly below the section:
+
+⚠️ *Near-duplicate candidates found — consider running `wiki-consolidate` now, independent
+of the consolidation-count nudge.*
 
 ---
 
@@ -293,6 +304,7 @@ Append one entry to `CHANGELOG.md` (newest first):
 - QUESTIONS hygiene: [n closed, n stale, n archived — or "none"]
 - Index drift: [n entries added, n removed]
 - Frontmatter schema: [n violations fixed — or "none"]
+- Near-duplicate candidates: [n] found (or "none")
 ```
 
 ---
@@ -328,7 +340,7 @@ If no entries are older than 90 days, skip this step silently.
 
 ## Lint rules
 
-- Run scripted checks first (1, 5, 8, 9), then manual checks (2, 3, 4, 6, 7). Report only after all 9.
+- Run scripted checks first (1, 5, 8, 9, 10), then manual checks (2, 3, 4, 6, 7). Report only after all 10.
 - Missing pages (Check 5) are highest priority. Create stubs immediately.
 - Auto-fixes (Check 4 cross-references, Check 7 QUESTIONS closures, Check 8 index drift,
   Check 9 unambiguous frontmatter fixes) are applied and noted in CHANGELOG.md.
@@ -351,6 +363,7 @@ bash skills/wiki-lint/scripts/find-missing-pages.sh /path/to/wiki
 bash skills/wiki-lint/scripts/check-index-drift.sh /path/to/wiki [projects/name]
 bash skills/wiki-lint/scripts/prune-questions.sh /path/to/wiki [days_threshold]
 bash skills/wiki-lint/scripts/check-frontmatter.sh /path/to/wiki
+bash skills/wiki-lint/scripts/find-duplicate-candidates.sh /path/to/wiki
 bash skills/wiki-lint/scripts/check-health.sh /path/to/wiki
 ```
 
@@ -361,8 +374,9 @@ powershell -File skills\wiki-lint\scripts\find-missing-pages.ps1 C:\path\to\wiki
 powershell -File skills\wiki-lint\scripts\check-index-drift.ps1 C:\path\to\wiki projects/ai-native-engineering
 powershell -File skills\wiki-lint\scripts\prune-questions.ps1 C:\path\to\wiki [days_threshold]
 powershell -File skills\wiki-lint\scripts\check-frontmatter.ps1 C:\path\to\wiki
+powershell -File skills\wiki-lint\scripts\find-duplicate-candidates.ps1 C:\path\to\wiki
 powershell -File skills\wiki-lint\scripts\check-health.ps1 C:\path\to\wiki
 ```
 output format is identical — `ORPHAN`, `MISSING`, `NOT_INDEXED`, `BROKEN_ENTRY`, `BAD_FRONTMATTER`,
-`MISSING_FIELD`, `BAD_HEALTH`, and `SUMMARY` lines — so the rest of the skill works unchanged on
-both platforms.
+`MISSING_FIELD`, `BAD_HEALTH`, `CANDIDATE`, and `SUMMARY` lines — so the rest of the skill works
+unchanged on both platforms.
