@@ -315,6 +315,13 @@ Links to related entities, concepts, topics, and projects.
 **Created by:** Claude when a domain warrants its own hub.
 **Requires explicit confirmation before creation.**
 
+**Prefer broadening over fragmenting:** before proposing a new topic hub, check whether
+an existing hub's scope could reasonably be broadened to cover the new material. Note
+in the proposal which adjacent hubs were considered and why a new hub is still
+warranted. A vault with many narrow, thin hubs degrades the resource graph — see
+wiki-lint Check 11 and wiki-consolidate Check 5 for the thin-hub signal (status: stub,
+fewer than 3 sources, 30+ days old) that retroactively flags this.
+
 ```yaml
 ---
 type: topic
@@ -527,6 +534,6 @@ Never promote silently.
 
 ## Section 5: Lint Workflow
 
-See `skills/wiki-lint/SKILL.md` for the full lint workflow, 10 checks,
+See `skills/wiki-lint/SKILL.md` for the full lint workflow, 11 checks,
 report format, and rules. Run after every 10–15 ingests, or whenever
 the wiki feels like it's drifting.
