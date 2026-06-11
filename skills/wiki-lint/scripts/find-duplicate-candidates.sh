@@ -28,7 +28,14 @@ page_type() {
   awk '
     NR==1 { if ($0 != "---") exit; next }
     /^---$/ { exit }
-    /^type:/ { sub("^type:[[:space:]]*", ""); print; exit }
+    /^type:/ {
+      sub("^type:[[:space:]]*", "")
+      sub("[[:space:]]*$", "")
+      sub(/^["'"'"']/, "")
+      sub(/["'"'"']$/, "")
+      print
+      exit
+    }
   ' "$1"
 }
 
@@ -69,6 +76,7 @@ for idx in "${!dirs[@]}"; do
 
       shared=()
       for t in "${tokens_a[@]}"; do
+        [ -n "$t" ] || continue
         for t2 in "${tokens_b[@]}"; do
           if [ "$t" = "$t2" ]; then
             shared+=("$t")
