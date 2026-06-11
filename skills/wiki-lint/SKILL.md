@@ -2,7 +2,7 @@
 name: wiki-lint
 description: >
   Run a lint pass on the wiki. Triggers when the user says "run a lint", "lint pass",
-  "lint the wiki", "check the wiki", or "wiki health check". Runs 9 structural checks,
+  "lint the wiki", "check the wiki", or "wiki health check". Runs 10 structural checks,
   auto-fixes index drift, missing cross-references, and frontmatter schema violations,
   flags everything else for the user's decision, produces a standard report, and appends
   an entry to CHANGELOG.md.
@@ -32,11 +32,11 @@ Determine the bash-accessible path by translating the vault path using the sessi
 
 ## Execution order
 
-Checks 1, 5, 8, and 9 are **scripted** — run the shell scripts first (they are fast and
+Checks 1, 5, 8, 9, and 10 are **scripted** — run the shell scripts first (they are fast and
 exhaustive). Checks 2, 3, 4, 6, and 7 are **manual** — they require reading page content
 and applying judgment.
 
-Do not produce the report until all 9 checks are complete.
+Do not produce the report until all 10 checks are complete.
 
 ---
 
@@ -120,6 +120,36 @@ For each violation:
   rules in `meta/CLAUDE.md` (Sections 3.1 and 3.3) before extending the enum.
 
 Note all corrections in CHANGELOG.md.
+
+---
+
+### Check 10 — Near-duplicate candidates [SCRIPTED + MANUAL]
+
+Run:
+```bash
+bash skills/wiki-lint/scripts/find-duplicate-candidates.sh /path/to/wiki
+```
+
+output format: `CANDIDATE <type> <path-a> <path-b> <shared-tokens>` per pair, then
+`SUMMARY <pages_checked> <candidate_count>`.
+
+For each CANDIDATE, read both pages' "What it is" / "Overview" sections and frontmatter
+(`status`, `sources`). Confirm only if the two pages describe substantially the same
+concept, entity, or topic under different names. Dismiss coincidental word overlap
+(shared tokens that reflect a real but different relationship between the two pages,
+not duplication).
+
+For each confirmed pair: name both with wikilinks, quote the overlapping claim from
+each. If one page is clearly thinner (`status: stub`, fewer `sources`), propose it as
+the page that would fold into the other; otherwise note "review via wiki-consolidate"
+without proposing a direction. Do not merge anything here — this check reports only.
+
+If one or more pairs are confirmed, recommend running `wiki-consolidate` now, regardless
+of the current `consolidation-count`.
+
+This check has no natural project filter — concept/entity/topic pages aren't owned by a
+single project. Run it globally regardless of lint scope, same as Check 1 (orphans), and
+include its results in both project-scoped and global lint reports.
 
 ---
 
@@ -242,12 +272,23 @@ Always produce the report in this exact format:
 **Frontmatter schema:** [n] violations found / [n] fixed
 - <field> <value> in [[page]] — fix or proposal
 
+**Near-duplicate candidates:** [n] found
+- [[page-a]] / [[page-b]] — shared tokens: token1, token2
+  Overlap: "..." (quote from page-a) / "..." (quote from page-b)
+  Proposed: [[page-b]] (stub, 1 source) folds into [[page-a]] — review via wiki-consolidate
+
 **Health:** ingest-count reset, last-lint set to YYYY-MM-DD
 ```
 
-If a category is clean, write `[0] found` — do not omit the category. The `Health:` line is
-filled in last, after the `meta/health.md` update in "After the report" below — see that
-section for what to write if verification fails.
+If a category is clean, write `[0] found` — do not omit the category, including
+**Near-duplicate candidates**, which must always be written as `[0] found` rather than
+omitted. The `Health:` line is filled in last, after the `meta/health.md` update in "After
+the report" below — see that section for what to write if verification fails.
+
+If `**Near-duplicate candidates**` is `[n] >= 1`, add one line directly below the section:
+
+⚠️ *Near-duplicate candidates found — consider running `wiki-consolidate` now, independent
+of the consolidation-count nudge.*
 
 ---
 
@@ -263,6 +304,7 @@ Append one entry to `CHANGELOG.md` (newest first):
 - QUESTIONS hygiene: [n closed, n stale, n archived — or "none"]
 - Index drift: [n entries added, n removed]
 - Frontmatter schema: [n violations fixed — or "none"]
+- Near-duplicate candidates: [n] found (or "none")
 ```
 
 ---
@@ -298,7 +340,7 @@ If no entries are older than 90 days, skip this step silently.
 
 ## Lint rules
 
-- Run scripted checks first (1, 5, 8, 9), then manual checks (2, 3, 4, 6, 7). Report only after all 9.
+- Run scripted checks first (1, 5, 8, 9, 10), then manual checks (2, 3, 4, 6, 7). Report only after all 10.
 - Missing pages (Check 5) are highest priority. Create stubs immediately.
 - Auto-fixes (Check 4 cross-references, Check 7 QUESTIONS closures, Check 8 index drift,
   Check 9 unambiguous frontmatter fixes) are applied and noted in CHANGELOG.md.
@@ -321,6 +363,7 @@ bash skills/wiki-lint/scripts/find-missing-pages.sh /path/to/wiki
 bash skills/wiki-lint/scripts/check-index-drift.sh /path/to/wiki [projects/name]
 bash skills/wiki-lint/scripts/prune-questions.sh /path/to/wiki [days_threshold]
 bash skills/wiki-lint/scripts/check-frontmatter.sh /path/to/wiki
+bash skills/wiki-lint/scripts/find-duplicate-candidates.sh /path/to/wiki
 bash skills/wiki-lint/scripts/check-health.sh /path/to/wiki
 ```
 
@@ -331,8 +374,9 @@ powershell -File skills\wiki-lint\scripts\find-missing-pages.ps1 C:\path\to\wiki
 powershell -File skills\wiki-lint\scripts\check-index-drift.ps1 C:\path\to\wiki projects/ai-native-engineering
 powershell -File skills\wiki-lint\scripts\prune-questions.ps1 C:\path\to\wiki [days_threshold]
 powershell -File skills\wiki-lint\scripts\check-frontmatter.ps1 C:\path\to\wiki
+powershell -File skills\wiki-lint\scripts\find-duplicate-candidates.ps1 C:\path\to\wiki
 powershell -File skills\wiki-lint\scripts\check-health.ps1 C:\path\to\wiki
 ```
 output format is identical — `ORPHAN`, `MISSING`, `NOT_INDEXED`, `BROKEN_ENTRY`, `BAD_FRONTMATTER`,
-`MISSING_FIELD`, `BAD_HEALTH`, and `SUMMARY` lines — so the rest of the skill works unchanged on
-both platforms.
+`MISSING_FIELD`, `BAD_HEALTH`, `CANDIDATE`, and `SUMMARY` lines — so the rest of the skill works
+unchanged on both platforms.

@@ -527,6 +527,6 @@ Never promote silently.
 
 ## Section 5: Lint Workflow
 
-See `skills/wiki-lint/SKILL.md` for the full lint workflow, 8 checks,
+See `skills/wiki-lint/SKILL.md` for the full lint workflow, 10 checks,
 report format, and rules. Run after every 10–15 ingests, or whenever
 the wiki feels like it's drifting.
