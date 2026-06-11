@@ -53,7 +53,7 @@ $candidateCount = 0
 
 foreach ($dir in $dirTypes.Keys) {
     $type = $dirTypes[$dir]
-    $d = Join-Path $Wiki "resources\$dir"
+    $d = Join-Path (Join-Path $Wiki "resources") $dir
     if (-not (Test-Path $d)) { continue }
 
     $files = @(Get-ChildItem -Path $d -Filter "*.md" -ErrorAction SilentlyContinue |
