@@ -198,7 +198,6 @@ above). A cross-area overlap that warrants a new concept page follows the
 **Registry updates:** After applying any approved changes, update the following files:
 - Remove any merged/archived pages from the relevant `INDEX.md` entries, or note them as redirects
 - If a new concept page was created, add it to the project `INDEX.md` and root `wiki/INDEX.md` per the ingest rules
-- Update `meta/health.md`: set `last-consolidation` to today's date
 
 Append one entry to `CHANGELOG.md` (newest first):
 
@@ -225,6 +224,11 @@ count into the existing **Synthesis actions** line rather than adding a new fiel
 keep the established `[global]` format intact.
 
 If all checks that ran for the chosen scope find zero items, still append the CHANGELOG entry with all fields set to "none", and state clearly in the report: "Wiki is semantically clean as of YYYY-MM-DD — no action needed."
+
+**Health update — always:** Regardless of whether any proposals were approved, update
+`meta/health.md` at the end of every consolidation pass: set `last-consolidation` to
+today's date and reset `consolidation-count` to 0. A clean pass still resets the cadence —
+the counter tracks ingests since the wiki was last reviewed, not since it was last changed.
 
 ---
 

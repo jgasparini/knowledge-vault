@@ -216,11 +216,25 @@ Prepend one new entry at the top (newest first):
 ```
 
 **`meta/health.md`**
-Read the file. Increment `ingest-count` by 1 and write the updated value back. If
-`ingest-count` is now 15 or more, emit this warning at the end of Step 9 before continuing
-to Step 10:
+Read the file. Increment both `ingest-count` and `consolidation-count` by 1 and write the
+updated values back.
 
-> ⚠️ *`ingest-count` ingests since last lint — consider running `wiki-lint` before the next ingest.*
+Then check thresholds, in this priority order, and emit at most one nudge at the end of
+Step 9 before continuing to Step 10:
+
+1. If `ingest-count` is now 15 or more, emit:
+
+   > ⚠️ *`ingest-count` ingests since last lint — consider running `wiki-lint` before the next ingest.*
+
+2. Otherwise, if `consolidation-count` is now 30 or more, emit:
+
+   > ⚠️ *`consolidation-count` ingests since last consolidation — consider running `wiki-consolidate`.*
+
+The lint nudge always wins when both thresholds are crossed at once — do not emit both.
+Lint is the cheaper, faster pass and a natural prerequisite for a clean consolidation, and
+because the consolidation threshold (30) is roughly double the lint threshold (15), by the
+time consolidation is due the lint counter will already be significantly overdue. This
+ordering is deliberate; do not reintroduce a double-nudge.
 
 If you reach the end of the workflow and have not updated all five files, go back and do
 it before confirming. Do not confirm without completing this step.
