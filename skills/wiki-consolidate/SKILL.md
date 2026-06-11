@@ -4,10 +4,12 @@ description: >
   Semantic review of the wiki. Triggers when the user says "consolidate the wiki",
   "run a consolidation", "consolidation pass", "review the wiki for drift",
   "cleanup pass", "cross-area synthesis", or "consolidate across areas".
-  Runs four checks: deduplication candidates (pages covering the same ground),
+  Runs five checks: deduplication candidates (pages covering the same ground),
   lifecycle promotions (status changes that are overdue), synthesis opportunities
-  (concepts ready for a new hub or cross-reference), and cross-area concept overlaps
-  (concepts or entities that span two or more areas without a connecting wikilink).
+  (concepts ready for a new hub or cross-reference), cross-area concept overlaps
+  (concepts or entities that span two or more areas without a connecting wikilink),
+  and topic hub health (global passes only — proposes merging thin, low-traction
+  hubs into broader adjacent ones).
   Produces a proposal report — nothing is changed without explicit user confirmation.
   Complements wiki-lint (structural checks) with semantic review. Run every 30–50
   ingests, or whenever the wiki feels like it's drifting semantically.
@@ -30,8 +32,8 @@ Today's date is needed for the report header and CHANGELOG entry.
 - **Project-scoped** (default): "consolidate [project name]". Check pages within that
   project plus any concepts or entities it references.
 - **Global**: "consolidate all" or "full consolidation". All pages across all projects
-  — also runs the cross-area check (Check 4) automatically, since a full pass should
-  surface area silos for free.
+  — also runs the cross-area check (Check 4) and the topic hub health check (Check 5)
+  automatically, since a full pass should surface area silos and thin topic hubs for free.
 - **Cross-area**: "cross-area synthesis" or "consolidate across areas". Runs Check 4
   only — scans all concept and entity pages plus all area overview pages
   (`wiki/areas/*/[area-name].md`). Does not require project scoping.
@@ -142,6 +144,31 @@ Do not add links or create anything without confirmation.
 
 ---
 
+## Check 5 — Topic hub health
+
+**Global scope only.** Topic hubs are global resources — this check does not run for
+project-scoped or cross-area-only consolidation passes. For those scopes, report this
+section as `[0] found`, same convention as Checks 1–3 in a cross-area-only run.
+
+Read every page in `wiki/resources/topics/`. A hub is "thin" when all three are true:
+- `status: stub`
+- fewer than 3 entries in its `sources:` frontmatter field
+- `created` 30 or more days ago (the same default threshold as wiki-lint Check 11 — if
+  Check 11 was run with a different threshold, use that instead)
+
+For each thin hub:
+1. Read its `## Related topics` section, `## Overview`, and `## Evolving thesis`.
+2. Propose the most fitting broader adjacent hub as a merge target:
+   - Prefer a hub already linked under `## Related topics`.
+   - Otherwise, compare against every other page in `wiki/resources/topics/` and use
+     semantic judgment.
+   - If nothing fits, propose "no clear target — needs review" instead of forcing a
+     match.
+
+Do not merge anything without explicit user confirmation.
+
+---
+
 ## Report format
 
 Always produce the report in this exact format before asking for confirmation:
@@ -164,6 +191,10 @@ Always produce the report in this exact format before asking for confirmation:
 
 **Cross-area concept overlaps:** [n] found
 - [[concept]] — referenced by [[area-a]] and [[area-b]]; proposed: add link in both area overview pages
+
+**Thin topic hubs:** [n] found
+- [[thin-hub]] (stub, N sources, M days old) → proposed merge into [[broader-hub]]
+  Reason: [one sentence — why broader-hub is the right home]
 ```
 
 If a category is clean, write `[n] found` with n=0 — do not omit the category.
@@ -183,6 +214,14 @@ For each approved item, apply the following:
 Replace the retiring page's body with a one-line redirect (`See [[surviving-page]]`), set its `status: archived`, and update all inbound wikilinks to point to the surviving page.
 
 **Status change:** update the `status:` field in frontmatter and set `updated:` to today's date.
+
+**Topic hub merge:** apply the **Deduplication merge** steps above (the retiring page is
+the thin hub, the surviving page is the proposed broader hub), plus:
+- Merge the retiring hub's `## Key concepts`, `## Key entities`, `## Active projects`, and
+  `## Related topics` lists into the corresponding sections of the broader hub,
+  deduplicating links already present.
+- Do not auto-rewrite the broader hub's `## Evolving thesis` — note in the report that the
+  merged scope may be worth revisiting.
 
 **Synthesis — new concept page:** create using the schema from `meta/CLAUDE.md` Section 3.2.
 Ensure the new page has at least two inbound wikilinks before finishing.
@@ -206,22 +245,25 @@ Append one entry to `CHANGELOG.md` (newest first):
 - Duplicates merged: [n or "none"]
 - Status changes: [list or "none"]
 - Synthesis actions: [n or "none"]
+- Topic hub merges: [n or "none"]
 ```
 
-For a `[cross-area]` pass, add a fourth line:
+For a `[cross-area]` pass, add a fifth line:
 
 ```
 ## YYYY-MM-DD — Consolidation pass [cross-area]
 - Duplicates merged: none
 - Status changes: none
 - Synthesis actions: none
+- Topic hub merges: none
 - Cross-area links added: [n or "none"]
 ```
 
-(Duplicates/status/synthesis stay "none" for a cross-area-only run since Checks 1–3
-don't execute in that scope.) For a `[global]` pass that includes Check 4, fold its
-count into the existing **Synthesis actions** line rather than adding a new field —
-keep the established `[global]` format intact.
+(Duplicates/status/synthesis/topic hub merges stay "none" for a cross-area-only run
+since Checks 1–3 and 5 don't execute in that scope.) For a `[global]` pass: fold Check
+4's cross-area count into the existing **Synthesis actions** line rather than adding a
+new field (keep the established `[global]` format intact), and set **Topic hub merges**
+to Check 5's actual count.
 
 If all checks that ran for the chosen scope find zero items, still append the CHANGELOG entry with all fields set to "none", and state clearly in the report: "Wiki is semantically clean as of YYYY-MM-DD — no action needed."
 
