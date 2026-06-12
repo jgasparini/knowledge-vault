@@ -27,7 +27,7 @@ param(
     [string]$Wiki
 )
 
-$Wiki = (Resolve-Path $Wiki).Path.TrimEnd('\', '/')
+$Wiki = (Get-Item $Wiki).FullName.TrimEnd('\', '/')
 
 # Get-PageType <path> — return the frontmatter `type:` value (trimmed of
 # whitespace and surrounding single/double quotes), or $null if the file has

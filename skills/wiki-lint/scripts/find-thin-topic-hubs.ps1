@@ -33,7 +33,7 @@ param(
     [int]$DaysThreshold = 30
 )
 
-$Wiki = (Resolve-Path $Wiki).Path.TrimEnd('\', '/')
+$Wiki = (Get-Item $Wiki).FullName.TrimEnd('\', '/')
 
 $today = Get-Date
 

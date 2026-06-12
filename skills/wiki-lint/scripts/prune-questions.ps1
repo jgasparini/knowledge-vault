@@ -21,7 +21,7 @@ param(
     [int]$DaysThreshold = 30
 )
 
-$WikiPath = (Resolve-Path $WikiPath).Path.TrimEnd('\', '/')
+$WikiPath = (Get-Item $WikiPath).FullName.TrimEnd('\', '/')
 
 $today = Get-Date
 $filesChecked = 0
