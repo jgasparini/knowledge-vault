@@ -24,17 +24,19 @@ Read `meta/CLAUDE.md` in full. It contains:
 Do not proceed until you have read it. The schema there is the source of truth — not
 anything hardcoded in this skill.
 
-### Establish project scope
+### Establish project or area scope
 
-Before reading the source, determine which project it belongs to (either from the user's
-instruction or from the Step 2 surface). Then read:
+Before reading the source, determine which project or area it belongs to (either from the
+user's instruction or from the Step 2 surface). Then read:
 
-1. `wiki/projects/[name]/INDEX.md` — understand what pages already exist for this project
-2. `wiki/projects/[name]/QUESTIONS.md` — identify open questions this source might resolve
+1. `wiki/projects/[name]/INDEX.md` or `wiki/areas/[name]/INDEX.md` — understand what pages
+   already exist for this project or area
+2. `wiki/projects/[name]/QUESTIONS.md` or `wiki/areas/[name]/QUESTIONS.md` — identify open
+   questions this source might resolve
 
 Read these two files instead of the full `wiki/INDEX.md`. This keeps context lean regardless
-of how many other projects exist in the vault. Only read the root `wiki/INDEX.md` if you need
-to check whether a concept or entity already exists across all projects.
+of how many other projects or areas exist in the vault. Only read the root `wiki/INDEX.md` if
+you need to check whether a concept or entity already exists across all projects and areas.
 
 ---
 
@@ -195,16 +197,16 @@ this in the Raw source section — no file to move.
 
 Five files must be updated after every ingest, no exceptions.
 
-**`wiki/projects/[name]/INDEX.md`**
+**`wiki/projects/[name]/INDEX.md` or `wiki/areas/[name]/INDEX.md`**
 Add a row for every new source, concept, or entity created. Add to the correct section.
 
-**`wiki/projects/[name]/QUESTIONS.md`**
+**`wiki/projects/[name]/QUESTIONS.md` or `wiki/areas/[name]/QUESTIONS.md`**
 Close any items resolved by this ingest (`- [ ]` → `- [x]` with a page reference).
 Add any new questions or gaps surfaced during ingestion.
 
 **`wiki/INDEX.md`**
-Add any new concepts or entities to the Global Resources section. Add the project row if
-this is the first ingest for a new project.
+Add any new concepts or entities to the Global Resources section. Add the project or area
+row if this is the first ingest for a new project or area.
 
 **`CHANGELOG.md`**
 Prepend one new entry at the top (newest first):

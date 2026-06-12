@@ -37,62 +37,15 @@ jobs:
           grep -oE '^\| `[a-z0-9-]+`' CLAUDE.md | sed -E 's/^\| `//; s/`$//' | sort -u > /tmp/listed.txt
           diff /tmp/actual.txt /tmp/listed.txt
 
+  enum-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash skills/wiki-lint/scripts/check-enum-drift.sh .
+
   windows-ps:
     runs-on: windows-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - shell: pwsh
-        run: |
-          # Smoke test: build a tiny fixture vault and confirm each lint
-          # script runs and emits a SUMMARY line. Not a full port of the
-          # bash fixture suite (skills/wiki-lint/tests/) -- see #28/#30.
-          $wiki = Join-Path $env:RUNNER_TEMP "wiki"
-          New-Item -ItemType Directory -Path "$wiki/resources/concepts" -Force | Out-Null
-
-          $indexContent = "# Index`n- [[resources/concepts/page-good]]`n- [[resources/concepts/page-missing]]`n"
-          Set-Content -Path "$wiki/INDEX.md" -Value $indexContent
-
-          Set-Content -Path "$wiki/resources/concepts/page-good.md" -Value "# Good`n`n[[page-good]]"
-          Set-Content -Path "$wiki/resources/concepts/page-orphan.md" -Value "# Orphan"
-          New-Item -ItemType Directory -Path (Join-Path $env:RUNNER_TEMP "questions/projects/demo") -Force | Out-Null
-          Set-Content -Path (Join-Path $env:RUNNER_TEMP "questions/projects/demo/QUESTIONS.md") -Value "- [ ] Open question"
-
-          $frontmatterContent = "---`ntype: source`nstatus: processed`ncreated: 2026-01-01`ntags: [test]`nsource-type: article`nreliability: primary`norigin: https://example.com`nproject: demo`n---`n`n# Good Source"
-          Set-Content -Path "$wiki/resources/concepts/page-good-source.md" -Value $frontmatterContent
-
-          $conceptContent = "---`ntype: concept`nstatus: active`ncreated: 2026-01-01`nupdated: 2026-01-01`ntags: []`nsources: []`n---`n`n# Concept"
-          Set-Content -Path "$wiki/resources/concepts/agent-memory.md" -Value $conceptContent
-          Set-Content -Path "$wiki/resources/concepts/agent-memory-taxonomy.md" -Value $conceptContent
-
-          $thinHubContent = "---`ntype: topic`nstatus: stub`ncreated: 2020-01-01`nupdated: 2020-01-01`ntags: []`nsources: []`n---`n`n# Thin Hub"
-          New-Item -ItemType Directory -Path "$wiki/resources/topics" -Force | Out-Null
-          Set-Content -Path "$wiki/resources/topics/thin-hub.md" -Value $thinHubContent
-
-          $scripts = "skills/wiki-lint/scripts"
-          $failed = $false
-
-          $out = & "$scripts/find-orphans.ps1" $wiki
-          if (-not ($out -match "^SUMMARY")) { Write-Error "find-orphans.ps1 failed"; $failed = $true }
-
-          $out = & "$scripts/find-missing-pages.ps1" $wiki
-          if (-not ($out -match "^SUMMARY")) { Write-Error "find-missing-pages.ps1 failed"; $failed = $true }
-
-          $out = & "$scripts/check-index-drift.ps1" $wiki
-          if (-not ($out -match "^SUMMARY")) { Write-Error "check-index-drift.ps1 failed"; $failed = $true }
-
-          $out = & "$scripts/prune-questions.ps1" (Join-Path $env:RUNNER_TEMP "questions")
-          if (-not ($out -match "^SUMMARY")) { Write-Error "prune-questions.ps1 failed"; $failed = $true }
-
-          $out = & "$scripts/check-frontmatter.ps1" $wiki
-          if (-not ($out -match "^SUMMARY")) { Write-Error "check-frontmatter.ps1 failed"; $failed = $true }
-
-          $out = & "$scripts/find-duplicate-candidates.ps1" $wiki
-          if (-not ($out -match "^SUMMARY")) { Write-Error "find-duplicate-candidates.ps1 failed"; $failed = $true }
-          if (-not ($out -match "^CANDIDATE concept")) { Write-Error "find-duplicate-candidates.ps1 did not detect expected CANDIDATE"; $failed = $true }
-
-          $out = & "$scripts/find-thin-topic-hubs.ps1" $wiki
-          if (-not ($out -match "^SUMMARY")) { Write-Error "find-thin-topic-hubs.ps1 failed"; $failed = $true }
-          if (-not ($out -match "^THIN_HUB 0 \d+ resources/topics/thin-hub.md")) { Write-Error "find-thin-topic-hubs.ps1 did not detect expected THIN_HUB"; $failed = $true }
-
-          if ($failed) { exit 1 }
+        run: powershell -File skills\wiki-lint\tests\run.ps1

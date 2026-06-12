@@ -121,7 +121,16 @@ them and moves them to the appropriate project sources/ folder.
 A project has a goal, a deadline or review date, and an owner.
 When complete, it moves to `archive/`.
 
-**wiki/areas/** — ongoing responsibilities maintained indefinitely.
+**wiki/areas/** — ongoing responsibilities maintained indefinitely, containing:
+- the area page itself (e.g. `[name].md`) — scope, current focus, key resources
+- `INDEX.md` — scoped catalog of all sources, concepts, entities, and
+  topics created from this area's ingests (same structure as a project
+  `INDEX.md`)
+- `QUESTIONS.md` — area-specific open threads and gaps (same Open/Closed
+  structure as a project `QUESTIONS.md`)
+- `sources/` — both raw source files (moved from `inbox/` after
+  ingestion) and their processed summary pages
+
 `areas/people/` holds one page per person worth tracking.
 
 **wiki/resources/concepts/** — abstract ideas: mental models,

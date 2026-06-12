@@ -1,5 +1,5 @@
-#!/usr/bin/env bash
-# test_find_orphans.sh — fixture tests for find-orphans.sh
+#Requires -Version 5.1
+# test_find_orphans.ps1 — fixture tests for find-orphans.ps1
 #
 # Fixture: 6 content pages (each has `type:` frontmatter).
 #   page-popular  <- linked from page-a and page-b (2 inbound, NOT an orphan)
@@ -20,20 +20,20 @@
 # that must also be excluded from the content-page count entirely (R3):
 #   outputs/sample-report.md
 #
-# Vault root contains a space (F1 mandatory case) — this script quotes
-# "$WIKI" correctly throughout, so this is expected to PASS.
+# Vault root contains a space (F1 mandatory case).
 
-SCRIPT="$SCRIPTS_DIR/find-orphans.sh"
+$Script = Join-Path $ScriptsDir "find-orphans.ps1"
 
-base=$(mktemp -d)
-wiki="$base/audit vault/wiki"
-mkdir -p "$wiki/sources"
+$base = Join-Path $env:TEMP ([System.Guid]::NewGuid().ToString())
+$wiki = Join-Path $base "audit vault\wiki"
+New-Item -ItemType Directory -Path (Join-Path $wiki "sources") -Force | Out-Null
+New-Item -ItemType Directory -Path (Join-Path $wiki "outputs") -Force | Out-Null
 
-cat > "$wiki/INDEX.md" <<'EOF'
+Set-Content -Path (Join-Path $wiki "INDEX.md") -Encoding UTF8 -Value @'
 # Index
-EOF
+'@
 
-cat > "$wiki/page-a.md" <<'EOF'
+Set-Content -Path (Join-Path $wiki "page-a.md") -Encoding UTF8 -Value @'
 ---
 type: concept
 ---
@@ -41,9 +41,9 @@ type: concept
 # Page A
 
 [[page-popular]] [[page-single]]
-EOF
+'@
 
-cat > "$wiki/page-b.md" <<'EOF'
+Set-Content -Path (Join-Path $wiki "page-b.md") -Encoding UTF8 -Value @'
 ---
 type: concept
 ---
@@ -51,33 +51,33 @@ type: concept
 # Page B
 
 [[page-popular]] [[page-a]]
-EOF
+'@
 
-cat > "$wiki/page-popular.md" <<'EOF'
+Set-Content -Path (Join-Path $wiki "page-popular.md") -Encoding UTF8 -Value @'
 ---
 type: concept
 ---
 
 # Page Popular
-EOF
+'@
 
-cat > "$wiki/page-single.md" <<'EOF'
+Set-Content -Path (Join-Path $wiki "page-single.md") -Encoding UTF8 -Value @'
 ---
 type: concept
 ---
 
 # Page Single
-EOF
+'@
 
-cat > "$wiki/page-lonely.md" <<'EOF'
+Set-Content -Path (Join-Path $wiki "page-lonely.md") -Encoding UTF8 -Value @'
 ---
 type: concept
 ---
 
 # Page Lonely
-EOF
+'@
 
-cat > "$wiki/page extra.md" <<'EOF'
+Set-Content -Path (Join-Path $wiki "page extra.md") -Encoding UTF8 -Value @'
 ---
 type: concept
 ---
@@ -85,18 +85,17 @@ type: concept
 # Page Extra
 
 A misnamed (space-containing) content page with no inbound links.
-EOF
+'@
 
-cat > "$wiki/sources/raw-transcript.md" <<'EOF'
+Set-Content -Path (Join-Path $wiki "sources\raw-transcript.md") -Encoding UTF8 -Value @'
 Raw transcript text, no frontmatter. Not a content page.
-EOF
+'@
 
-cat > "$wiki/sources/raw transcript.md" <<'EOF'
+Set-Content -Path (Join-Path $wiki "sources\raw transcript.md") -Encoding UTF8 -Value @'
 Raw transcript text with a space in its filename, no frontmatter. Not a content page.
-EOF
+'@
 
-mkdir -p "$wiki/outputs"
-cat > "$wiki/outputs/sample-report.md" <<'EOF'
+Set-Content -Path (Join-Path $wiki "outputs\sample-report.md") -Encoding UTF8 -Value @'
 ---
 type: output
 ---
@@ -104,38 +103,38 @@ type: output
 # Sample Report
 
 An outputs/ working doc with no inbound links. Not a linkable content page (R3).
-EOF
+'@
 
-output=$(bash "$SCRIPT" "$wiki")
+$output = (& $Script $wiki | Out-String)
 
-assert_line_present "ORPHAN 1 page-a.md" "$output" \
+Assert-LinePresent "ORPHAN 1 page-a.md" $output `
   "find-orphans: page-a has exactly one inbound link (from page-b)"
 
-assert_line_present "ORPHAN 0 page-b.md" "$output" \
+Assert-LinePresent "ORPHAN 0 page-b.md" $output `
   "find-orphans: page-b has no inbound links"
 
-assert_line_present "ORPHAN 0 page-lonely.md" "$output" \
+Assert-LinePresent "ORPHAN 0 page-lonely.md" $output `
   "find-orphans: page-lonely has no inbound links"
 
-assert_line_absent "page-popular.md" "$output" \
+Assert-LineAbsent "page-popular.md" $output `
   "find-orphans: page-popular has 2 inbound links and is not flagged"
 
-assert_line_present "ORPHAN 1 page-single.md" "$output" \
+Assert-LinePresent "ORPHAN 1 page-single.md" $output `
   "find-orphans: page-single has exactly one inbound link"
 
-assert_line_present "ORPHAN 0 page extra.md" "$output" \
+Assert-LinePresent "ORPHAN 0 page extra.md" $output `
   "find-orphans: a space-named content page with type: frontmatter is flagged, not skipped (#38)"
 
-assert_line_absent "raw-transcript" "$output" \
+Assert-LineAbsent "raw-transcript" $output `
   "find-orphans: a kebab-named raw source with no frontmatter is excluded entirely (#38)"
 
-assert_line_absent "raw transcript" "$output" \
+Assert-LineAbsent "raw transcript" $output `
   "find-orphans: a space-named raw source with no frontmatter is excluded entirely (#38)"
 
-assert_line_absent "sample-report" "$output" \
+Assert-LineAbsent "sample-report" $output `
   "find-orphans: a type: output page with 0 inbound links is excluded entirely, not flagged ORPHAN (R3)"
 
-assert_line_present "SUMMARY 6 5" "$output" \
+Assert-LinePresent "SUMMARY 6 5" $output `
   "find-orphans: summary counts 6 content pages checked, 5 orphans (raw sources and outputs/ excluded) (#38, R3)"
 
-rm -rf "$base"
+Remove-Item -Recurse -Force $base
