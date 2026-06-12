@@ -1,5 +1,5 @@
-#!/usr/bin/env bash
-# test_check_index_drift.sh — fixture tests for check-index-drift.sh
+#Requires -Version 5.1
+# test_check_index_drift.ps1 — fixture tests for check-index-drift.ps1
 #
 # Fixture:
 #   wiki/INDEX.md links to:
@@ -20,21 +20,23 @@
 # below — including BROKEN_ENTRY and SUMMARY — must pass with a
 # space-containing vault path.
 
-SCRIPT="$SCRIPTS_DIR/check-index-drift.sh"
+$Script = Join-Path $ScriptsDir "check-index-drift.ps1"
 
-base=$(mktemp -d)
-wiki="$base/audit vault/wiki"
-mkdir -p "$wiki/resources/concepts" "$wiki/projects/demo/sources"
+$base = Join-Path $env:TEMP ([System.Guid]::NewGuid().ToString())
+$wiki = Join-Path $base "audit vault\wiki"
+New-Item -ItemType Directory -Path (Join-Path $wiki "resources\concepts") -Force | Out-Null
+New-Item -ItemType Directory -Path (Join-Path $wiki "projects\demo\sources") -Force | Out-Null
+New-Item -ItemType Directory -Path (Join-Path $wiki "outputs") -Force | Out-Null
 
-cat > "$wiki/INDEX.md" <<'EOF'
+Set-Content -Path (Join-Path $wiki "INDEX.md") -Encoding UTF8 -Value @'
 # Index
 
 - [[projects/demo/_overview]]
 - [[resources/concepts/page-good]]
 - [[resources/concepts/page-missing]]
-EOF
+'@
 
-cat > "$wiki/resources/concepts/page-good.md" <<'EOF'
+Set-Content -Path (Join-Path $wiki "resources\concepts\page-good.md") -Encoding UTF8 -Value @'
 ---
 type: concept
 ---
@@ -42,9 +44,9 @@ type: concept
 # Page Good
 
 Content.
-EOF
+'@
 
-cat > "$wiki/resources/concepts/page-orphan.md" <<'EOF'
+Set-Content -Path (Join-Path $wiki "resources\concepts\page-orphan.md") -Encoding UTF8 -Value @'
 ---
 type: concept
 ---
@@ -52,9 +54,9 @@ type: concept
 # Page Orphan
 
 Not referenced from any INDEX.md.
-EOF
+'@
 
-cat > "$wiki/resources/concepts/page extra.md" <<'EOF'
+Set-Content -Path (Join-Path $wiki "resources\concepts\page extra.md") -Encoding UTF8 -Value @'
 ---
 type: concept
 ---
@@ -62,9 +64,9 @@ type: concept
 # Page Extra
 
 A misnamed (space-containing) content page, not referenced from any INDEX.md.
-EOF
+'@
 
-cat > "$wiki/projects/demo/_overview.md" <<'EOF'
+Set-Content -Path (Join-Path $wiki "projects\demo\_overview.md") -Encoding UTF8 -Value @'
 ---
 type: project
 ---
@@ -72,18 +74,17 @@ type: project
 # Demo Project
 
 Overview content.
-EOF
+'@
 
-cat > "$wiki/projects/demo/sources/raw-transcript.md" <<'EOF'
+Set-Content -Path (Join-Path $wiki "projects\demo\sources\raw-transcript.md") -Encoding UTF8 -Value @'
 Raw transcript text, no frontmatter. Not a content page.
-EOF
+'@
 
-cat > "$wiki/projects/demo/sources/raw transcript.md" <<'EOF'
+Set-Content -Path (Join-Path $wiki "projects\demo\sources\raw transcript.md") -Encoding UTF8 -Value @'
 Raw transcript text with a space in its filename, no frontmatter. Not a content page.
-EOF
+'@
 
-mkdir -p "$wiki/outputs"
-cat > "$wiki/outputs/sample-query.md" <<'EOF'
+Set-Content -Path (Join-Path $wiki "outputs\sample-query.md") -Encoding UTF8 -Value @'
 ---
 type: query
 ---
@@ -92,29 +93,29 @@ type: query
 
 An outputs/ working doc, referenced by no INDEX.md. Not a linkable content
 page, so not NOT_INDEXED (R3).
-EOF
+'@
 
-output=$(bash "$SCRIPT" "$wiki")
+$output = (& $Script $wiki | Out-String)
 
-assert_line_present "NOT_INDEXED resources/concepts/page-orphan.md" "$output" \
+Assert-LinePresent "NOT_INDEXED resources/concepts/page-orphan.md" $output `
   "check-index-drift: flags a content page not referenced by any INDEX.md"
 
-assert_line_present "NOT_INDEXED resources/concepts/page extra.md" "$output" \
+Assert-LinePresent "NOT_INDEXED resources/concepts/page extra.md" $output `
   "check-index-drift: a space-named content page with type: frontmatter is flagged, not skipped (#38)"
 
-assert_line_absent "raw-transcript" "$output" \
+Assert-LineAbsent "raw-transcript" $output `
   "check-index-drift: a kebab-named raw source with no frontmatter is excluded entirely (#38)"
 
-assert_line_absent "raw transcript" "$output" \
+Assert-LineAbsent "raw transcript" $output `
   "check-index-drift: a space-named raw source with no frontmatter is excluded entirely (#38)"
 
-assert_line_absent "sample-query" "$output" \
+Assert-LineAbsent "sample-query" $output `
   "check-index-drift: a type: query page referenced by no INDEX.md is excluded entirely, not flagged NOT_INDEXED (R3)"
 
-assert_line_present "BROKEN_ENTRY [[resources/concepts/page-missing]] in INDEX.md" "$output" \
+Assert-LinePresent "BROKEN_ENTRY [[resources/concepts/page-missing]] in INDEX.md" $output `
   "check-index-drift: flags an INDEX.md entry with no matching file (vault path contains a space)"
 
-assert_line_present "SUMMARY 2 1" "$output" \
+Assert-LinePresent "SUMMARY 2 1" $output `
   "check-index-drift: summary counts both NOT_INDEXED findings and the BROKEN_ENTRY (vault path contains a space, outputs/ excluded) (R3)"
 
-rm -rf "$base"
+Remove-Item -Recurse -Force $base

@@ -91,8 +91,8 @@ Status values: `stub` → `active` → `evergreen` → `archived`.
 
 ## Non-negotiable rules
 
-- Every ingest must update five files: project `INDEX.md`, project `QUESTIONS.md`, root `wiki/INDEX.md`, `CHANGELOG.md`, and `meta/health.md`.
-- Move the raw source file from `inbox/` to `wiki/projects/[name]/sources/` after ingest.
+- Every ingest must update five files: project or area `INDEX.md`, project or area `QUESTIONS.md`, root `wiki/INDEX.md`, `CHANGELOG.md`, and `meta/health.md`.
+- Move the raw source file from `inbox/` to `wiki/projects/[name]/sources/` (or `wiki/areas/[name]/sources/`) after ingest.
 - Every new wiki page needs at least two inbound wikilinks before an ingest is complete.
 - Never create a Project, Area, or Topic hub without explicit user confirmation.
 - Never delete a wiki page without explicit instruction.
