@@ -25,7 +25,7 @@ param(
     [string]$Wiki
 )
 
-$Wiki = (Resolve-Path $Wiki).Path.TrimEnd('\', '/')
+$Wiki = (Get-Item $Wiki).FullName.TrimEnd('\', '/')
 
 $pageTypes = @('source', 'concept', 'entity', 'topic', 'project', 'area', 'person')
 $sourceTypes = @('article', 'paper', 'report', 'book-chapter', 'meeting', 'email', 'letter', 'video')

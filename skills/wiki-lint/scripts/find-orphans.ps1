@@ -19,7 +19,7 @@ param(
 
 . (Join-Path $PSScriptRoot "lib.ps1")
 
-$Wiki = (Resolve-Path $Wiki).Path.TrimEnd('\', '/')
+$Wiki = (Get-Item $Wiki).FullName.TrimEnd('\', '/')
 
 $navPattern = [regex]"[/\\](INDEX|QUESTIONS|CHANGELOG)\.md$"
 

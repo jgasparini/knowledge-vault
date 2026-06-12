@@ -21,7 +21,7 @@ param(
     [string]$Wiki
 )
 
-$Wiki = (Resolve-Path $Wiki).Path.TrimEnd('\', '/')
+$Wiki = (Get-Item $Wiki).FullName.TrimEnd('\', '/')
 $healthPath = Join-Path (Split-Path $Wiki -Parent) "meta\health.md"
 
 $results = [System.Collections.Generic.List[string]]::new()

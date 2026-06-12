@@ -17,7 +17,7 @@ param(
     [string]$Wiki
 )
 
-$Wiki = (Resolve-Path $Wiki).Path.TrimEnd('\', '/')
+$Wiki = (Get-Item $Wiki).FullName.TrimEnd('\', '/')
 
 $ignorePattern = [regex]"^(INDEX|QUESTIONS|CHANGELOG|page-name|concept-name|entity-name|source-name|topic-name|link|page|concept|entity)$"
 $linkRegex     = [regex]"\[\[([^\]]+)\]\]"
