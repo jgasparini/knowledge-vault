@@ -66,6 +66,33 @@ this step entirely.
 
 ---
 
+### Step 0.5 — Secrets scan
+
+Run `bash skills/secrets-detection/scripts/scan-secrets.sh <file>` (or the
+`.ps1` equivalent on Windows) against the file that will be read in Step 1
+(the converted `.md` if Step 0 ran, otherwise the original file).
+
+If the scan is clean (`SUMMARY 0`), proceed to Step 1 as normal.
+
+If the scan reports any `FINDING` lines, stop before Step 1 and present the
+findings to the user (pattern name, file, line — never the matched value),
+then ask them to choose:
+
+- **Stop** — do not ingest this file. Leave it untouched in `inbox/`; nothing
+  is written to the wiki. If the trigger was "ingest the inbox" (multiple
+  files), continue with the next file rather than aborting the whole run.
+- **Redact and continue** — run `scan-secrets.sh --redact <file>` (or
+  `-Redact` on Windows), which rewrites the file in place replacing each
+  match with `[REDACTED:<pattern-name>]`. Re-run the scan to confirm
+  `SUMMARY 0`, then proceed to Step 1 using this redacted file — it is also
+  the version that gets moved to `sources/` in the existing "move source
+  file" step, so the secret never enters git history.
+
+Like Step 0, this is a pre-step and is not counted in the "10-step ingest
+workflow" described in this skill's frontmatter.
+
+---
+
 ### Step 1 — Read
 
 Read the source file in full. No output yet. If the file is unreadable (corrupt, wrong
