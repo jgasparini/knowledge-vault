@@ -76,6 +76,8 @@ Tell Claude:
 
 > **"Ingest the inbox"**
 
+Before reading the file, Claude scans it for accidentally-included credentials (API keys, tokens, passwords, private keys). If it finds one, it shows you the pattern and location — never the secret itself — and asks whether to stop or redact and continue.
+
 Claude reads the source, pulls out the key insights, creates a source summary page, updates any related concept and entity pages, files everything in the right place, and updates the index and changelog. You don't need to do anything.
 
 When it's done, you'll see a new page in `wiki/projects/ai-tools-research/sources/` and a fresh entry in `CHANGELOG.md`.
@@ -150,6 +152,7 @@ user-facing phrasing; if the two disagree on what skills exist, root `CLAUDE.md`
 | `establish-advisors` | "/establish-advisors" or "Who else should be on the board?" | Diagnoses knowledge gaps in your vault and recommends advisors whose published work addresses them |
 | `email-processor` | "Process my inbox" or "Triage my emails" | Reads your Outlook inbox, classifies emails into archive / unsubscribe / reply / keep, and acts only on what you approve |
 | `writing-rules` | *(applied automatically)* | House style guide — applied to all wiki prose |
+| `secrets-detection` | "Scan this file for secrets" or "Check for secrets before committing" | Scans a file or folder for credentials (API keys, tokens, private keys, passwords) — on any match, shows you the pattern and location (never the secret itself) and lets you stop or redact and continue |
 
 ### Folder structure
 
