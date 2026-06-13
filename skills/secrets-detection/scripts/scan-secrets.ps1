@@ -38,7 +38,11 @@ function Test-BinaryFile {
 }
 
 if (Test-Path -LiteralPath $Path -PathType Leaf) {
-    $Files = @($Path)
+    if (Test-BinaryFile $Path) {
+        $Files = @()
+    } else {
+        $Files = @($Path)
+    }
 } elseif (Test-Path -LiteralPath $Path -PathType Container) {
     $Files = @(Get-ChildItem -LiteralPath $Path -Recurse -File -Force |
         Where-Object {
@@ -72,7 +76,7 @@ function Invoke-Redaction {
         $regex = $PatternRegexes[$i]
 
         if ($name -eq "private-key-block") {
-            $endRegex = $regex -replace "BEGIN", "END"
+            $endRegex = $regex.Replace("BEGIN", "END")
             $newContent = New-Object System.Collections.Generic.List[string]
             $inBlock = $false
             foreach ($contentLine in $content) {
