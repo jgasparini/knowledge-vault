@@ -12,7 +12,6 @@ SCRIPTS_DIR="$(cd "$TESTS_DIR/../scripts" && pwd)"
 # shellcheck source=helpers.sh
 source "$TESTS_DIR/helpers.sh"
 
-shopt -s nullglob
 for test_file in "$TESTS_DIR"/test_*.sh; do
   echo "--- $(basename "$test_file") ---"
   source "$test_file"
