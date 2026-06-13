@@ -22,12 +22,13 @@ jobs:
       - uses: actions/checkout@v4
       - run: bash skills/wiki-lint/tests/run.sh
       - run: bash skills/secrets-detection/tests/run.sh
+      - run: bash skills/pii-detection/tests/run.sh
 
   shellcheck:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: shellcheck skills/wiki-lint/scripts/*.sh skills/secrets-detection/scripts/*.sh
+      - run: shellcheck skills/wiki-lint/scripts/*.sh skills/secrets-detection/scripts/*.sh skills/pii-detection/scripts/*.sh
 
   skill-registry-drift:
     runs-on: ubuntu-latest
@@ -52,3 +53,5 @@ jobs:
         run: powershell -File skills\wiki-lint\tests\run.ps1
       - shell: pwsh
         run: powershell -File skills\secrets-detection\tests\run.ps1
+      - shell: pwsh
+        run: powershell -File skills\pii-detection\tests\run.ps1
