@@ -39,7 +39,10 @@ against a file or directory, using `scripts/scan-secrets.sh` (macOS/Linux) or
 2. Read the output:
    - Each match is reported as `FINDING <pattern-name> <file>:<line>`. The
      matched secret value itself is **never** printed.
-   - The final line is `SUMMARY <count>`.
+   - The final line is `SUMMARY <count>`. `<count>` is the number of
+     matching lines, not the number of secret occurrences — a line with two
+     matches for the same pattern is one `FINDING`/count entry, but
+     `--redact`/`-Redact` still replaces every occurrence on that line.
    - Exit code is `0` if `<count>` is `0` (clean), `1` otherwise.
 
 3. If `SUMMARY 0` — clean. Proceed with whatever the caller was about to do
