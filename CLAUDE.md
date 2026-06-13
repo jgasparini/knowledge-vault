@@ -27,6 +27,7 @@ here. Trigger them by invoking the `Skill` tool with the appropriate name:
 | `catch-me-up` | "catch me up", "where did I leave off [on X]", "what have I been doing the last N days" | Reconstructs context after an interruption: reads CHANGELOG.md for the relevant window, pulls the project's decisions log and open questions if scoped, and delivers a short conversational re-entry briefing — nothing is filed to outputs/ |
 | `email-processor` | "process my inbox", "triage my emails", "clean up my inbox" | Reads unread Microsoft 365/Outlook mail, learns reply patterns from sent mail, classifies into archive/unsubscribe/reply/keep, and acts only after explicit approval — never sends, never deletes |
 | `writing-rules` | *(applied automatically before writing wiki prose)*, "apply writing rules", "does this sound like AI?" | House style guide: words/phrases to avoid, formatting, tone, and structure rules — not applied to frontmatter, navigation files, or verbatim quotes |
+| `secrets-detection` | "scan this file for secrets", "scan this repo/folder for secrets", "check for secrets before committing", "secrets scan" | Pattern-based scan for credentials (AWS/GitHub/Slack/Stripe/Google keys, JWTs, private keys, connection strings, generic key=value secrets) in a file or directory; on any finding, presents pattern name/file/line (never the value) and the user chooses stop or redact-and-continue |
 
 ## Lint scripts
 

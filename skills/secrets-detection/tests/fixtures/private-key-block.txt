@@ -1,0 +1,6 @@
+Some context before the key.
+-----BEGIN RSA PRIVATE KEY-----
+MIIBOgIBAAJBAK1fakekeydataline1
+MIIBOgIBAAJBAK2fakekeydataline2
+-----END RSA PRIVATE KEY-----
+Some context after the key.
