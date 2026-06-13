@@ -10,7 +10,11 @@ if [ "${1:-}" = "--redact" ]; then
   shift
 fi
 
-TARGET="${1:?Usage: $0 [--redact] <path>}"
+if [ $# -lt 1 ]; then
+  echo "Usage: $0 [--redact] <path>" >&2
+  exit 1
+fi
+TARGET="$1"
 
 if [ -f "$TARGET" ]; then
   FILES=("$TARGET")
@@ -33,6 +37,11 @@ while IFS=$'\t' read -r name regex _; do
   PATTERN_REGEXES+=("$regex")
 done < "$PATTERNS_FILE"
 
+# NOTE: redaction is not atomic across patterns. If pattern N of N fails
+# partway through, patterns 1..N-1 have already been applied to the file
+# in place, leaving it partially redacted even though this function
+# returns 1. Callers should treat a failure as "file may be modified" and
+# re-scan rather than assuming the original content is intact.
 redact_file() {
   local file="$1"
   local i name regex end_regex
