@@ -140,6 +140,8 @@ These are the phrases that trigger Claude's built-in workflows. Root `CLAUDE.md`
 is the canonical list of which skills exist — this table mirrors it with
 user-facing phrasing; if the two disagree on what skills exist, root `CLAUDE.md` wins.
 
+Skills live in `.claude/skills/` — Claude Code's required location for project skills to be discoverable by name. Don't move them elsewhere.
+
 | Skill | What to say | What it does |
 |-------|-------------|--------------|
 | `wiki-setup` | "Set up a new project for [topic]" | Scaffolds the project folder, index, and navigation files |
@@ -161,6 +163,8 @@ user-facing phrasing; if the two disagree on what skills exist, root `CLAUDE.md`
 
 ```
 knowledge-vault/
+  .claude/
+    skills/           ← Claude Code skill definitions (must live here to be discoverable)
   inbox/              ← drop sources here
   wiki/
     projects/
