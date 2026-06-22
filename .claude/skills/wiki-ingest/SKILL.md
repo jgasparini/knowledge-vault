@@ -52,7 +52,7 @@ Before reading the file, check its extension. If it is `.docx`, `.pptx`, `.ppt`,
 or `.msg`, run the conversion script to produce a readable `.md` file:
 
 ```bash
-python skills/wiki-ingest/convert.py inbox/<filename>
+python .claude/skills/wiki-ingest/convert.py inbox/<filename>
 ```
 
 The script prints the path of the output file (e.g. `inbox/filename.md`). Proceed with
@@ -68,7 +68,7 @@ this step entirely.
 
 ### Step 0.5 — Secrets scan
 
-Run `bash skills/secrets-detection/scripts/scan-secrets.sh <file>` (or the
+Run `bash .claude/skills/secrets-detection/scripts/scan-secrets.sh <file>` (or the
 `.ps1` equivalent on Windows) against the file that will be read in Step 1
 (the converted `.md` if Step 0 ran, otherwise the original file).
 
@@ -95,7 +95,7 @@ workflow" described in this skill's frontmatter.
 
 ### Step 0.6 — PII scan
 
-Run `bash skills/pii-detection/scripts/scan-pii.sh <file>` (or the `.ps1`
+Run `bash .claude/skills/pii-detection/scripts/scan-pii.sh <file>` (or the `.ps1`
 equivalent on Windows) against the file that will be read in Step 1 (the
 same file Step 0.5 scanned).
 

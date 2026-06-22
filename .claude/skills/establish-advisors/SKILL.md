@@ -16,7 +16,7 @@ Builds and extends the advisory board by reading the vault, diagnosing knowledge
 Read these files before forming any view:
 
 **Current board:**
-- `skills/ask-the-board/SKILL.md` — who's currently on the board and what lenses they cover
+- `.claude/skills/ask-the-board/SKILL.md` — who's currently on the board and what lenses they cover
 
 **User context:**
 - `wiki/INDEX.md` — project directory and global resources catalog
@@ -101,7 +101,7 @@ Write this from the ingested sources, not from general knowledge. It must reflec
 
 ### 4c — Update ask-the-board
 
-Open `skills/ask-the-board/SKILL.md` and make two changes:
+Open `.claude/skills/ask-the-board/SKILL.md` and make two changes:
 
 1. **Overview section:** Add the new advisor (name + lens, one line).
 2. **Voice profiles section:** Add a full voice profile section, copied and expanded from the entity page's `## Board voice profile`.

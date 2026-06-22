@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
-# helpers.sh — shared assertion helpers for pii-detection script fixture tests
+# helpers.sh — shared assertion helpers for secrets-detection script fixture tests
 #
 # Sourced by run.sh before each test_*.sh file. PASS_COUNT and FAIL_COUNT
 # are globals that accumulate across every sourced test file.
 #
-# Standalone copy: this skill has no dependency on secrets-detection's or
-# wiki-lint's helpers.sh, so the skills/pii-detection/ directory can be
-# copied into other repos.
+# Standalone copy: this skill has no dependency on wiki-lint's helpers.sh, so
+# the .claude/skills/secrets-detection/ directory can be copied into other repos.
 
 PASS_COUNT=0
 FAIL_COUNT=0

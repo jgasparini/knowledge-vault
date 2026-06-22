@@ -14,28 +14,28 @@ jobs:
         with:
           python-version: "3.12"
       - run: python3 -m pip install -r requirements-dev.txt
-      - run: python3 -m pytest skills/wiki-ingest/tests/
+      - run: python3 -m pytest .claude/skills/wiki-ingest/tests/
 
   script-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: bash skills/wiki-lint/tests/run.sh
-      - run: bash skills/secrets-detection/tests/run.sh
-      - run: bash skills/pii-detection/tests/run.sh
+      - run: bash .claude/skills/wiki-lint/tests/run.sh
+      - run: bash .claude/skills/secrets-detection/tests/run.sh
+      - run: bash .claude/skills/pii-detection/tests/run.sh
 
   shellcheck:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: shellcheck skills/wiki-lint/scripts/*.sh skills/secrets-detection/scripts/*.sh skills/pii-detection/scripts/*.sh
+      - run: shellcheck .claude/skills/wiki-lint/scripts/*.sh .claude/skills/secrets-detection/scripts/*.sh .claude/skills/pii-detection/scripts/*.sh
 
   skill-registry-drift:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: |
-          ls -d skills/*/ | xargs -n1 basename | sort -u > /tmp/actual.txt
+          ls -d .claude/skills/*/ | xargs -n1 basename | sort -u > /tmp/actual.txt
           grep -oE '^\| `[a-z0-9-]+`' CLAUDE.md | sed -E 's/^\| `//; s/`$//' | sort -u > /tmp/listed.txt
           diff /tmp/actual.txt /tmp/listed.txt
 
@@ -43,15 +43,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: bash skills/wiki-lint/scripts/check-enum-drift.sh .
+      - run: bash .claude/skills/wiki-lint/scripts/check-enum-drift.sh .
 
   windows-ps:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - shell: pwsh
-        run: powershell -File skills\wiki-lint\tests\run.ps1
+        run: powershell -File .claude\skills\wiki-lint\tests\run.ps1
       - shell: pwsh
-        run: powershell -File skills\secrets-detection\tests\run.ps1
+        run: powershell -File .claude\skills\secrets-detection\tests\run.ps1
       - shell: pwsh
-        run: powershell -File skills\pii-detection\tests\run.ps1
+        run: powershell -File .claude\skills\pii-detection\tests\run.ps1

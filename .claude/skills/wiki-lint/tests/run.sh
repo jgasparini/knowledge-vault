@@ -2,7 +2,7 @@
 # run.sh — run all wiki-lint script fixture tests
 #
 # Usage:
-#   bash skills/wiki-lint/tests/run.sh
+#   bash .claude/skills/wiki-lint/tests/run.sh
 #
 # NOTE: as of audit T0.1 (issue #28), the check-index-drift.sh tests
 # include an intentionally-failing regression case for the F1 bug
