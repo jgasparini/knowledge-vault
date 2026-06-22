@@ -21,7 +21,7 @@ WIKI="${1:?Usage: $0 /path/to/vault/wiki [project/subdir]}"
 SCOPE="$2"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# shellcheck source=skills/wiki-lint/scripts/lib.sh
+# shellcheck source=.claude/skills/wiki-lint/scripts/lib.sh
 source "$SCRIPT_DIR/lib.sh"
 
 NAV_PATTERN="/(INDEX|QUESTIONS|CHANGELOG)\.md$"

@@ -12,8 +12,8 @@ description: >
 # Secrets Detection
 
 Standalone, portable skill — this directory has no dependency on any other skill or
-on project-specific paths. Copy `skills/secrets-detection/` into another repository's
-`skills/` directory to reuse it there unchanged.
+on project-specific paths. Copy `.claude/skills/secrets-detection/` into another repository's
+`.claude/skills/` directory to reuse it there unchanged.
 
 ## What this does
 
@@ -26,11 +26,11 @@ against a file or directory, using `scripts/scan-secrets.sh` (macOS/Linux) or
 1. Run the scanner in default (scan) mode against the target path:
 
    ```bash
-   bash skills/secrets-detection/scripts/scan-secrets.sh <path>
+   bash .claude/skills/secrets-detection/scripts/scan-secrets.sh <path>
    ```
 
    ```powershell
-   powershell -File skills\secrets-detection\scripts\scan-secrets.ps1 <path>
+   powershell -File .claude\skills\secrets-detection\scripts\scan-secrets.ps1 <path>
    ```
 
    `<path>` may be a single file or a directory. Directories are scanned
@@ -58,11 +58,11 @@ against a file or directory, using `scripts/scan-secrets.sh` (macOS/Linux) or
      `-Redact` (PowerShell) against the same path:
 
      ```bash
-     bash skills/secrets-detection/scripts/scan-secrets.sh --redact <path>
+     bash .claude/skills/secrets-detection/scripts/scan-secrets.sh --redact <path>
      ```
 
      ```powershell
-     powershell -File skills\secrets-detection\scripts\scan-secrets.ps1 -Redact <path>
+     powershell -File .claude\skills\secrets-detection\scripts\scan-secrets.ps1 -Redact <path>
      ```
 
      This rewrites each match in place as `[REDACTED:<pattern-name>]` (a

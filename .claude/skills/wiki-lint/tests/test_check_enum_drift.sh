@@ -15,7 +15,7 @@ SCRIPT="$SCRIPTS_DIR/check-enum-drift.sh"
 
 base=$(mktemp -d)
 vault="$base/audit vault"
-mkdir -p "$vault/meta" "$vault/skills/wiki-lint/scripts"
+mkdir -p "$vault/meta" "$vault/.claude/skills/wiki-lint/scripts"
 
 cat > "$vault/meta/CLAUDE.md" <<'EOF'
 ```yaml
@@ -48,7 +48,7 @@ relationship: colleague|stakeholder|external|vendor|peer
 ```
 EOF
 
-cat > "$vault/skills/wiki-lint/scripts/check-frontmatter.sh" <<'EOF'
+cat > "$vault/.claude/skills/wiki-lint/scripts/check-frontmatter.sh" <<'EOF'
 PAGE_TYPES=" source concept entity topic project area person "
 SOURCE_TYPES=" video letter email meeting book-chapter report paper article "
 RELIABILITIES=" speculative secondary practitioner primary "
@@ -57,7 +57,7 @@ RELATIONSHIPS=" peer vendor external stakeholder colleague "
 DECAY_RATES=" fast slow "
 EOF
 
-cat > "$vault/skills/wiki-lint/scripts/check-frontmatter.ps1" <<'EOF'
+cat > "$vault/.claude/skills/wiki-lint/scripts/check-frontmatter.ps1" <<'EOF'
 $sourceTypes = @('article', 'paper', 'report', 'book-chapter', 'meeting', 'email', 'letter', 'video')
 $reliabilities = @('primary', 'practitioner', 'secondary', 'speculative')
 $entityKinds = @('person', 'company', 'tool', 'model', 'paper', 'research-group', 'standard', 'publication')

@@ -15,7 +15,7 @@ description: >
 
 Standalone, portable skill — this directory has no dependency on any other skill
 (including secrets-detection) or on project-specific paths. Copy
-`skills/pii-detection/` into another repository's `skills/` directory to reuse it
+`.claude/skills/pii-detection/` into another repository's `.claude/skills/` directory to reuse it
 there unchanged.
 
 ## What this does
@@ -35,11 +35,11 @@ they are.
 1. Run the scanner in default (scan) mode against the target path:
 
    ```bash
-   bash skills/pii-detection/scripts/scan-pii.sh <path>
+   bash .claude/skills/pii-detection/scripts/scan-pii.sh <path>
    ```
 
    ```powershell
-   powershell -File skills\pii-detection\scripts\scan-pii.ps1 <path>
+   powershell -File .claude\skills\pii-detection\scripts\scan-pii.ps1 <path>
    ```
 
    `<path>` may be a single file or a directory. Directories are scanned
@@ -64,11 +64,11 @@ they are.
      `-Redact` (PowerShell) against the same path:
 
      ```bash
-     bash skills/pii-detection/scripts/scan-pii.sh --redact <path>
+     bash .claude/skills/pii-detection/scripts/scan-pii.sh --redact <path>
      ```
 
      ```powershell
-     powershell -File skills\pii-detection\scripts\scan-pii.ps1 -Redact <path>
+     powershell -File .claude\skills\pii-detection\scripts\scan-pii.ps1 -Redact <path>
      ```
 
      This rewrites each match in place as `[REDACTED:<pattern-name>]`. Re-run

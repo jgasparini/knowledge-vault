@@ -25,7 +25,7 @@ and status values). Today's date matters for staleness checks.
 
 ### Locate the scripts
 
-The lint scripts live at `skills/wiki-lint/scripts/` relative to the vault root.
+The lint scripts live at `.claude/skills/wiki-lint/scripts/` relative to the vault root.
 Determine the bash-accessible path by translating the vault path using the session mount.
 
 ---
@@ -46,7 +46,7 @@ Do not produce the report until all 11 checks are complete.
 
 Run:
 ```bash
-bash skills/wiki-lint/scripts/find-orphans.sh /path/to/wiki
+bash .claude/skills/wiki-lint/scripts/find-orphans.sh /path/to/wiki
 ```
 
 output format: `ORPHAN <inbound_count> <relative_path>` per orphan, then `SUMMARY <total> <orphan_count>`.
@@ -62,7 +62,7 @@ Do not add links silently — list orphans and wait for instruction.
 
 Run:
 ```bash
-bash skills/wiki-lint/scripts/find-missing-pages.sh /path/to/wiki
+bash .claude/skills/wiki-lint/scripts/find-missing-pages.sh /path/to/wiki
 ```
 
 output format: `MISSING <ref_count> [[link-name]]` per missing page, then `SUMMARY`.
@@ -79,7 +79,7 @@ created in CHANGELOG.md. If more than 10 missing pages are found, flag as a stru
 
 Run:
 ```bash
-bash skills/wiki-lint/scripts/check-index-drift.sh /path/to/wiki [projects/name]
+bash .claude/skills/wiki-lint/scripts/check-index-drift.sh /path/to/wiki [projects/name]
 ```
 
 For project-scoped lint, pass the project subdirectory as the second argument.
@@ -98,7 +98,7 @@ Note total corrections in CHANGELOG.md.
 
 Run:
 ```bash
-bash skills/wiki-lint/scripts/check-frontmatter.sh /path/to/wiki
+bash .claude/skills/wiki-lint/scripts/check-frontmatter.sh /path/to/wiki
 ```
 
 output format: `BAD_FRONTMATTER <field> <value> <path>` and `MISSING_FIELD <field> <path>`
@@ -127,7 +127,7 @@ Note all corrections in CHANGELOG.md.
 
 Run:
 ```bash
-bash skills/wiki-lint/scripts/find-duplicate-candidates.sh /path/to/wiki
+bash .claude/skills/wiki-lint/scripts/find-duplicate-candidates.sh /path/to/wiki
 ```
 
 output format: `CANDIDATE <type> <path-a> <path-b> <shared-tokens>` per pair, then
@@ -157,7 +157,7 @@ include its results in both project-scoped and global lint reports.
 
 Run:
 ```bash
-bash skills/wiki-lint/scripts/find-thin-topic-hubs.sh /path/to/wiki
+bash .claude/skills/wiki-lint/scripts/find-thin-topic-hubs.sh /path/to/wiki
 ```
 
 output format: `THIN_HUB <sources_count> <days_old> <relative_path>` per flagged hub, then
@@ -244,7 +244,7 @@ page now resolves it. If yes, close it (`- [x]`) with a page reference. If it ha
 **Step B — Prune old closed items (scripted):** Run:
 
 ```bash
-bash skills/wiki-lint/scripts/prune-questions.sh /path/to/wiki
+bash .claude/skills/wiki-lint/scripts/prune-questions.sh /path/to/wiki
 ```
 
 Output format:
@@ -350,7 +350,7 @@ Update `meta/health.md`: reset `ingest-count` to 0 and set `last-lint` to today'
 
 Verify the update:
 ```bash
-bash skills/wiki-lint/scripts/check-health.sh /path/to/wiki
+bash .claude/skills/wiki-lint/scripts/check-health.sh /path/to/wiki
 ```
 output format: `BAD_HEALTH <reason>` per issue, then `SUMMARY <issue_count>`.
 
@@ -389,32 +389,32 @@ If no entries are older than 90 days, skip this step silently.
 
 ## Portability note
 
-Scripts live in `skills/wiki-lint/scripts/`. The vault path must be translated to the
+Scripts live in `.claude/skills/wiki-lint/scripts/`. The vault path must be translated to the
 shell-accessible mount path for the current session. The skill reads `meta/CLAUDE.md` at
 runtime for schema details — if the schema changes, re-read before running checks.
 
 **macOS / Linux:** use the `.sh` scripts via `bash`:
 ```bash
-bash skills/wiki-lint/scripts/find-orphans.sh /path/to/wiki
-bash skills/wiki-lint/scripts/find-missing-pages.sh /path/to/wiki
-bash skills/wiki-lint/scripts/check-index-drift.sh /path/to/wiki [projects/name]
-bash skills/wiki-lint/scripts/prune-questions.sh /path/to/wiki [days_threshold]
-bash skills/wiki-lint/scripts/check-frontmatter.sh /path/to/wiki
-bash skills/wiki-lint/scripts/find-duplicate-candidates.sh /path/to/wiki
-bash skills/wiki-lint/scripts/find-thin-topic-hubs.sh /path/to/wiki [days_threshold]
-bash skills/wiki-lint/scripts/check-health.sh /path/to/wiki
+bash .claude/skills/wiki-lint/scripts/find-orphans.sh /path/to/wiki
+bash .claude/skills/wiki-lint/scripts/find-missing-pages.sh /path/to/wiki
+bash .claude/skills/wiki-lint/scripts/check-index-drift.sh /path/to/wiki [projects/name]
+bash .claude/skills/wiki-lint/scripts/prune-questions.sh /path/to/wiki [days_threshold]
+bash .claude/skills/wiki-lint/scripts/check-frontmatter.sh /path/to/wiki
+bash .claude/skills/wiki-lint/scripts/find-duplicate-candidates.sh /path/to/wiki
+bash .claude/skills/wiki-lint/scripts/find-thin-topic-hubs.sh /path/to/wiki [days_threshold]
+bash .claude/skills/wiki-lint/scripts/check-health.sh /path/to/wiki
 ```
 
 **Windows 11:** use the `.ps1` equivalents via PowerShell (5.1+):
 ```powershell
-powershell -File skills\wiki-lint\scripts\find-orphans.ps1 C:\path\to\wiki
-powershell -File skills\wiki-lint\scripts\find-missing-pages.ps1 C:\path\to\wiki
-powershell -File skills\wiki-lint\scripts\check-index-drift.ps1 C:\path\to\wiki projects/ai-native-engineering
-powershell -File skills\wiki-lint\scripts\prune-questions.ps1 C:\path\to\wiki [days_threshold]
-powershell -File skills\wiki-lint\scripts\check-frontmatter.ps1 C:\path\to\wiki
-powershell -File skills\wiki-lint\scripts\find-duplicate-candidates.ps1 C:\path\to\wiki
-powershell -File skills\wiki-lint\scripts\find-thin-topic-hubs.ps1 C:\path\to\wiki [days_threshold]
-powershell -File skills\wiki-lint\scripts\check-health.ps1 C:\path\to\wiki
+powershell -File .claude\skills\wiki-lint\scripts\find-orphans.ps1 C:\path\to\wiki
+powershell -File .claude\skills\wiki-lint\scripts\find-missing-pages.ps1 C:\path\to\wiki
+powershell -File .claude\skills\wiki-lint\scripts\check-index-drift.ps1 C:\path\to\wiki projects/ai-native-engineering
+powershell -File .claude\skills\wiki-lint\scripts\prune-questions.ps1 C:\path\to\wiki [days_threshold]
+powershell -File .claude\skills\wiki-lint\scripts\check-frontmatter.ps1 C:\path\to\wiki
+powershell -File .claude\skills\wiki-lint\scripts\find-duplicate-candidates.ps1 C:\path\to\wiki
+powershell -File .claude\skills\wiki-lint\scripts\find-thin-topic-hubs.ps1 C:\path\to\wiki [days_threshold]
+powershell -File .claude\skills\wiki-lint\scripts\check-health.ps1 C:\path\to\wiki
 ```
 output format is identical — `ORPHAN`, `MISSING`, `NOT_INDEXED`, `BROKEN_ENTRY`, `BAD_FRONTMATTER`,
 `MISSING_FIELD`, `BAD_HEALTH`, `CANDIDATE`, `THIN_HUB`, and `SUMMARY` lines — so the rest of the

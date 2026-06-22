@@ -10,7 +10,7 @@ The authoritative schema lives in `meta/CLAUDE.md`. Read it before any operation
 
 ## Skills
 
-This is the canonical list of skills — every directory in `skills/` must appear
+This is the canonical list of skills — every directory in `.claude/skills/` must appear
 here. Trigger them by invoking the `Skill` tool with the appropriate name:
 
 | Skill | Trigger phrases | What it does |
@@ -19,7 +19,7 @@ here. Trigger them by invoking the `Skill` tool with the appropriate name:
 | `wiki-ingest` | "ingest [filename]", "ingest the inbox", "add this to the wiki" | Full 10-step ingest: read → surface → structural check → write → update → create → verify links → move file → update registries → confirm |
 | `wiki-query` | "query the wiki", "what does the wiki say about X", "ask the wiki X" | 6-step query: detect scope → read scoped index → read targeted pages → synthesise and cite → write to Outputs/ → gap analysis |
 | `wiki-consolidate` | "consolidate the wiki", "run a consolidation", "review the wiki for drift" | Semantic review: deduplication candidates, lifecycle promotions, synthesis opportunities — produces a proposal report, nothing changed without confirmation |
-| `wiki-lint` | "run a lint", "lint the wiki", "wiki health check" | 11-check health pass using bash scripts in `skills/wiki-lint/scripts/` |
+| `wiki-lint` | "run a lint", "lint the wiki", "wiki health check" | 11-check health pass using bash scripts in `.claude/skills/wiki-lint/scripts/` |
 | `improve-system` | "improve-system", "audit notes", "improve that skill", "capture this experience", "mine sessions", "fill in about me" | 5-mode meta-maintenance: Audit / Skill Review / Experience / Historical Review / Foundation — detects mode from context |
 | `ask-the-board` | "/ask-the-board [decision]", "what would the board say about X", "ask Nicole and Phil" | Surfaces Nicole Forsgren's and Phil Venables's perspectives on a decision in their own voice, with explicit agreements and divergences |
 | `establish-advisors` | "/establish-advisors", "add a new advisor", "who else should be on the board", "who should join the board" | Reads the vault to diagnose knowledge gaps, recommends advisors whose published work addresses those gaps, ingests their 5 best pieces, and updates `ask-the-board` |
@@ -35,21 +35,21 @@ here. Trigger them by invoking the `Skill` tool with the appropriate name:
 **macOS / Linux** — run from the vault root:
 
 ```bash
-bash skills/wiki-lint/scripts/find-orphans.sh /path/to/wiki
-bash skills/wiki-lint/scripts/find-missing-pages.sh /path/to/wiki
-bash skills/wiki-lint/scripts/check-index-drift.sh /path/to/wiki [projects/name]
-bash skills/wiki-lint/scripts/prune-questions.sh /path/to/wiki [days_threshold]
-bash skills/wiki-lint/scripts/check-frontmatter.sh /path/to/wiki
+bash .claude/skills/wiki-lint/scripts/find-orphans.sh /path/to/wiki
+bash .claude/skills/wiki-lint/scripts/find-missing-pages.sh /path/to/wiki
+bash .claude/skills/wiki-lint/scripts/check-index-drift.sh /path/to/wiki [projects/name]
+bash .claude/skills/wiki-lint/scripts/prune-questions.sh /path/to/wiki [days_threshold]
+bash .claude/skills/wiki-lint/scripts/check-frontmatter.sh /path/to/wiki
 ```
 
 **Windows 11** — PowerShell equivalents (require PowerShell 5.1+):
 
 ```powershell
-powershell -File skills\wiki-lint\scripts\find-orphans.ps1 C:\path\to\wiki
-powershell -File skills\wiki-lint\scripts\find-missing-pages.ps1 C:\path\to\wiki
-powershell -File skills\wiki-lint\scripts\check-index-drift.ps1 C:\path\to\wiki [projects/name]
-powershell -File skills\wiki-lint\scripts\prune-questions.ps1 C:\path\to\wiki [days_threshold]
-powershell -File skills\wiki-lint\scripts\check-frontmatter.ps1 C:\path\to\wiki
+powershell -File .claude\skills\wiki-lint\scripts\find-orphans.ps1 C:\path\to\wiki
+powershell -File .claude\skills\wiki-lint\scripts\find-missing-pages.ps1 C:\path\to\wiki
+powershell -File .claude\skills\wiki-lint\scripts\check-index-drift.ps1 C:\path\to\wiki [projects/name]
+powershell -File .claude\skills\wiki-lint\scripts\prune-questions.ps1 C:\path\to\wiki [days_threshold]
+powershell -File .claude\skills\wiki-lint\scripts\check-frontmatter.ps1 C:\path\to\wiki
 ```
 
 ## Folder structure

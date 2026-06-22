@@ -62,7 +62,7 @@ before switching:
 > to switch out of thinking mode and start drafting, or keep exploring a bit more?"
 
 Do not silently comply. This mirrors the "never promote/transition silently" posture in
-`wiki-query` Step 6 and the hard rules in `skills/catch-me-up/SKILL.md`.
+`wiki-query` Step 6 and the hard rules in `.claude/skills/catch-me-up/SKILL.md`.
 
 Reading the wiki to surface connections is fine — follow `wiki-query` Step 3's one-hop
 pattern. The constraint is on producing finished material, not on retrieval.

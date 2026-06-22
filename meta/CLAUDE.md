@@ -10,7 +10,7 @@ from scratch each time, but to build up a structured, interlinked
 body of knowledge that compounds with every source added and every
 question asked.
 
-Before writing any wiki prose, read `skills/writing-rules/SKILL.md`
+Before writing any wiki prose, read `.claude/skills/writing-rules/SKILL.md`
 and apply those rules to all article bodies, summaries, and outputs.
 Do not apply them to frontmatter, navigation files (INDEX.md,
 QUESTIONS.md, CHANGELOG.md), or verbatim quotes from source material.
@@ -510,7 +510,7 @@ Related projects, areas, other people.
 Queries are how you extract value from the accumulated wiki.
 A good answer is a wiki page waiting to happen.
 
-See `skills/wiki-query/SKILL.md` for the full query workflow. The steps below are a summary.
+See `.claude/skills/wiki-query/SKILL.md` for the full query workflow. The steps below are a summary.
 
 **Step 1 — Read the index.** Read `wiki/INDEX.md` first to identify
 relevant pages.
@@ -543,6 +543,6 @@ Never promote silently.
 
 ## Section 5: Lint Workflow
 
-See `skills/wiki-lint/SKILL.md` for the full lint workflow, 11 checks,
+See `.claude/skills/wiki-lint/SKILL.md` for the full lint workflow, 11 checks,
 report format, and rules. Run after every 10–15 ingests, or whenever
 the wiki feels like it's drifting.

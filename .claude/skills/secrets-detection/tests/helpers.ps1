@@ -1,12 +1,11 @@
 #Requires -Version 5.1
-# helpers.ps1 — shared assertion helpers for pii-detection script fixture tests
+# helpers.ps1 — shared assertion helpers for secrets-detection script fixture tests
 #
 # Dot-sourced by run.ps1 before each test_*.ps1 file. $global:PassCount and
 # $global:FailCount accumulate across every dot-sourced test file.
 #
-# Standalone copy: this skill has no dependency on secrets-detection's or
-# wiki-lint's helpers.ps1, so the skills/pii-detection/ directory can be
-# copied into other repos.
+# Standalone copy: this skill has no dependency on wiki-lint's helpers.ps1, so
+# the .claude/skills/secrets-detection/ directory can be copied into other repos.
 
 $global:PassCount = 0
 $global:FailCount = 0

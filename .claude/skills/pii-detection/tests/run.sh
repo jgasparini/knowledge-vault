@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# run.sh — run all secrets-detection script fixture tests
+# run.sh — run all pii-detection script fixture tests
 #
 # Usage:
-#   bash skills/secrets-detection/tests/run.sh
+#   bash .claude/skills/pii-detection/tests/run.sh
 
 set -u
 

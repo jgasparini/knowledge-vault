@@ -140,6 +140,8 @@ These are the phrases that trigger Claude's built-in workflows. Root `CLAUDE.md`
 is the canonical list of which skills exist — this table mirrors it with
 user-facing phrasing; if the two disagree on what skills exist, root `CLAUDE.md` wins.
 
+Skills live in `.claude/skills/` — Claude Code's required location for project skills to be discoverable by name. Don't move them elsewhere.
+
 | Skill | What to say | What it does |
 |-------|-------------|--------------|
 | `wiki-setup` | "Set up a new project for [topic]" | Scaffolds the project folder, index, and navigation files |
@@ -161,6 +163,8 @@ user-facing phrasing; if the two disagree on what skills exist, root `CLAUDE.md`
 
 ```
 knowledge-vault/
+  .claude/
+    skills/           ← Claude Code skill definitions (must live here to be discoverable)
   inbox/              ← drop sources here
   wiki/
     projects/
@@ -186,7 +190,7 @@ knowledge-vault/
 
 ### Customising for your domain
 
-**Writing style:** create a `writing-rules.md` file in the vault root. Claude applies it to all wiki prose, layered on top of the built-in style guide in `skills/writing-rules/`.
+**Writing style:** create a `writing-rules.md` file in the vault root. Claude applies it to all wiki prose, layered on top of the built-in style guide in `.claude/skills/writing-rules/`.
 
 **Schema changes:** edit `meta/CLAUDE.md`. The skills read it at runtime — if the schema changes there, the skills adapt automatically. You never need to edit the skills directly.
 
@@ -198,13 +202,13 @@ Pull requests welcome. If you've adapted the schema for a specific domain (legal
 
 ### Development / running tests
 
-The `wiki-ingest` skill's source-conversion code (`skills/wiki-ingest/convert.py`) has a pytest suite. To run it:
+The `wiki-ingest` skill's source-conversion code (`.claude/skills/wiki-ingest/convert.py`) has a pytest suite. To run it:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements-dev.txt
-python3 -m pytest skills/wiki-ingest/tests/
+python3 -m pytest .claude/skills/wiki-ingest/tests/
 ```
 
 ## Licence

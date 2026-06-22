@@ -2,8 +2,8 @@
 # run.ps1 — run all pii-detection script fixture tests (PowerShell port of run.sh)
 #
 # Usage:
-#   powershell -File skills\pii-detection\tests\run.ps1
-#   pwsh skills/pii-detection/tests/run.ps1
+#   powershell -File .claude\skills\pii-detection\tests\run.ps1
+#   pwsh .claude/skills/pii-detection/tests/run.ps1
 #
 # Mirrors run.sh: dot-sources helpers.ps1, then dot-sources every test_*.ps1
 # in this directory so each can call Assert-LinePresent / Assert-LineAbsent

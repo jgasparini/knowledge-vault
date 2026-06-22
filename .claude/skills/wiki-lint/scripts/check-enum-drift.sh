@@ -6,7 +6,7 @@
 # Usage:
 #   bash check-enum-drift.sh /path/to/vault
 #
-# $1 is the vault root (containing meta/CLAUDE.md and skills/).
+# $1 is the vault root (containing meta/CLAUDE.md and .claude/skills/).
 #
 # For each of source-type, reliability, entity-kind, relationship, and
 # decay-rate: compares the pipe-delimited enum in meta/CLAUDE.md's frontmatter
@@ -26,8 +26,8 @@
 VAULT="${1:?Usage: $0 /path/to/vault}"
 
 META="$VAULT/meta/CLAUDE.md"
-SH="$VAULT/skills/wiki-lint/scripts/check-frontmatter.sh"
-PS1="$VAULT/skills/wiki-lint/scripts/check-frontmatter.ps1"
+SH="$VAULT/.claude/skills/wiki-lint/scripts/check-frontmatter.sh"
+PS1="$VAULT/.claude/skills/wiki-lint/scripts/check-frontmatter.ps1"
 
 FIELDS=(source-type reliability entity-kind relationship decay-rate)
 SH_VARS=(SOURCE_TYPES RELIABILITIES ENTITY_KINDS RELATIONSHIPS DECAY_RATES)
