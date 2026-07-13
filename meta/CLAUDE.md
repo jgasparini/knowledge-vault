@@ -256,8 +256,13 @@ created: YYYY-MM-DD
 updated: YYYY-MM-DD
 tags: []
 sources: []
+resource:
 ---
 ```
+
+`resource:` is optional — a canonical external URL for this concept (a spec, a gist,
+a paper), if one exists. Omit the field entirely when there's no single canonical
+external anchor.
 
 **Page structure:**
 ```
@@ -292,8 +297,13 @@ created: YYYY-MM-DD
 updated: YYYY-MM-DD
 tags: []
 sources: []
+resource:
 ---
 ```
+
+`resource:` is optional — a canonical external URL for this entity (a homepage,
+a repo, a spec), if one exists. Omit the field entirely when there's no single
+canonical external anchor.
 
 **Entity-kind rules:**
 - `entity-kind` is a closed enum. If no value fits, stop and propose a new value
