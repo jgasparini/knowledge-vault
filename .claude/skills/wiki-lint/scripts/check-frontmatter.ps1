@@ -28,7 +28,7 @@ param(
 $Wiki = (Get-Item $Wiki).FullName.TrimEnd('\', '/')
 
 $pageTypes = @('source', 'concept', 'entity', 'topic', 'project', 'area', 'person')
-$sourceTypes = @('article', 'paper', 'report', 'book-chapter', 'meeting', 'email', 'letter', 'video')
+$sourceTypes = @('article', 'paper', 'report', 'book-chapter', 'meeting', 'email', 'letter', 'video', 'dataset')
 $reliabilities = @('primary', 'practitioner', 'secondary', 'speculative')
 $entityKinds = @('person', 'company', 'tool', 'model', 'paper', 'research-group', 'standard', 'publication')
 $relationships = @('colleague', 'stakeholder', 'external', 'vendor', 'peer')

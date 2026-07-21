@@ -22,7 +22,7 @@
 WIKI="${1:?Usage: $0 /path/to/vault/wiki}"
 
 PAGE_TYPES=" source concept entity topic project area person "
-SOURCE_TYPES=" article paper report book-chapter meeting email letter video "
+SOURCE_TYPES=" article paper report book-chapter meeting email letter video dataset "
 RELIABILITIES=" primary practitioner secondary speculative "
 ENTITY_KINDS=" person company tool model paper research-group standard publication "
 RELATIONSHIPS=" colleague stakeholder external vendor peer "
