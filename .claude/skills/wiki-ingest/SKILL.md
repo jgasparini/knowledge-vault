@@ -48,8 +48,8 @@ Work through these steps in order. Do not skip ahead or compress steps together.
 
 ### Step 0 — Convert (if needed)
 
-Before reading the file, check its extension. If it is `.docx`, `.pptx`, `.ppt`, `.eml`,
-or `.msg`, run the conversion script to produce a readable `.md` file:
+Before reading the file, check its extension. If it is `.docx`, `.pptx`, `.ppt`, `.xlsx`,
+`.xls`, `.eml`, or `.msg`, run the conversion script to produce a readable `.md` file:
 
 ```bash
 python .claude/skills/wiki-ingest/convert.py inbox/<filename>
@@ -63,6 +63,13 @@ command it printed and stop. Do not proceed until the dependency is installed.
 
 If the file extension is anything else (`.md`, `.txt`, `.pdf`, images, notebooks), skip
 this step entirely.
+
+For `.xlsx`, each sheet converts to a capped sample: column/row counts, the header row, and
+the first 20 data rows, with a note when rows were omitted. This is deliberate — the full
+sheet stays queryable from the raw file preserved in `sources/` after Step 8; the converted
+`.md` is a readable preview, not a full transcription. Mention this in the Step 2 surface so
+the user knows the summary is drawn from a sample, not the complete dataset. Legacy `.xls`
+files are not supported — the script will tell the user to re-export as `.xlsx`.
 
 ---
 

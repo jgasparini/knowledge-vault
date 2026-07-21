@@ -95,6 +95,90 @@ def test_pptx_includes_speaker_notes(tmp_path):
 
 
 # ---------------------------------------------------------------------------
+# .xlsx
+# ---------------------------------------------------------------------------
+
+def test_xlsx_extracts_header_and_rows(tmp_path):
+    from openpyxl import Workbook
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Data"
+    ws.append(["Name", "Score"])
+    ws.append(["Alice", 90])
+    ws.append(["Bob", 85])
+    src = tmp_path / "sample.xlsx"
+    wb.save(src)
+
+    result = convert(src)
+    assert "## Sheet: Data" in result
+    assert "Name" in result and "Score" in result
+    assert "Alice" in result and "90" in result
+    assert "2 columns x 2 data rows" in result
+
+
+def test_xlsx_multiple_sheets_both_present(tmp_path):
+    from openpyxl import Workbook
+
+    wb = Workbook()
+    ws1 = wb.active
+    ws1.title = "First"
+    ws1.append(["A"])
+    ws1.append(["1"])
+    ws2 = wb.create_sheet("Second")
+    ws2.append(["B"])
+    ws2.append(["2"])
+    src = tmp_path / "multi.xlsx"
+    wb.save(src)
+
+    result = convert(src)
+    assert "## Sheet: First" in result
+    assert "## Sheet: Second" in result
+    first_idx = result.index("## Sheet: First")
+    second_idx = result.index("## Sheet: Second")
+    assert first_idx < second_idx
+
+
+def test_xlsx_empty_sheet_noted(tmp_path):
+    from openpyxl import Workbook
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Empty"
+    src = tmp_path / "empty.xlsx"
+    wb.save(src)
+
+    result = convert(src)
+    assert "_Empty sheet_" in result
+
+
+def test_xlsx_caps_sample_and_notes_truncation(tmp_path):
+    from openpyxl import Workbook
+
+    wb = Workbook()
+    ws = wb.active
+    ws.append(["Col"])
+    for i in range(30):
+        ws.append([f"row{i}"])
+    src = tmp_path / "big.xlsx"
+    wb.save(src)
+
+    result = convert(src)
+    assert "showing first 20" in result
+    assert "row0" in result
+    assert "row19" in result
+    assert "row20" not in result
+    assert "30 data rows" in result
+
+
+def test_xls_raises_helpful_error(tmp_path):
+    src = tmp_path / "legacy.xls"
+    src.write_bytes(b"not a real xls file")
+    with pytest.raises(SystemExit, match="re-export as .xlsx"):
+        convert(src)
+
+
+# ---------------------------------------------------------------------------
 # .eml
 # ---------------------------------------------------------------------------
 

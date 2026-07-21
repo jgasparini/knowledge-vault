@@ -15,6 +15,8 @@ def _require(module: str, package: str, ext: str) -> None:
 
 _HTML_BLOCK_TAGS = {"p", "div", "br", "li", "tr", "h1", "h2", "h3", "h4", "h5", "h6"}
 
+_MAX_SAMPLE_ROWS = 20
+
 
 class _HTMLTextExtractor(HTMLParser):
     """Minimal HTML-to-text: drop tags, break lines at block-level elements."""
@@ -65,6 +67,42 @@ def _table_to_markdown(table) -> str:
     return "\n".join(rows)
 
 
+def _cell_to_str(value) -> str:
+    if value is None:
+        return ""
+    return str(value).replace("\n", " ").strip()
+
+
+def _sheet_to_markdown(sheet) -> str:
+    rows_iter = sheet.iter_rows(values_only=True)
+    try:
+        header = next(rows_iter)
+    except StopIteration:
+        return "_Empty sheet_"
+
+    header_cells = [_cell_to_str(v) for v in header]
+    data_rows = list(rows_iter)
+    sample = data_rows[:_MAX_SAMPLE_ROWS]
+
+    if len(data_rows) > _MAX_SAMPLE_ROWS:
+        note = (
+            f"_{len(header_cells)} columns x {len(data_rows)} data rows "
+            f"(showing first {_MAX_SAMPLE_ROWS}). See the raw file for the full dataset._"
+        )
+    else:
+        note = f"_{len(header_cells)} columns x {len(data_rows)} data rows_"
+
+    lines = [
+        note,
+        "",
+        "| " + " | ".join(header_cells) + " |",
+        "| " + " | ".join(["---"] * len(header_cells)) + " |",
+    ]
+    for row in sample:
+        lines.append("| " + " | ".join(_cell_to_str(v) for v in row) + " |")
+    return "\n".join(lines)
+
+
 def convert(src: pathlib.Path) -> str:
     ext = src.suffix.lower()
 
@@ -109,6 +147,23 @@ def convert(src: pathlib.Path) -> str:
                 if notes:
                     lines.append(f"_Notes: {notes}_")
         return "\n\n".join(lines)
+
+    if ext == ".xlsx":
+        _require("openpyxl", "openpyxl", ext)
+        import openpyxl
+        wb = openpyxl.load_workbook(src, data_only=True, read_only=True)
+        parts = []
+        for name in wb.sheetnames:
+            parts.append(f"## Sheet: {name}")
+            parts.append(_sheet_to_markdown(wb[name]))
+        return "\n\n".join(parts)
+
+    if ext == ".xls":
+        raise SystemExit(
+            "openpyxl cannot open legacy .xls files (binary format).\n"
+            "Open the file in Excel or LibreOffice and re-export as .xlsx, "
+            "then ingest the .xlsx version."
+        )
 
     if ext == ".eml":
         import email as _email

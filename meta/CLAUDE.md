@@ -200,7 +200,7 @@ type: source
 status: processed
 created: YYYY-MM-DD
 tags: []
-source-type: article|paper|report|book-chapter|meeting|email|letter|video
+source-type: article|paper|report|book-chapter|meeting|email|letter|video|dataset
 reliability: primary|practitioner|secondary|speculative
 origin: URL or filename in inbox/
 project:
@@ -220,6 +220,8 @@ project:
 - Use the original medium even when ingested via a derived artifact — e.g. a
   YouTube video transcribed to text is still `video`, not `transcript`. There
   is no `transcript` value.
+- `dataset` covers spreadsheets and other tabular data exports (e.g. a `.xlsx`
+  export), as distinct from a narrative `report`.
 - This is a closed enum. If no value fits, stop and propose a new value to
   the user before using it — never coin a new `source-type` value silently.
 

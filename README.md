@@ -127,6 +127,7 @@ Claude runs 11 structural checks — orphan pages, missing wikilinks, stale cont
 | Word documents | `.docx` | Supported — auto-converted via `convert.py` before ingest |
 | PowerPoint | `.pptx`, `.ppt` | Supported — auto-converted via `convert.py` before ingest |
 | Email | `.eml`, `.msg` | Supported — auto-converted via `convert.py` before ingest |
+| Excel | `.xlsx` | Supported — auto-converted via `convert.py` before ingest. Each sheet is summarised as a capped sample (header + first 20 rows); the raw file is preserved in `sources/` for full-detail lookups. Legacy `.xls` is not supported — re-export as `.xlsx` first |
 
 For any format, the ingest skill also accepts inline content: paste the text directly into chat and tell Claude to ingest it.
 
