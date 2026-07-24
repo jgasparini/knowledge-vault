@@ -71,6 +71,12 @@ sheet stays queryable from the raw file preserved in `sources/` after Step 8; th
 the user knows the summary is drawn from a sample, not the complete dataset. Legacy `.xls`
 files are not supported — the script will tell the user to re-export as `.xlsx`.
 
+For `.docx` and `.pptx`/`.ppt`, the script also extracts any embedded images (pictures,
+charts, diagrams) into a `<filename>_media/` folder next to the converted `.md`. If any were
+found, the `.md` ends with an `## Embedded images` section listing them — see Step 1 for what
+to do with that section. If a source has no embedded images, no media folder is created and
+no section appears.
+
 ---
 
 ### Step 0.5 — Secrets scan
@@ -139,6 +145,16 @@ one combined report, because the two scans offer different action sets
 Read the source file in full. No output yet. If the file is unreadable (corrupt, wrong
 format, empty), stop and tell the user.
 
+Diagrams and figures carry real signal and are easy to silently drop — read for them
+deliberately:
+
+- **PDF**: the Read tool renders each page visually. Actively look for diagrams, charts,
+  flowcharts, screenshots, or figures on each page and note what they show, not just the
+  surrounding body text.
+- **DOCX/PPTX**: if the converted `.md` from Step 0 ends with an `## Embedded images`
+  section, read each listed image file directly with the Read tool before moving to Step 2,
+  and note diagram or figure content the same way as for PDF.
+
 If "ingest the inbox" was the trigger, list all files in `inbox/` and identify which have
 not yet been ingested by checking whether a matching raw source file already exists anywhere
 in `wiki/**/sources/`. A file is already ingested if its filename appears in any sources/
@@ -203,7 +219,9 @@ The page must include:
   rules). `source-type` is a closed enum — if no value fits, stop and propose a new
   one to the user rather than coining a value silently.
 - Summary (one paragraph)
-- Key insights (3–7 bullets, distilled signal not paraphrase)
+- Key insights (3–7 bullets, distilled signal not paraphrase). Include what a diagram, chart,
+  or figure shows when it carries signal — e.g. "the architecture diagram on slide 4 shows X
+  flowing into Y" — rather than letting visual content go unmentioned
 - Contradictions or tensions (cross-reference any conflicts with existing wiki pages — in
   both directions)
 - Pages updated (list, filled in after Steps 5–6)
@@ -255,6 +273,10 @@ pass.
 Move the raw source file from `inbox/` to `wiki/projects/[name]/sources/` (same folder as
 the processed summary). Then update the **Raw source** section of the summary page to
 reflect the new path.
+
+If a `<filename>_media/` folder was created in Step 0, delete it now. The images inside it
+already live inside the raw file being moved, so this is just cleanup of temporary viewing
+scratch, not a loss of information.
 
 If the source was provided inline (pasted text, meeting notes not saved as a file), note
 this in the Raw source section — no file to move.

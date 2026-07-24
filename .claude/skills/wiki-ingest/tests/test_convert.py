@@ -6,6 +6,21 @@ import pytest
 from convert import convert
 
 
+# Minimal valid 1x1 RGB PNG, used to embed a real image in docx/pptx
+# fixtures without depending on Pillow.
+_TINY_PNG = bytes.fromhex(
+    "89504e470d0a1a0a0000000d4948445200000001000000010802000000907753de"
+    "0000000c49444154789c63f8cfc0000003010100c9fe92ef0000000049454e44ae"
+    "426082"
+)
+
+
+def _write_tiny_png(tmp_path, name="tiny.png"):
+    path = tmp_path / name
+    path.write_bytes(_TINY_PNG)
+    return path
+
+
 # ---------------------------------------------------------------------------
 # .docx
 # ---------------------------------------------------------------------------
@@ -62,6 +77,56 @@ def test_docx_extracts_table_in_document_order(tmp_path):
     assert before_idx < table_idx < after_idx
 
 
+def test_docx_extracts_embedded_image_to_media_dir(tmp_path):
+    from docx import Document
+
+    png = _write_tiny_png(tmp_path)
+    doc = Document()
+    doc.add_paragraph("Text before the image")
+    doc.add_picture(str(png))
+    src = tmp_path / "with_image.docx"
+    doc.save(src)
+
+    media_dir = tmp_path / "media"
+    result = convert(src, media_dir=media_dir)
+
+    assert "## Embedded images" in result
+    extracted = list(media_dir.iterdir())
+    assert len(extracted) == 1
+    assert extracted[0].name in result
+
+
+def test_docx_no_images_no_media_section(tmp_path):
+    from docx import Document
+
+    doc = Document()
+    doc.add_paragraph("Just text, no pictures")
+    src = tmp_path / "no_images.docx"
+    doc.save(src)
+
+    media_dir = tmp_path / "media"
+    result = convert(src, media_dir=media_dir)
+
+    assert "## Embedded images" not in result
+    assert not media_dir.exists()
+
+
+def test_convert_without_media_dir_param_unaffected(tmp_path):
+    from docx import Document
+
+    png = _write_tiny_png(tmp_path)
+    doc = Document()
+    doc.add_paragraph("Text before the image")
+    doc.add_picture(str(png))
+    src = tmp_path / "with_image_no_media_dir.docx"
+    doc.save(src)
+
+    result = convert(src)
+
+    assert "Text before the image" in result
+    assert "## Embedded images" not in result
+
+
 # ---------------------------------------------------------------------------
 # .pptx
 # ---------------------------------------------------------------------------
@@ -92,6 +157,26 @@ def test_pptx_includes_speaker_notes(tmp_path):
 
     result = convert(src)
     assert "These are speaker notes" in result
+
+
+def test_pptx_extracts_embedded_image_to_media_dir(tmp_path):
+    from pptx import Presentation
+    from pptx.util import Inches
+
+    png = _write_tiny_png(tmp_path)
+    prs = Presentation()
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+    slide.shapes.add_picture(str(png), Inches(1), Inches(1))
+    src = tmp_path / "deck_with_image.pptx"
+    prs.save(src)
+
+    media_dir = tmp_path / "media"
+    result = convert(src, media_dir=media_dir)
+
+    assert "## Embedded images" in result
+    extracted = list(media_dir.iterdir())
+    assert len(extracted) == 1
+    assert extracted[0].name in result
 
 
 # ---------------------------------------------------------------------------
@@ -336,6 +421,31 @@ def test_cli_writes_md_file_and_prints_path(tmp_path):
     assert out_path.suffix == ".md"
     assert "CLI test paragraph" in out_path.read_text()
     assert out_path.parent == tmp_path
+
+
+def test_cli_creates_media_dir_for_docx_with_image(tmp_path):
+    from docx import Document
+
+    png = _write_tiny_png(tmp_path)
+    doc = Document()
+    doc.add_paragraph("CLI image test paragraph")
+    doc.add_picture(str(png))
+    src = tmp_path / "cli_image_test.docx"
+    doc.save(src)
+
+    script = pathlib.Path(__file__).parent.parent / "convert.py"
+    result = subprocess.run(
+        [sys.executable, str(script), str(src)],
+        capture_output=True, text=True
+    )
+    assert result.returncode == 0, result.stderr
+    out_path = pathlib.Path(result.stdout.strip())
+    assert out_path.exists()
+
+    media_dir = tmp_path / "cli_image_test_media"
+    assert media_dir.exists()
+    assert len(list(media_dir.iterdir())) == 1
+    assert "## Embedded images" in out_path.read_text()
 
 
 def test_cli_bad_usage_exits_nonzero():

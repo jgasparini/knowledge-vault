@@ -1,5 +1,6 @@
 import sys
 import pathlib
+import zipfile
 from html.parser import HTMLParser
 
 
@@ -67,6 +68,39 @@ def _table_to_markdown(table) -> str:
     return "\n".join(rows)
 
 
+def _extract_media(src: pathlib.Path, zip_prefix: str, media_dir: pathlib.Path) -> list:
+    """Extract files under zip_prefix from src (a zip-based Office file) into media_dir.
+
+    Returns sorted filenames extracted; empty list (and no directory created) if none found.
+    """
+    with zipfile.ZipFile(src) as zf:
+        names = [n for n in zf.namelist() if n.startswith(zip_prefix) and not n.endswith("/")]
+        if not names:
+            return []
+        media_dir.mkdir(parents=True, exist_ok=True)
+        extracted = []
+        for name in names:
+            filename = pathlib.Path(name).name
+            (media_dir / filename).write_bytes(zf.read(name))
+            extracted.append(filename)
+    return sorted(extracted)
+
+
+def _embedded_images_section(media_dir: pathlib.Path, filenames: list) -> str:
+    lines = [
+        "## Embedded images",
+        f"This file contains {len(filenames)} embedded image(s), extracted to "
+        f"`{media_dir}/`:",
+    ]
+    lines.extend(f"- {name}" for name in filenames)
+    lines.append("")
+    lines.append(
+        "Read each image directly with the Read tool before writing the source "
+        "summary, and note any diagrams, charts, or figures they show."
+    )
+    return "\n".join(lines)
+
+
 def _cell_to_str(value) -> str:
     if value is None:
         return ""
@@ -103,7 +137,7 @@ def _sheet_to_markdown(sheet) -> str:
     return "\n".join(lines)
 
 
-def convert(src: pathlib.Path) -> str:
+def convert(src: pathlib.Path, media_dir: pathlib.Path = None) -> str:
     ext = src.suffix.lower()
 
     if ext == ".docx":
@@ -119,6 +153,10 @@ def convert(src: pathlib.Path) -> str:
                     lines.append(block.text)
             elif isinstance(block, Table):
                 lines.append(_table_to_markdown(block))
+        if media_dir is not None:
+            images = _extract_media(src, "word/media/", media_dir)
+            if images:
+                lines.append(_embedded_images_section(media_dir, images))
         return "\n\n".join(lines)
 
     if ext in (".pptx", ".ppt"):
@@ -146,6 +184,10 @@ def convert(src: pathlib.Path) -> str:
                 notes = slide.notes_slide.notes_text_frame.text.strip()
                 if notes:
                     lines.append(f"_Notes: {notes}_")
+        if media_dir is not None:
+            images = _extract_media(src, "ppt/media/", media_dir)
+            if images:
+                lines.append(_embedded_images_section(media_dir, images))
         return "\n\n".join(lines)
 
     if ext == ".xlsx":
@@ -224,5 +266,6 @@ if __name__ == "__main__":
     if out.exists():
         print(f"Refusing to overwrite existing file: {out}", file=sys.stderr)
         sys.exit(1)
-    out.write_text(convert(src), encoding="utf-8")
+    media_dir = out.parent / f"{out.stem}_media"
+    out.write_text(convert(src, media_dir=media_dir), encoding="utf-8")
     print(out)
