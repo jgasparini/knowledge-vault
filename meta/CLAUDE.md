@@ -293,7 +293,7 @@ Things not yet resolved or well-understood.
 ```yaml
 ---
 type: entity
-entity-kind: person|company|tool|model|paper|research-group|standard|publication
+entity-kind: person|company|tool|model|paper|research-group|standard|publication|regulation
 status: stub|active|evergreen
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
@@ -310,6 +310,11 @@ canonical external anchor.
 **Entity-kind rules:**
 - `entity-kind` is a closed enum. If no value fits, stop and propose a new value
   to the user before using it — never coin a new `entity-kind` value silently.
+- `regulation` covers named laws, statutes, and regulatory regimes (e.g. the EU AI
+  Act, DORA, the UK's Critical Third Parties regime) — a concrete named instrument,
+  distinct from `standard` (a technical specification) and from the regulatory
+  *body* that issues or enforces it (which uses `research-group`, per precedent
+  set by NCSC and CERT-EU).
 
 **Page structure:**
 ```
