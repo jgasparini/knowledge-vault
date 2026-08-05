@@ -1,6 +1,6 @@
 ---
 name: improve-system
-description: Use when the user wants to maintain or improve the knowledge system itself — not ingest content. Triggers on: audit/health-check requests, improving a skill after friction, capturing a story/win/lesson, mining past sessions for missed learnings, or filling in foundational memories about the user (identity, tone, brand, working style).
+description: Use when the user wants to maintain or improve the knowledge system itself — not ingest content. Triggers on: audit/health-check requests, improving a skill after friction, capturing a story/win/lesson, mining past sessions for missed learnings, filling in foundational memories about the user (identity, tone, brand, working style), or running a regression check on a skill.
 ---
 
 # Improve System
@@ -126,16 +126,23 @@ Memory directory: `/Users/jgasparini/.claude/projects/-Users-jgasparini-Library-
    cp wiki/QUESTIONS.md "$SANDBOX/wiki/QUESTIONS.md"
    cp -r ".claude/skills/wiki-ingest/tests/regression/fixtures/<fixture>/scratch-project" "$SANDBOX/wiki/projects/regression-fixture"
    cp ".claude/skills/wiki-ingest/tests/regression/fixtures/<fixture>/source.md" "$SANDBOX/inbox/source.md"
+   echo "$SANDBOX"
    ```
+   Record the printed path — shell variables do not persist between separate command invocations in this environment, so substitute the literal printed path for `$SANDBOX` in every command in steps 3, 4, and 7, rather than relying on the variable.
+
    Do not `cd` into `$SANDBOX` — the working directory stays at the repo root for the rest of this mode. Build every path explicitly: vault-data paths (`inbox/`, `wiki/`, `meta/CLAUDE.md`, `meta/health.md`, `CHANGELOG.md`) get the `$SANDBOX/` prefix; skill-code paths (`.claude/skills/*/scripts/...`, `.claude/skills/wiki-ingest/convert.py`) stay repo-relative, since those are code, not vault content, and take the sandboxed file as an argument regardless of where they're invoked from.
 3. **Run the ingest** — follow `.claude/skills/wiki-ingest/SKILL.md`'s 10-step workflow exactly, unmodified, with `$SANDBOX/inbox/source.md` as the file being ingested and `regression-fixture` (at `$SANDBOX/wiki/projects/regression-fixture/`) as the target project. Every vault-data path the skill references resolves under `$SANDBOX/` per step 2; every skill-code path stays repo-relative. If `wiki-ingest` errors partway through (unreadable file, a script dependency missing, an unresolvable structural question), stop, report the error to the user, skip straight to step 7 (clean up), and leave `golden/<fixture>/` untouched — do not partially update the baseline.
 4. **Diff against the golden snapshot** — compare, against `.claude/skills/wiki-ingest/tests/regression/golden/<fixture>/`:
    - the whole `$SANDBOX/wiki/projects/regression-fixture/` subtree (`_overview.md`, `INDEX.md`, `QUESTIONS.md`, `sources/`)
    - any new files under `$SANDBOX/wiki/resources/concepts/` or `$SANDBOX/wiki/resources/entities/`
-   - only the new row(s) appended to root `wiki/INDEX.md`'s Global Resources section — never the whole file, since it holds real, unrelated project and area data that must not end up in a git-tracked fixture. Extract the new row(s) and compare against `golden/<fixture>/root-index-delta.md`.
+   - only any new row(s) appended to root `wiki/INDEX.md` (Projects table and/or Global Resources section) — never the whole file, since it holds real, unrelated project and area data that must not end up in a git-tracked fixture. Extract the new row(s) with a diff-based approach, e.g.:
+     ```bash
+     diff wiki/INDEX.md "$SANDBOX/wiki/INDEX.md" | grep '^>' | sed 's/^> //' > golden/<fixture>/root-index-delta.md
+     ```
+     Read the result and trim by hand if `diff` picked up a neighboring unchanged line due to context shift — it should contain only genuinely new rows. Compare against `golden/<fixture>/root-index-delta.md`.
 
    If `golden/<fixture>/` doesn't exist yet, this run becomes the baseline — skip to step 6.
-5. **Present the diff** — additions/changes/removals, frontmatter deltas, prose deltas, plainly. Ask: same behavior, intentional improvement, or regression?
+5. **Present the diff** — additions/changes/removals, frontmatter deltas, prose deltas, plainly. Note that `created:`/`updated:` date fields will always differ between runs (they carry the run date) — treat these as expected noise, excluded from the same/improvement/regression judgment; everything else in the diff is signal. Ask: same behavior, intentional improvement, or regression?
 6. **On approval (or first-run bootstrap)** — overwrite `golden/<fixture>/` with the new `wiki/projects/regression-fixture/` subtree, any new concept/entity pages, and the extracted `root-index-delta.md`. Append one line to `golden/<fixture>/HISTORY.md`: `YYYY-MM-DD — <one-sentence reason>`.
 7. **Clean up** — `rm -rf "$SANDBOX"` in every case: success, rejected diff, or error.
 
