@@ -7,7 +7,7 @@ description: Use when the user wants to maintain or improve the knowledge system
 
 ## Overview
 
-Meta-maintenance skill for the knowledge system. Detects one of five modes from context, or asks if unclear.
+Meta-maintenance skill for the knowledge system. Detects one of six modes from context, or asks if unclear.
 
 ## Mode Detection
 
@@ -20,8 +20,9 @@ Match the user's message to the best-fit mode:
 | **Experience** | "capture this", "remember this win/lesson", user shares a story or outcome |
 | **Historical Review** | "mine my sessions", "what have I missed", "review past conversations" |
 | **Foundation** | "fill in about me", "tone of voice", "brand", "style guide", "who am I" |
+| **Regression Check** | "regression check", "test wiki-ingest", "run the wiki-ingest regression test" |
 
-If ambiguous, show the five options and ask.
+If ambiguous, show the six options and ask.
 
 ---
 
@@ -106,3 +107,36 @@ Memory directory: `/Users/jgasparini/.claude/projects/-Users-jgasparini-Library-
 3. Ask focused questions to fill gaps (max 3 at a time).
 4. Draft memories from the answers — show drafts before writing.
 5. Write confirmed memories and update `MEMORY.md`.
+
+---
+
+## Mode 6: Regression Check
+
+**Goal:** Catch unintended behavior drift in `wiki-ingest` after a `SKILL.md` edit, by re-running a known fixture source through the skill in an isolated sandbox and diffing the result against the last-approved output.
+
+1. **Resolve the fixture** — default to `article-basic` if the user doesn't name one. If `.claude/skills/wiki-ingest/tests/regression/fixtures/<fixture>/` doesn't exist, list the available fixtures under that directory and stop.
+2. **Build the sandbox** — create an isolated copy of only what `wiki-ingest` reads:
+   ```bash
+   SANDBOX=$(mktemp -d)
+   mkdir -p "$SANDBOX/meta" "$SANDBOX/wiki/projects" "$SANDBOX/inbox"
+   cp meta/CLAUDE.md "$SANDBOX/meta/CLAUDE.md"
+   cp meta/health.md "$SANDBOX/meta/health.md"
+   cp CHANGELOG.md "$SANDBOX/CHANGELOG.md"
+   cp wiki/INDEX.md "$SANDBOX/wiki/INDEX.md"
+   cp wiki/QUESTIONS.md "$SANDBOX/wiki/QUESTIONS.md"
+   cp -r ".claude/skills/wiki-ingest/tests/regression/fixtures/<fixture>/scratch-project" "$SANDBOX/wiki/projects/regression-fixture"
+   cp ".claude/skills/wiki-ingest/tests/regression/fixtures/<fixture>/source.md" "$SANDBOX/inbox/source.md"
+   ```
+   Do not `cd` into `$SANDBOX` — the working directory stays at the repo root for the rest of this mode. Build every path explicitly: vault-data paths (`inbox/`, `wiki/`, `meta/CLAUDE.md`, `meta/health.md`, `CHANGELOG.md`) get the `$SANDBOX/` prefix; skill-code paths (`.claude/skills/*/scripts/...`, `.claude/skills/wiki-ingest/convert.py`) stay repo-relative, since those are code, not vault content, and take the sandboxed file as an argument regardless of where they're invoked from.
+3. **Run the ingest** — follow `.claude/skills/wiki-ingest/SKILL.md`'s 10-step workflow exactly, unmodified, with `$SANDBOX/inbox/source.md` as the file being ingested and `regression-fixture` (at `$SANDBOX/wiki/projects/regression-fixture/`) as the target project. Every vault-data path the skill references resolves under `$SANDBOX/` per step 2; every skill-code path stays repo-relative. If `wiki-ingest` errors partway through (unreadable file, a script dependency missing, an unresolvable structural question), stop, report the error to the user, skip straight to step 7 (clean up), and leave `golden/<fixture>/` untouched — do not partially update the baseline.
+4. **Diff against the golden snapshot** — compare, against `.claude/skills/wiki-ingest/tests/regression/golden/<fixture>/`:
+   - the whole `$SANDBOX/wiki/projects/regression-fixture/` subtree (`_overview.md`, `INDEX.md`, `QUESTIONS.md`, `sources/`)
+   - any new files under `$SANDBOX/wiki/resources/concepts/` or `$SANDBOX/wiki/resources/entities/`
+   - only the new row(s) appended to root `wiki/INDEX.md`'s Global Resources section — never the whole file, since it holds real, unrelated project and area data that must not end up in a git-tracked fixture. Extract the new row(s) and compare against `golden/<fixture>/root-index-delta.md`.
+
+   If `golden/<fixture>/` doesn't exist yet, this run becomes the baseline — skip to step 6.
+5. **Present the diff** — additions/changes/removals, frontmatter deltas, prose deltas, plainly. Ask: same behavior, intentional improvement, or regression?
+6. **On approval (or first-run bootstrap)** — overwrite `golden/<fixture>/` with the new `wiki/projects/regression-fixture/` subtree, any new concept/entity pages, and the extracted `root-index-delta.md`. Append one line to `golden/<fixture>/HISTORY.md`: `YYYY-MM-DD — <one-sentence reason>`.
+7. **Clean up** — `rm -rf "$SANDBOX"` in every case: success, rejected diff, or error.
+
+No real-vault file (`wiki/`, `inbox/`, `CHANGELOG.md`, `meta/health.md`) is written to at any point — every ingest action happens inside `$SANDBOX`.
