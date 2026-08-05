@@ -63,6 +63,10 @@ to project `sources/` → CHANGELOG.md updated.
 - Never create a new Project, Area, or Topic hub without explicit
   confirmation.
 - When in doubt about where something belongs, ask rather than guess.
+- When corrected on a wrong retrieval or routing claim (e.g. "you do
+  have access to that"), retrace what was searched and why before
+  applying the fix. State the actual gap found, then fix that gap —
+  not just the immediate wrong answer.
 
 ### Skills
 
@@ -524,37 +528,7 @@ Related projects, areas, other people.
 
 ## Section 4: Query Workflow
 
-Queries are how you extract value from the accumulated wiki.
-A good answer is a wiki page waiting to happen.
-
-See `.claude/skills/wiki-query/SKILL.md` for the full query workflow. The steps below are a summary.
-
-**Step 1 — Read the index.** Read `wiki/INDEX.md` first to identify
-relevant pages.
-
-**Step 2 — Read relevant pages.** Read identified pages in full,
-including adjacent concepts and the evolving thesis on relevant topics.
-
-**Step 3 — Synthesise and cite.** Answer using the wiki as source of
-truth. Cite with `[[page-name]]`. Flag clearly when drawing on general
-knowledge instead.
-
-**Step 4 — Land in the scoped outputs/.** The answer lands as a dated
-markdown file in the `outputs/` folder closest to the query's scope:
-
-- Project-scoped query → `wiki/projects/[name]/outputs/`
-- Area-scoped query → `wiki/areas/[name]/outputs/`
-- Resource-scoped query (concept, entity, topic) → `wiki/resources/outputs/`
-- Cross-cutting or ambiguous → root `outputs/`
-
-Create the `outputs/` subfolder if it does not exist. This keeps
-query results co-located with the material they draw on, making
-patterns and compounding insights visible over time.
-
-**Step 5 — Propose promotion if warranted.** Ask whether the answer
-should become a wiki page. Promote when it synthesises across three
-or more pages, or surfaces a connection not previously captured.
-Never promote silently.
+See `.claude/skills/wiki-query/SKILL.md` for the full 6-step query workflow, output location rules, and promotion criteria.
 
 ---
 

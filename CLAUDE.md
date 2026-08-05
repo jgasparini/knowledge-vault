@@ -32,25 +32,7 @@ here. Trigger them by invoking the `Skill` tool with the appropriate name:
 
 ## Lint scripts
 
-**macOS / Linux** — run from the vault root:
-
-```bash
-bash .claude/skills/wiki-lint/scripts/find-orphans.sh /path/to/wiki
-bash .claude/skills/wiki-lint/scripts/find-missing-pages.sh /path/to/wiki
-bash .claude/skills/wiki-lint/scripts/check-index-drift.sh /path/to/wiki [projects/name]
-bash .claude/skills/wiki-lint/scripts/prune-questions.sh /path/to/wiki [days_threshold]
-bash .claude/skills/wiki-lint/scripts/check-frontmatter.sh /path/to/wiki
-```
-
-**Windows 11** — PowerShell equivalents (require PowerShell 5.1+):
-
-```powershell
-powershell -File .claude\skills\wiki-lint\scripts\find-orphans.ps1 C:\path\to\wiki
-powershell -File .claude\skills\wiki-lint\scripts\find-missing-pages.ps1 C:\path\to\wiki
-powershell -File .claude\skills\wiki-lint\scripts\check-index-drift.ps1 C:\path\to\wiki [projects/name]
-powershell -File .claude\skills\wiki-lint\scripts\prune-questions.ps1 C:\path\to\wiki [days_threshold]
-powershell -File .claude\skills\wiki-lint\scripts\check-frontmatter.ps1 C:\path\to\wiki
-```
+See `.claude/skills/wiki-lint/SKILL.md` for the exact bash/PowerShell invocations.
 
 ## Folder structure
 
