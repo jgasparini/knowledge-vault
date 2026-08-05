@@ -137,7 +137,7 @@ Memory directory: `/Users/jgasparini/.claude/projects/-Users-jgasparini-Library-
    - any new files under `$SANDBOX/wiki/resources/concepts/` or `$SANDBOX/wiki/resources/entities/`
    - only any new row(s) appended to root `wiki/INDEX.md` (Projects table and/or Global Resources section) — never the whole file, since it holds real, unrelated project and area data that must not end up in a git-tracked fixture. Extract the new row(s) with a diff-based approach, e.g.:
      ```bash
-     diff wiki/INDEX.md "$SANDBOX/wiki/INDEX.md" | grep '^>' | sed 's/^> //' > golden/<fixture>/root-index-delta.md
+     diff wiki/INDEX.md "$SANDBOX/wiki/INDEX.md" | grep '^>' | sed 's/^> //' > .claude/skills/wiki-ingest/tests/regression/golden/<fixture>/root-index-delta.md
      ```
      Read the result and trim by hand if `diff` picked up a neighboring unchanged line due to context shift — it should contain only genuinely new rows. Compare against `golden/<fixture>/root-index-delta.md`.
 
